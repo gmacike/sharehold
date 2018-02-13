@@ -1,13 +1,16 @@
 {% extends "catalogue/base.html" %}
 
 {% block content %}
-<h1>Nowa gra planszowa</h1>
 
-<form class="boardgame-form" method="post">
-  {% csrf_token %}
-  {{form.as_p}}
+<div class="jumbotron">
+  <h1>Nowa gra planszowa</h1>
 
-  <button type="submit" class="save btn btn-default">Dodaj</button>
-</form>
+  <form class="boardgame-form" method="post">
+    {% csrf_token %}
+    {{form.as_p}}
+
+    <button type="submit" class="save btn btn-primary">Dodaj</button>
+  </form>
+</div>
 
 {% endblock %}

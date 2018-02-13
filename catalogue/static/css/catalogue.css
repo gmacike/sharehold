@@ -6,15 +6,19 @@
 
 .barcodefont{
   font-family: 'Libre Barcode 39', cursive;
-  font-size: 1.5em;
+  font-size: 3em;
+}
+
+.barcodefont{
+  font-size: 3em;
   margin-bottom: 10px;
 }
+
 
 .bigbrand{
   font-size: 1.5em;
 }
 
-.centertage{
-  margin-left: auto;
-  margin-right: auto;
+.catalogentry{
+  margin-left: 3px;
 }

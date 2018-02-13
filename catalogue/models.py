@@ -7,6 +7,9 @@ from django.core.urlresolvers import reverse
 class CatalogueItem (models.Model):
     itemLabel = models.CharField (max_length = 30)
 
+    class Meta:
+        abstract = True
+
     def __str__ (self):
         return self.itemLabel
 
@@ -30,6 +33,15 @@ class CodeLabelledItem (CatalogueItem):
         null = True,
     )
 
+
+    class Meta:
+        abstract = True
+
+    def codeValueToStr (self):
+        if self.codeType == CodeLabelledItem.BARCODE:
+            return self.codeValue
+
+
 class BoardGameItem (CodeLabelledItem):
     # frontImage = models.ImageField
     # sideImages = models.ImageField
@@ -47,3 +59,7 @@ class BoardGameItem (CodeLabelledItem):
 
     def get_absolute_url(self):
         return reverse("catalogue_entries")
+
+    def codeValueToStr (self):
+        if self.codeType == CodeLabelledItem.BARCODE:
+            return self.codeValue [0]+" "+ self.codeValue[1:6]+" "+ self.codeValue[7:12]

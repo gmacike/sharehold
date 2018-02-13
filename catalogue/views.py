@@ -6,10 +6,10 @@ from django.views.generic import (ListView,DetailView,CreateView, UpdateView)
 
 # Create your views here.
 class CatalogueItemListView(ListView):
-    model = CatalogueItem
+    model = BoardGameItem
 
     def get_queryset(self):
-        return CatalogueItem.objects
+        return BoardGameItem.objects.all()
         # .orderby('itemLabel')
 
 class BoardGameDetailsView(DetailView):
