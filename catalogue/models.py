@@ -63,3 +63,15 @@ class BoardGameItem (CodeLabelledItem):
     def codeValueToStr (self):
         if self.codeType == CodeLabelledItem.BARCODE:
             return self.codeValue [0]+" "+ self.codeValue[1:6]+" "+ self.codeValue[7:12]
+
+
+class Warehouse(models.Model):
+    name = models.CharField(max_length=30)
+    desc = models.CharField(max_length=120)
+
+
+class Container(models.Model):
+    warehouse = models.ForeignKey(Warehouse)
+    board_game = models.ForeignKey(BoardGameItem)
+    available = models.IntegerField()
+    total = models.IntegerField()
