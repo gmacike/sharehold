@@ -9,6 +9,7 @@
   {% if boardgameitem.bggURL %}
     <h2> <a href={{boardgameitem.bggURL}}> {{boardgameitem.getTitle}} bgg page </a> </h2>
   {% endif %}
+  <a href="{% url 'catalogue_entries' %}" class="btn btn-default">Powrót</a>
 </div>
 
 {% endblock %}
