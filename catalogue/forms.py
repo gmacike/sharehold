@@ -13,14 +13,11 @@ class BoardGameForm(forms.ModelForm):
             'bggURL' : 'BGG link',
         }
 
-        placeholders = {
-            'itemLabel' : 'Wprowadź tytuł',
-            'codeValue' : 'Wczytaj kod paskowy',
-            'bggURL' : 'Podaj adres strony gry w serwisie boardgamegeek.com',
-        }
-
         widgets = {
-            'itemLabel': forms.TextInput(attrs={'class':'textinputclass'}),
-            'codeValue': forms.TextInput(attrs={'class':'textinputclass'}),
-            'bggURL': forms.URLInput(attrs={'class':'urlinputclass'})
+            'itemLabel': forms.TextInput(attrs={'class':'textinputclass',
+                'placeholder':'Wprowadź tytuł'}),
+            'codeValue': forms.TextInput(attrs={'class':'textinputclass',
+                'placeholder':'Wczytaj kod paskowy'}),
+            'bggURL': forms.URLInput(attrs={'class':'urlinputclass',
+                'placeholder':'Podaj adres strony gry w serwisie boardgamegeek.com'})
         }
