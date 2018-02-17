@@ -6,10 +6,34 @@ from django.views.generic import (ListView,DetailView,CreateView, UpdateView)
 
 # Create your views here.
 class CatalogueItemListView(ListView):
-    model = BoardGameItem
+    queryset = BoardGameItem.objects.all()
+    filter_criteria = ""
+    context_object_name = 'catalogueitem_list'
+    template_name = 'catalogue/catalogueitem_list.html'
+    paginate_by = 4
+    paginate_orphans = 2
+
 
     def get_queryset(self):
-        return BoardGameItem.objects.all().order_by("itemLabel")
+        if self.request.method == 'GET':
+
+            self.filter_criteria = self.request.GET.get("filter")
+            if self.filter_criteria:
+                search_type = self.request.GET.get("search")
+                if search_type == "barcode":
+                    self.queryset = BoardGameItem.objects.filter(codeValue__startswith=self.filter_criteria).order_by("codeValue")
+                elif search_type == "title":
+                    self.queryset =  BoardGameItem.objects.filter(itemLabel__icontains=self.filter_criteria).order_by("itemLabel")
+                # else:
+                #     objects =  self.model.objects.all().order_by("-itemLabel")
+            return self.queryset
+
+
+# class CatalogueItemFilteredListView(CatalogueItemListView):
+#     filterCriteria = ""
+#     def get_queryset(self):
+#         return BoardGameItem.objects.all().order_by("itemLabel")
+
 
 class BoardGameDetailsView(DetailView):
     model = BoardGameItem
@@ -31,6 +55,9 @@ class BoardGameUpdateView(UpdateView):
     form_class = BoardGameForm
     model = BoardGameItem
 
+
+##########################################
+# BoardGameItem additional views
 ##########################################
 def repeat_add_boardgame(request):
     if request.method == 'POST':
