@@ -6,7 +6,7 @@ from django.views.generic import (ListView,DetailView,CreateView, UpdateView)
 
 # Create your views here.
 class CatalogueItemListView(ListView):
-    queryset = BoardGameItem.objects.all()
+    queryset = BoardGameItem.objects.all().order_by("itemLabel")
     filter_criteria = ""
     context_object_name = 'catalogueitem_list'
     template_name = 'catalogue/catalogueitem_list.html'
