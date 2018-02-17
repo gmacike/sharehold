@@ -1,2 +1,4 @@
 *.pyc
 .idea
+sharehold/db.sqlite3
+prod.py
