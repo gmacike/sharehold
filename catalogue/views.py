@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
-# from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.contrib.auth.decorators import login_required, permission_required
 from catalogue.models import (CatalogueItem, BoardGameItem)
 from catalogue.forms import BoardGameForm
 from django.views.generic import (ListView,DetailView,CreateView, UpdateView)
@@ -38,20 +39,21 @@ class CatalogueItemListView(ListView):
 class BoardGameDetailsView(DetailView):
     model = BoardGameItem
 
-# todo: add LoginRequiredMixin inheritance
-class BoardGameCreateView(CreateView):
+class BoardGameCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     #authorization restriction section
-    # login_url = '/login/'
-    # redirect_field_name = todo define it
+    # login_url = 'accounts/login/'
+    permission_required = 'catalogue.add_boardgameitem'
+    raise_exception=True
 
     form_class = BoardGameForm
     model = BoardGameItem
 
-# todo: add LoginRequiredMixin inheritance
-class BoardGameUpdateView(UpdateView):
+class BoardGameUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     #authorization restriction section
-    # login_url = '/login/'
-    # redirect_field_name = todo define it
+    permission_required = 'catalogue.change_boardgameitem'
+    raise_exception=True
+    # login_url = 'accounts/login/'
+
     form_class = BoardGameForm
     model = BoardGameItem
 
@@ -59,6 +61,8 @@ class BoardGameUpdateView(UpdateView):
 ##########################################
 # BoardGameItem additional views
 ##########################################
+@login_required
+@permission_required('catalogue.add_boardgameitem', raise_exception=True)
 def repeat_add_boardgame(request):
     if request.method == 'POST':
         form = BoardGameForm(request.POST)
@@ -67,6 +71,8 @@ def repeat_add_boardgame(request):
             boardgame.save()
     return redirect('boardgame_new')
 
+@login_required
+@permission_required('catalogue.add_boardgameitem', raise_exception=True)
 def boardgamelist_return(request):
     if request.method == 'POST':
         form = BoardGameForm(request.POST)
@@ -74,3 +80,13 @@ def boardgamelist_return(request):
             boardgame = form.save(commit=False)
             boardgame.save()
     return redirect('catalogue_entries')
+
+@login_required
+@permission_required('catalogue.add_boardgameitem', raise_exception=True)
+def return_home (request):
+    if request.method == 'POST':
+        form = BoardGameForm(request.POST)
+        if form.is_valid():
+            boardgame = form.save(commit=False)
+            boardgame.save()
+    return redirect('welcome')

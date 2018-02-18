@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <div class="jumbotron">
+    <h2>Podaj swoje dane użytkownika systemu</h2>
+
+    {% if form.errors %}
+      <p>Nazwa użytkownika lub hasło nie są poprawne.</p>
+    {% endif %}
+
+    <form  action="{% url 'login' %}" method="POST">
+      {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" class="btn btn-primary" value="Potwierdź">
+        <input type="hidden" name="next" value="{{next}}">
+
+    </form>
+
+  </div>
+{% endblock %}

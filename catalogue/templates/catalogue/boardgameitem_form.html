@@ -32,7 +32,7 @@
     {% else %}
       <button type="submit" class="save btn btn-primary btn-lg" formaction="repeat_add_boardgame">Dodaj i wprowadź następną</button>
       <button type="submit" class="save btn btn-secondary btn-lg" formaction="boardgamelist_return">Dodaj i wróć do katalogu</button>
-      <button type="submit" class="save btn btn-secondary btn-lg">Dodaj i zakończ wprowadzanie</button>
+      <button type="submit" class="save btn btn-secondary btn-lg" formaction="return_home">Dodaj i zakończ wprowadzanie</button>
     {% endif %}
     <a href="{% url 'catalogue_entries' %}" class="btn btn-default">Anuluj</a>
   </form>
