@@ -20,8 +20,9 @@
          <h2> <a href="{% url 'boardgame_detail' pk=item.pk %}"> {{item.getTitle}} </a> </h2>
          <h2 class="barcodefont">{{item.codeValue}}</h2>
          <h2 class="barcodevalue">{{item.codeValueToStr}}</h2>
-         <!-- TODO: przycisk powinien być dostępny tylko dla uprawnionych do edytowania wpisów do katalogu -->
-         <a href="{% url 'boardgame_edit' pk=item.pk %}" class="btn btn-warning">Edytuj</a>
+         {% if perms.catalogue.change_boardgameitem %}
+            <a href="{% url 'boardgame_edit' pk=item.pk %}" class="btn btn-warning">Edytuj</a>
+         {% endif %}
        </div>
     {% endfor %}
   </div>
