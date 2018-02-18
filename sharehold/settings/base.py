@@ -14,6 +14,7 @@ import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+TEMPLATE_DIR_SITE = os.path.join(BASE_DIR, 'templates/sharehold')
 TEMPLATE_DIR_CATALOGUE = os.path.join(BASE_DIR, 'catalogue/templates/catalogue')
 
 # Quick-start development settings - unsuitable for production
@@ -47,7 +48,7 @@ ROOT_URLCONF = 'sharehold.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [TEMPLATE_DIR_CATALOGUE,],
+        'DIRS': [TEMPLATE_DIR_SITE, TEMPLATE_DIR_CATALOGUE,],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
