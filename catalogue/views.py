@@ -1,8 +1,9 @@
+from catalogue.models import (CatalogueItem, BoardGameItem, Warehouse, Container)
+from catalogue.forms import BoardGameForm, WarehouseForm, ContainerForm
+
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.contrib.auth.decorators import login_required, permission_required
-from catalogue.models import (CatalogueItem, BoardGameItem)
-from catalogue.forms import BoardGameForm
 from django.views.generic import (ListView,DetailView,CreateView, UpdateView)
 
 # Create your views here.
@@ -58,6 +59,26 @@ class BoardGameUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateVie
     model = BoardGameItem
 
 
+class WarehouseListView(ListView):
+    model = Warehouse
+
+    def get_queryset(self):
+        return Warehouse.objects.all()
+
+
+class WarehouseDetailView(DetailView):
+    model = Warehouse
+
+
+class WarehouseCreateView(CreateView):
+    model = Warehouse
+    form_class = WarehouseForm
+
+
+class ContainerCreateView(CreateView):
+    model = Container
+    form_class = ContainerForm
+
 ##########################################
 # BoardGameItem additional views
 ##########################################
@@ -90,3 +111,4 @@ def return_home (request):
             boardgame = form.save(commit=False)
             boardgame.save()
     return redirect('welcome')
+

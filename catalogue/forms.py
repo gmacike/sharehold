@@ -1,5 +1,6 @@
 from django import forms
-from catalogue.models import BoardGameItem
+from catalogue.models import BoardGameItem, Warehouse, Container
+
 
 class BoardGameForm(forms.ModelForm):
 
@@ -21,3 +22,19 @@ class BoardGameForm(forms.ModelForm):
             'bggURL': forms.URLInput(attrs={'class':'urlinputclass',
                 'placeholder':'Podaj adres strony gry w serwisie boardgamegeek.com'})
         }
+
+
+class WarehouseForm(forms.ModelForm):
+    class Meta():
+        model = Warehouse
+        fields = ('name', 'desc')
+        labels = {'name': 'nazwa', 'desc': 'opis'}
+        placeholders = {'name': 'dodaj nazwę', 'desc': ''}
+        widgets = {'name': forms.TextInput(attrs={'class': 'textinputclass'}),
+                   'desc': forms.Textarea()}
+
+
+class ContainerForm(forms.ModelForm):
+    class Meta:
+        model = Container
+        fields = ('warehouse', 'board_game', 'total')
