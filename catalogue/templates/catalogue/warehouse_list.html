@@ -1,16 +1,12 @@
 {% extends "catalogue/base.html" %}
-
 {% block content %}
-
 <div class="jumbotron">
     <h1>Magazyny</h1>
 </div>
 {% for warehouse in warehouse_list %}
 <div class="row col-lg-3 col-md-4 col-sm-6 catalogentry">
-    <h2>{{ warehouse.name }}</h2>
+    <h2><a href="{% url 'warehouse_detail' pk=warehouse.pk %}">{{ warehouse.name }}</a></h2>
     <h2>{{ warehouse.desc }}</h2>
 </div>
 {% endfor %}
-
-
 {% endblock %}

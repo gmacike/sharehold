@@ -22,3 +22,8 @@
 .catalogentry{
   margin-left: 3px;
 }
+
+td {
+    padding: 5px;
+    text-align: center;
+}
