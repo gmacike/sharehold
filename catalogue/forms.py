@@ -1,5 +1,5 @@
 from django import forms
-from catalogue.models import BoardGameItem, Warehouse
+from catalogue.models import BoardGameItem, Warehouse, Container
 
 
 class BoardGameForm(forms.ModelForm):
@@ -35,3 +35,9 @@ class WarehouseForm(forms.ModelForm):
         placeholders = {'name': 'dodaj nazwę', 'desc': ''}
         widgets = {'name': forms.TextInput(attrs={'class': 'textinputclass'}),
                    'desc': forms.Textarea()}
+
+
+class ContainerForm(forms.ModelForm):
+    class Meta:
+        model = Container
+        fields = ('warehouse', 'board_game', 'total')

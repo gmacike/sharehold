@@ -1,0 +1,14 @@
+{% extends "catalogue/base.html" %}
+
+{% block content %}
+
+<div class="jumbotron">
+  <h1>{{warehouse.name}}</h1>
+    <span>{{warehouse.desc}}</span>
+    {% for container in warehouse.container_set.all %}
+        <div>{{ container.board_game.getTitle }}</div>
+        <div>{{ container.total }}</div>
+    {% endfor %}
+</div>
+
+{% endblock %}

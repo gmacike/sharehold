@@ -1,7 +1,7 @@
 from django.shortcuts import render
 # from django.contrib.auth.mixins import LoginRequiredMixin
-from catalogue.models import (CatalogueItem, BoardGameItem, Warehouse)
-from catalogue.forms import BoardGameForm, WarehouseForm
+from catalogue.models import (CatalogueItem, BoardGameItem, Warehouse, Container)
+from catalogue.forms import BoardGameForm, WarehouseForm, ContainerForm
 from django.views.generic import (ListView,DetailView,CreateView, UpdateView)
 
 # Create your views here.
@@ -33,13 +33,22 @@ class BoardGameUpdateView(UpdateView):
     model = BoardGameItem
 
 
-class WarehouseView(ListView):
+class WarehouseListView(ListView):
     model = Warehouse
 
     def get_queryset(self):
         return Warehouse.objects.all()
 
 
+class WarehouseDetailView(DetailView):
+    model = Warehouse
+
+
 class WarehouseCreateView(CreateView):
     model = Warehouse
     form_class = WarehouseForm
+
+
+class ContainerCreateView(CreateView):
+    model = Container
+    form_class = ContainerForm
