@@ -14,19 +14,11 @@ import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-TEMPLATE_DIR_CATALOGUE = os.path.join(BASE_DIR, 'catalogue/templates/items')
+TEMPLATE_DIR_SITE = os.path.join(BASE_DIR, 'templates/sharehold')
+TEMPLATE_DIR_CATALOGUE = os.path.join(BASE_DIR, 'catalogue/templates/catalogue')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'm(9xlaurd!-%!x1!q5^_)byn##_nr32%@3v&gxz)v#hke^_xun'
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = []
-
 
 # Application definition
 
@@ -37,6 +29,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'widget_tweaks',
     'catalogue',
 ]
 
@@ -55,7 +48,7 @@ ROOT_URLCONF = 'sharehold.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [TEMPLATE_DIR_CATALOGUE,],
+        'DIRS': [TEMPLATE_DIR_SITE, TEMPLATE_DIR_CATALOGUE,],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -104,7 +97,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/1.11/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'pl-pl'
 
 TIME_ZONE = 'UTC'
 

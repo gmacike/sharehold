@@ -29,21 +29,24 @@
     <nav class="nabar navbar-default techfont custom-navbar">
       <div class="container">
         <ul class="nav navbar-nav">
-          <li><a class="navbar-brand bigbrand" href="{% url 'welcome' %}"><span class="glyphicon glyphicon-home"></span></a></li>
+          <li><a class="navbar-brand bigbrand" href="{% url 'welcome' %}"> <span class="glyphicon glyphicon-home"></span> </a></li>
+          <!-- <img class="img-fluid" src="{% static 'images/logo.160.png' %}" alt="Sharehold"> -->
+          <li><a class="navbar-brand bigbrand" href="{% url 'catalogue_entries' %}">Katalog</a></li>
         </ul>
-
-        <ul class="nav navbar-nav navbar-right">
-          {% if user.is_authenticated %}
-            {% if perms.catalogue.add_boardgameitem %}
-              <li> <a href="{% url 'boardgame_new' %}">Kataloguj grę</a> </li>
-            {% endif %}
+        <!-- <ul class="nav navbar-nav">
+        </ul> -->
+        {% if user.is_authenticated %}
+          <ul class="nav navbar-nav navbar-right">
             <li> <a href="{% url 'logout' %}">Wyloguj {{user.username}}</a> </li>
-          {% else %}
+          </ul>
+        {% else %}
+          <ul class="nav navbar-nav navbar-right">
             <li> <a class="nav navbar-right" href="{% url 'login' %}"> <span class="glyphicon glyphicon-user"></span> </a> </li>
-          {% endif %}
-        </ul>
+          </ul>
+        {% endif %}
       </div>
     </nav>
+
 
     <!-- Content block -->
     <div class="content container">

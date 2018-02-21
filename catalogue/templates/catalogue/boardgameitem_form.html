@@ -1,15 +1,40 @@
 {% extends "catalogue/base.html" %}
+{% load widget_tweaks %}
 
 {% block content %}
 
 <div class="jumbotron">
-  <h1>Nowa gra planszowa</h1>
+  {% if boardgameitem.pk != null %}
+    <h1>Gra planszowa aktualizacja</h1>
+  {% else %}
+    <h1>Nowa gra planszowa</h1>
+  {% endif %}
 
   <form class="boardgame-form" method="post">
     {% csrf_token %}
-    {{form.as_p}}
 
-    <button type="submit" class="save btn btn-primary">Dodaj</button>
+    {% for hidden in form.hidden_fields %}
+      {{ hidden }}
+    {% endfor %}
+
+    {% for field in form.visible_fields %}
+      <div class="form-group">
+        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+        {{ field|add_class:'form-control' }}
+        {% for error in field.errors %}
+          <span class="help-block">{{ error }}</span>
+        {% endfor %}
+      </div>
+    {% endfor %}
+
+    {% if boardgameitem.pk != null %}
+      <button type="submit" class="save btn btn-primary btn-warning">Aktualizuj</button>
+    {% else %}
+      <button type="submit" class="save btn btn-primary btn-lg" formaction="repeat_add_boardgame">Dodaj i wprowadź następną</button>
+      <button type="submit" class="save btn btn-secondary btn-lg" formaction="boardgamelist_return">Dodaj i wróć do katalogu</button>
+      <button type="submit" class="save btn btn-secondary btn-lg" formaction="return_home">Dodaj i zakończ wprowadzanie</button>
+    {% endif %}
+    <a href="{% url 'catalogue_entries' %}" class="btn btn-default">Anuluj</a>
   </form>
 </div>
 
