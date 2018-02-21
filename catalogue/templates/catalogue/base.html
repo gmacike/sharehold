@@ -29,12 +29,19 @@
     <nav class="nabar navbar-default techfont custom-navbar">
       <div class="container">
         <ul class="nav navbar-nav">
-          <li><a class="navbar-brand bigbrand" href="{% url 'catalogue_entries' %}">Sharehold</a></li>
-          <li> <a href="{% url 'rentalClient_new' %}">Dodaj klienta</a> </li>
+          <li><a class="navbar-brand bigbrand" href="{% url 'welcome' %}"><span class="glyphicon glyphicon-home"></span></a></li>
         </ul>
 
         <ul class="nav navbar-nav navbar-right">
-            <li> <a href="{% url 'boardgame_new' %}">Kataloguj grę</a> </li>
+          {% if user.is_authenticated %}
+            {% if perms.catalogue.add_boardgameitem %}
+              <li> <a href="{% url 'boardgame_new' %}">Kataloguj grę</a> </li>
+			  <li> <a href="{% url 'rentalClient_new' %}">Dodaj klienta</a> </li>
+            {% endif %}
+            <li> <a href="{% url 'logout' %}">Wyloguj {{user.username}}</a> </li>
+          {% else %}
+            <li> <a class="nav navbar-right" href="{% url 'login' %}"> <span class="glyphicon glyphicon-user"></span> </a> </li>
+          {% endif %}
         </ul>
       </div>
     </nav>

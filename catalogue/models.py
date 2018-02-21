@@ -1,5 +1,6 @@
 from django.db import models
 from django.core.urlresolvers import reverse
+from django.core.validators import RegexValidator
 
 # Create your models here.
 
@@ -31,6 +32,8 @@ class CodeLabelledItem (CatalogueItem):
     codeValue = models.CharField (
         max_length = 20,
         null = True,
+        unique = True,
+        verbose_name = "Etykieta kodu"
     )
 
 
@@ -45,7 +48,9 @@ class CodeLabelledItem (CatalogueItem):
 class BoardGameItem (CodeLabelledItem):
     # frontImage = models.ImageField
     # sideImages = models.ImageField
-    bggURL = models.URLField (max_length = 100)
+    bggURL = models.URLField (
+        max_length = 100,
+        blank = True)
     basegame = models.ForeignKey (
         'catalogue.BoardGameItem',
         related_name = 'extensions',
