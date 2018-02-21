@@ -66,12 +66,14 @@ class BoardGameItem (CodeLabelledItem):
 
 
 class Warehouse(models.Model):
-    name = models.CharField(max_length=30)
+    name = models.CharField(max_length=30, unique=True)
     desc = models.CharField(max_length=120)
 
 
 class Container(models.Model):
     warehouse = models.ForeignKey(Warehouse)
     board_game = models.ForeignKey(BoardGameItem)
-    available = models.IntegerField()
     total = models.IntegerField()
+
+    class Meta:
+        unique_together = ('warehouse', 'board_game')
