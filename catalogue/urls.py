@@ -11,4 +11,5 @@ urlpatterns = [
     url(r'^brdgm/(?P<pk>\d+)/edit/$', views.BoardGameUpdateView.as_view(), name='boardgame_edit'),
     # client links
     url(r'^rClient/new/$', views.RentalClientCreateView.as_view(), name='rentalClient_new'),
+    url(r'^rClient/new/return_home', views.return_home, name='return_home'),
 ]

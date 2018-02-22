@@ -4,7 +4,6 @@ from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMix
 from django.contrib.auth.decorators import login_required, permission_required
 from catalogue.models import (CatalogueItem, BoardGameItem, RentalClient)
 from catalogue.forms import (BoardGameForm, RentalClientForm)
->>>>>>> 358b7225e02167d86f48a403df106abcefd5241d
 from django.views.generic import (ListView,DetailView,CreateView, UpdateView)
 
 # Create your views here.
@@ -58,7 +57,27 @@ class BoardGameUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateVie
 
     form_class = BoardGameForm
     model = BoardGameItem
+    
+############################################
+# Client Views
+############################################
+class RentalClientListView(ListView):
+    model = RentalClient
 
+    def get_queryset(self):
+        return RentalClient.objects.all()
+        # .orderby('itemLabel')
+        
+class RentalClientDetailsView(DetailView):
+    model = RentalClient
+    
+class RentalClientCreateView(CreateView):
+    #authorization restriction section
+    # login_url = '/login/'
+    # redirect_field_name = todo define it
+
+    form_class = RentalClientForm
+    model = RentalClient
 
 ##########################################
 # BoardGameItem additional views
@@ -82,30 +101,7 @@ def boardgamelist_return(request):
             boardgame = form.save(commit=False)
             boardgame.save()
     return redirect('catalogue_entries')
-    
-############################################
-# Client Views
-############################################
-@login_required
-class RentalClientListView(ListView):
-    model = RentalClient
 
-    def get_queryset(self):
-        return RentalClient.objects.all()
-        # .orderby('itemLabel')
-        
-@login_required
-class RentalClientDetailsView(DetailView):
-    model = RentalClient
-    
-@login_required  
-class RentalClientCreateView(CreateView):
-    #authorization restriction section
-    # login_url = '/login/'
-    # redirect_field_name = todo define it
-
-    form_class = RentalClientForm
-    model = RentalClient
 
 @login_required
 @permission_required('catalogue.add_boardgameitem', raise_exception=True)

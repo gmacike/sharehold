@@ -70,7 +70,9 @@ class BoardGameItem (CodeLabelledItem):
             return self.codeValue [0]+" "+ self.codeValue[1:6]+" "+ self.codeValue[7:12]
             
 class RentalClient (models.Model):
-    identificationCode = models.IntegerField ( max_length = 10 )
+    identificationCode = models.IntegerField ( 
+        max_length = 10, 
+        unique = True )
     initials = models.CharField ( max_length = 10 )
 
     def getIdentificationCode (self):
@@ -84,3 +86,4 @@ class RentalClient (models.Model):
         
     def setInitials (self, initials):
         self.initials = initials
+    
