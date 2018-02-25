@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required, permission_required
 from catalogue.models import (CatalogueItem, BoardGameItem, BoardGameCommodity)
 from catalogue.forms import BoardGameItemForm, BoardGameCommodityForm
 from django.views.generic import (ListView,DetailView,CreateView, UpdateView)
+from django.conf import settings
 
 # Create your views here.
 class CatalogueItemListView(ListView):
@@ -11,8 +12,8 @@ class CatalogueItemListView(ListView):
     filter_criteria = ""
     context_object_name = 'catalogueitem_list'
     template_name = 'catalogue/catalogueitem_list.html'
-    paginate_by = 4
-    paginate_orphans = 2
+    paginate_by = settings.CATALOGUE_PAGINATION
+    paginate_orphans = settings.CATALOGUE_PAGINATION_ORPHANS
 
 
     def get_queryset(self):
@@ -113,3 +114,12 @@ class BoardGameCommodityCreateView(LoginRequiredMixin, PermissionRequiredMixin, 
             self.initial ['catalogueEntry'] = None
         form = self.form_class(initial=self.initial)
         return render(request, self.template_name, {'form': form})
+
+class BoardGameCommodityUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
+    #authorization restriction section
+    permission_required = 'catalogue.change_boardgamecommodity'
+    raise_exception=True
+    # login_url = 'accounts/login/'
+
+    form_class = BoardGameCommodityForm
+    model = BoardGameCommodity

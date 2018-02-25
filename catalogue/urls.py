@@ -11,5 +11,6 @@ urlpatterns = [
     url(r'^brdgm/(?P<pk>\d+)/edit/$', views.BoardGameItemUpdateView.as_view(), name='boardgame_edit'),
     url(r'^brdgmed/new/$', views.BoardGameCommodityCreateView.as_view(), name='boardgame_new_edition'),
     url(r'^brdgmed/new/(?P<bgpk>\d+)$', views.BoardGameCommodityCreateView.as_view(), name='boardgame_new_edition'),
+    url(r'^brdgmed/(?P<pk>\d+)/edit/$', views.BoardGameCommodityUpdateView.as_view(), name='boardgame_edition_edit'),
     url(r'^brdgmed/new/return_home', views.return_home, name='return_home'),
 ]

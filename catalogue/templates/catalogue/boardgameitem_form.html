@@ -31,8 +31,7 @@
       <label>Dostępne wydania</label>
       {% include "catalogue/boardgameeditions.html" %}
       <button type="submit" class="save btn btn-primary btn-warning">Aktualizuj</button>
-      {% if perms.catalogue.add_boardgamecommodity %}
-        {{boardgameitem.pk}}
+      {% if perms.catalogue.add_commodity %}
         <a href="{% url 'boardgame_new_edition' bgpk=boardgameitem.pk %}" class="btn btn-warning">Dodaj wydanie</a>
       {% endif %}
     {% else %}

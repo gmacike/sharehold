@@ -23,6 +23,9 @@
          {% if perms.catalogue.change_boardgameitem %}
             <a href="{% url 'boardgame_edit' pk=item.pk %}" class="btn btn-warning">Edytuj</a>
          {% endif %}
+         {% if perms.catalogue.add_commodity %}
+           <a href="{% url 'boardgame_new_edition' bgpk=item.pk %}" class="btn btn-warning">Dodaj wydanie</a>
+         {% endif %}
        </div>
     {% endfor %}
   </div>

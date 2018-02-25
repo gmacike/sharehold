@@ -6,14 +6,15 @@
   <h1>{{boardgameitem.getTitle}}</h1>
 
   {% if boardgameitem.baseGameItem %}
-    <h2>Dodatek do: {{boardgameitem.baseGameItem.getTitle}}</h2>
+    <h2>Dodatek do: <a href="{% url 'boardgame_detail' pk=boardgameitem.baseGameItem.pk %}"> {{boardgameitem.baseGameItem.getTitle}} </a></h2>
   {% endif %}
 
   {% if boardgameitem.extensions.count > 0 %}
     <h2>Dostępne rozszerzenia: </h2>
     <ul>
       {% for gameext in boardgameitem.extensions.all %}
-        <li>{{ gameext.getTitle }}</li>
+        <!-- <li>{{gameext.pk}} </li> -->
+        <li> <h3><a href="{% url 'boardgame_detail' pk=gameext.pk %}"> {{ gameext.getTitle }} </a></h3> </li>
       {% endfor %}
     </ul>
   {% endif %}

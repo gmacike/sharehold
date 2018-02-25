@@ -70,6 +70,7 @@ class CatalogueItem (models.Model):
 
     class Meta:
         abstract = True
+        ordering = ['itemLabel']
 
     def __str__ (self):
         return self.itemLabel

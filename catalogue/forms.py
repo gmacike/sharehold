@@ -47,4 +47,5 @@ class BoardGameCommodityForm(forms.ModelForm):
 
         widgets = {
             'codeValue': forms.TextInput(attrs={'class':'textinputclass',
-                'placeholder':'Wczytaj kod paskowy'})        }
+                'placeholder':'Wczytaj kod paskowy'}),
+        }
