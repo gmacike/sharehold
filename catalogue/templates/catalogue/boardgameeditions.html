@@ -1,0 +1,18 @@
+<div class="container">
+  <div class="row">
+    {% for commodity in boardgameitem.commodities.all %}
+      <div class="col-md-4 col-sm-6 boardgameedition thumbnail">
+        {% if commodity.boxFrontImage %}
+          <img class="img-fluid" src="{{commodity.boxFrontImage.url}}">
+        {% endif %}
+        {% if commodity.boxTopImage %}
+          {{commodity.boxTopImage.url}}
+        {% endif %}
+        {% if commodity.boxTopImage %}
+          {{commodity.boxTopImage.url}}
+        {% endif %}
+        <h2 class="barcodetextfont"> {{commodity.codeValue}} </h2>
+      </div>
+    {% endfor %}
+  </div>
+</div>
