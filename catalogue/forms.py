@@ -1,45 +1,51 @@
 from django import forms
-from catalogue.models import (BoardGameItem, RentalClient)
+from catalogue.models import BoardGameItem, BoardGameCommodity
 
-class BoardGameForm(forms.ModelForm):
+class BoardGameItemForm(forms.ModelForm):
 
     class Meta():
         model = BoardGameItem
-        fields = ('codeValue', 'itemLabel', 'bggURL')
+        # extensions =
+
+        fields = ('baseGameItem', 'itemLabel', 'bggURL')
 
         labels = {
             'itemLabel' : 'Tytuł',
-            'codeValue' : 'Kod paskowy',
             'bggURL' : 'BGG link',
+            'baseGameItem' : "Gra podstawowa"
         }
 
         widgets = {
             'itemLabel': forms.TextInput(attrs={'class':'textinputclass',
                 'placeholder':'Wprowadź tytuł'}),
-            'codeValue': forms.TextInput(attrs={'class':'textinputclass',
-                'placeholder':'Wczytaj kod paskowy'}),
             'bggURL': forms.URLInput(attrs={'class':'urlinputclass',
-                'placeholder':'Podaj adres strony gry w serwisie boardgamegeek.com'})
+                'placeholder':'Podaj adres strony gry w serwisie boardgamegeek.com'}),
+            'baseGameItem': forms.Select(attrs={'class': 'selectclass',
+                'empty_label' : "Dla dodatku wskaż podstawową grę"}),
         }
 
 
-class RentalClientForm(forms.ModelForm):
+class BoardGameCommodityForm(forms.ModelForm):
+
+    # def __init__ (self, *args, **kwargs):
+    #     super.__init__(*args, **kwargs)
 
     class Meta():
-        model = RentalClient
-        fields = ('identificationCode', 'initials')
+        model = BoardGameCommodity
+        # extensions =
+
+        fields = ('catalogueEntry', 'codeValue', 'boxFrontImage', 'boxTopImage', 'boxSideImage')
 
         labels = {
-            'identificationCode' : 'Oznaczenie Identyfikacyjne',
-            'initials' : 'Inicjały',
+            'catalogueEntry' : 'Tytuł katalogowy',
+            'codeValue' : 'Kod paskowy',
+            'boxFrontImage' : 'Przód',
+            'boxSideImage' : "Bok",
+            'boxTopImage' : "Wierzch"
         }
 
-        placeholders = {
-            'identificationCode' : 'Wprowadź oznaczenie identyfikacyjne',
-            'initials' : 'Wprowadź inicjały',
-        }
 
         widgets = {
-            'itemLabel': forms.TextInput(attrs={'class':'textinputclass'}),
-            'codeValue': forms.TextInput(attrs={'class':'textinputclass'})
+            'codeValue': forms.TextInput(attrs={'class':'textinputclass',
+                'placeholder':'Wczytaj kod paskowy'}),
         }

@@ -1,4 +1,6 @@
 *.pyc
+*.jpg
 .idea
 sharehold/db.sqlite3
+sharehold/media/img/*.*
 prod.py

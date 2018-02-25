@@ -1,0 +1,21 @@
+<div class="container">
+  <div class="row">
+    {% for commodity in boardgameitem.commodities.all %}
+      <div class="col-md-4 col-sm-6 boardgameedition thumbnail">
+        {% if commodity.boxTopImage %}
+          <img class="img-fluid" src="{{commodity.boxTopImage.url}}">
+        {% endif %}
+        {% if commodity.boxFrontImage %}
+          <img class="img-fluid" src="{{commodity.boxFrontImage.url}}">
+        {% endif %}
+        {% if commodity.boxSideImage %}
+          <img class="img-fluid" src="{{commodity.boxSideImage.url}}">
+        {% endif %}
+        <h2 class="barcodetextfont"> {{commodity.codeValue}} </h2>
+        {% if perms.catalogue.change_boardgamecommodity %}
+          <a href="{% url 'boardgame_edition_edit' pk=commodity.pk %}" class="btn btn-warning">Aktualizuj wydanie</a>
+        {% endif %}
+      </div>
+    {% endfor %}
+  </div>
+</div>
