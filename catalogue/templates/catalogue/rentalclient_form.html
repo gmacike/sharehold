@@ -1,0 +1,30 @@
+{% extends "catalogue/base.html" %}
+{% load widget_tweaks %}
+
+{% block content %}
+
+<div class="jumbotron">
+  <h1>Nowy klient</h1>
+
+  <form class="retalclient-form" method="post">
+    {% csrf_token %}
+
+	{% for hidden in form.hidden_fields %}
+      {{ hidden }}
+    {% endfor %}
+	
+	{% for field in form.visible_fields %}
+	      <div class="form-group">
+        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+        {{ field|add_class:'form-control' }}
+        {% for error in field.errors %}
+          <span class="help-block">{{ error }}</span>
+        {% endfor %}
+      </div>
+    {% endfor %}
+	<button type="submit" class="save btn btn-secondary btn-lg" formaction="return_home">Dodaj i zakończ wprowadzanie</button>
+    <a href="{% url 'return_home' %}" class="btn btn-default">Anuluj</a>
+  </form>
+</div>
+
+{% endblock %}

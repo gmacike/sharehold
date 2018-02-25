@@ -37,6 +37,7 @@
           {% if user.is_authenticated %}
             {% if perms.catalogue.add_boardgameitem %}
               <li> <a href="{% url 'boardgame_new' %}">Kataloguj grę</a> </li>
+			  <li> <a href="{% url 'rentalClient_new' %}">Dodaj klienta</a> </li>
             {% endif %}
             {% if perms.catalogue.add_boardgamecommodity %}
               <li> <a href="{% url 'boardgame_new_edition' %}">Kataloguj wydanie</a> </li>

@@ -1,4 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
+# from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.contrib.auth.decorators import login_required, permission_required
 from catalogue.models import (CatalogueItem, BoardGameItem, BoardGameCommodity)
@@ -59,7 +60,27 @@ class BoardGameItemUpdateView(LoginRequiredMixin, PermissionRequiredMixin, Updat
 
     form_class = BoardGameItemForm
     model = BoardGameItem
+    
+############################################
+# Client Views
+############################################
+class RentalClientListView(ListView):
+    model = RentalClient
 
+    def get_queryset(self):
+        return RentalClient.objects.all()
+        # .orderby('itemLabel')
+        
+class RentalClientDetailsView(DetailView):
+    model = RentalClient
+    
+class RentalClientCreateView(CreateView):
+    #authorization restriction section
+    # login_url = '/login/'
+    # redirect_field_name = todo define it
+
+    form_class = RentalClientForm
+    model = RentalClient
 
 ##########################################
 # BoardGameItem additional views
@@ -83,6 +104,7 @@ def boardgamelist_return(request):
             boardgame = form.save(commit=False)
             boardgame.save()
     return redirect('catalogue_entries')
+
 
 @login_required
 @permission_required('catalogue.add_boardgameitem', raise_exception=True)
