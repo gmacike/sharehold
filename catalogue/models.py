@@ -1,21 +1,15 @@
+# from django.conf import settings
 from django.db import models
 from django.core.urlresolvers import reverse
 from django.core.validators import RegexValidator
 
 # Create your models here.
 
-#abstract class for univeral handling catalogued items
-class CatalogueItem (models.Model):
-    itemLabel = models.CharField (max_length = 50)
+#abstract class for commodities to be catalogued
+class Commodity (models.Model):
+    catalogueEntry = models.ForeignKey ('CatalogueItem',
+        on_delete=models.CASCADE, related_name='commodities', null=True, blank=False)
 
-    class Meta:
-        abstract = True
-
-    def __str__ (self):
-        return self.itemLabel
-
-#abstract class for handling items with barcode, QRcode etc - any sort of outside identifier
-class CodeLabelledItem (CatalogueItem):
     BARCODE = 'BAR'
     QRCODE = 'QR'
     CODE_TYPES = (
@@ -36,24 +30,62 @@ class CodeLabelledItem (CatalogueItem):
         verbose_name = "Etykieta kodu"
     )
 
-
     class Meta:
         abstract = True
 
     def codeValueToStr (self):
-        if self.codeType == CodeLabelledItem.BARCODE:
+        if self.codeType == Commodity.BARCODE:
             return self.codeValue
 
 
-class BoardGameItem (CodeLabelledItem):
-    # frontImage = models.ImageField
-    # sideImages = models.ImageField
+class BoardGameCommodity (Commodity):
+    catalogueEntry = models.ForeignKey ('BoardGameItem',
+        on_delete=models.CASCADE, related_name='commodities', null=True, blank=False)
+
+
+    boxFrontImage = models.ImageField (upload_to="bg/img/", null = True, blank=True)
+    boxTopImage = models.ImageField (upload_to="bg/img/", null = True, blank=True)
+    boxSideImage = models.ImageField (upload_to="bg/img/", null = True, blank=True)
+
+    class Meta:
+        verbose_name = "Wydanie gry planszowej"
+
+    # def __init__(self, entry):
+    #     super().__init__()
+    #     self.catalogueEntry = entry
+
+    def __str__(self):
+        return self.catalogueEntry.__str__()+": "+self.codeValueToStr()
+
+    def get_absolute_url(self):
+        return reverse("catalogue_entries")
+
+    # def getBoxImageURL(self, boxImage):
+    #     return boxImage
+
+
+#abstract class for univeral handling catalogued items
+class CatalogueItem (models.Model):
+    itemLabel = models.CharField (max_length = 50)
+
+    class Meta:
+        abstract = True
+
+    def __str__ (self):
+        return self.itemLabel
+
+    def getCommodities (self):
+        return None
+
+
+class BoardGameItem (CatalogueItem):
     bggURL = models.URLField (
         max_length = 100,
         blank = True)
-    basegame = models.ForeignKey (
+    baseGameItem = models.ForeignKey (
         'catalogue.BoardGameItem',
         related_name = 'extensions',
+        related_query_name="basegame",
         null = True)
 
     def getTitle (self):
@@ -65,6 +97,5 @@ class BoardGameItem (CodeLabelledItem):
     def get_absolute_url(self):
         return reverse("catalogue_entries")
 
-    def codeValueToStr (self):
-        if self.codeType == CodeLabelledItem.BARCODE:
-            return self.codeValue [0]+" "+ self.codeValue[1:6]+" "+ self.codeValue[7:12]
+    def getCommodities (self):
+        return self.commodities
