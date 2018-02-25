@@ -18,10 +18,13 @@
     {% for item in catalogueitem_list %}
        <div class="col-lg-3 col-md-4 col-sm-6 catalogentry">
          <h2> <a href="{% url 'boardgame_detail' pk=item.pk %}"> {{item.getTitle}} </a> </h2>
-         <h2 class="barcodefont">{{item.codeValue}}</h2>
-         <h2 class="barcodevalue">{{item.codeValueToStr}}</h2>
+         <!-- <h2 class="barcodefont">{{item.codeValue}}</h2> -->
+         <!-- <h2 class="barcodevalue">{{item.codeValueToStr}}</h2> -->
          {% if perms.catalogue.change_boardgameitem %}
             <a href="{% url 'boardgame_edit' pk=item.pk %}" class="btn btn-warning">Edytuj</a>
+         {% endif %}
+         {% if perms.catalogue.add_commodity %}
+           <a href="{% url 'boardgame_new_edition' bgpk=item.pk %}" class="btn btn-warning">Dodaj wydanie</a>
          {% endif %}
        </div>
     {% endfor %}
