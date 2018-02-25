@@ -2,8 +2,8 @@ from django.shortcuts import render, get_object_or_404, redirect
 # from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.contrib.auth.decorators import login_required, permission_required
-from catalogue.models import (CatalogueItem, BoardGameItem, RentalClient)
-from catalogue.forms import (BoardGameForm, RentalClientForm)
+from catalogue.models import (CatalogueItem, BoardGameItem)
+from catalogue.forms import BoardGameForm
 from django.views.generic import (ListView,DetailView,CreateView, UpdateView)
 
 # Create your views here.
@@ -58,27 +58,6 @@ class BoardGameUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateVie
     form_class = BoardGameForm
     model = BoardGameItem
     
-############################################
-# Client Views
-############################################
-class RentalClientListView(ListView):
-    model = RentalClient
-
-    def get_queryset(self):
-        return RentalClient.objects.all()
-        # .orderby('itemLabel')
-        
-class RentalClientDetailsView(DetailView):
-    model = RentalClient
-    
-class RentalClientCreateView(CreateView):
-    #authorization restriction section
-    # login_url = '/login/'
-    # redirect_field_name = todo define it
-
-    form_class = RentalClientForm
-    model = RentalClient
-
 ##########################################
 # BoardGameItem additional views
 ##########################################

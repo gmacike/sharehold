@@ -34,8 +34,8 @@
 
         <ul class="nav navbar-nav navbar-right">
           {% if user.is_authenticated %}
-            {% if perms.catalogue.add_boardgameitem %}
-              <li> <a href="{% url 'boardgame_new' %}">Kataloguj grę</a> </li>
+            {% if perms.circulation.add_client %}
+			  <li> <a href="{% url 'rentalClient_new' %}">Dodaj klienta</a> </li>
             {% endif %}
             <li> <a href="{% url 'logout' %}">Wyloguj {{user.username}}</a> </li>
           {% else %}

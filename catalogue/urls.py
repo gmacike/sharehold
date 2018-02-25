@@ -9,7 +9,4 @@ urlpatterns = [
     url(r'^brdgm/new/boardgamelist_return', views.boardgamelist_return, name='boardgamelist_return'),
     url(r'^brdgm/new/return_home', views.return_home, name='return_home'),
     url(r'^brdgm/(?P<pk>\d+)/edit/$', views.BoardGameUpdateView.as_view(), name='boardgame_edit'),
-    # client links
-    url(r'^rClient/new/$', views.RentalClientCreateView.as_view(), name='rentalClient_new'),
-    url(r'^rClient/new/return_home', views.return_home, name='return_home'),
 ]

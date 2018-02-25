@@ -24,4 +24,5 @@ urlpatterns = [
     url(r'accounts/logout/$',views.logout,name='logout',kwargs={'next_page':'/'}),
     url(r'^admin/', admin.site.urls),
     url(r'',include('catalogue.urls')),
+    url(r'',include('circulation.urls')),
 ]

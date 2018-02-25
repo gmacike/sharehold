@@ -69,21 +69,3 @@ class BoardGameItem (CodeLabelledItem):
         if self.codeType == CodeLabelledItem.BARCODE:
             return self.codeValue [0]+" "+ self.codeValue[1:6]+" "+ self.codeValue[7:12]
             
-class RentalClient (models.Model):
-    identificationCode = models.IntegerField ( 
-        max_length = 10, 
-        unique = True )
-    initials = models.CharField ( max_length = 10 )
-
-    def getIdentificationCode (self):
-        return self.identificationCode
-        
-    def setIdentificationCode (self, identificationCode):
-        self.identificationCode = identificationCode
-        
-    def getInitials (self):
-        return self.initials
-        
-    def setInitials (self, initials):
-        self.initials = initials
-    
