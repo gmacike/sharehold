@@ -21,7 +21,7 @@
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css?family=Montserrat|Russo+One" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Libre+Barcode+39" rel="stylesheet">
-
+    <link href="https://fonts.googleapis.com/css?family=Libre+Barcode+39+Text" rel="stylesheet">
   </head>
   <body class="loader">
 
@@ -30,12 +30,16 @@
       <div class="container">
         <ul class="nav navbar-nav">
           <li><a class="navbar-brand bigbrand" href="{% url 'welcome' %}"><span class="glyphicon glyphicon-home"></span></a></li>
+          <li><a class="navbar-brand bigbrand" href="{% url 'catalogue_entries' %}"><span class="glyphicon glyphicon-bookmark"></span></a></li>
         </ul>
 
         <ul class="nav navbar-nav navbar-right">
           {% if user.is_authenticated %}
             {% if perms.catalogue.add_boardgameitem %}
               <li> <a href="{% url 'boardgame_new' %}">Kataloguj grę</a> </li>
+            {% endif %}
+            {% if perms.catalogue.add_boardgamecommodity %}
+              <li> <a href="{% url 'boardgame_new_edition' %}">Kataloguj wydanie</a> </li>
             {% endif %}
             <li> <a href="{% url 'logout' %}">Wyloguj {{user.username}}</a> </li>
           {% else %}
