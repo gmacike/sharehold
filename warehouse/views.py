@@ -1,7 +1,7 @@
 from django.views.generic import ListView, DetailView, CreateView
 
-from warehouse.forms import WarehouseForm, ContainerForm
-from warehouse.models import Warehouse, Container
+from warehouse.forms import WarehouseForm, BoardGameContainerForm
+from warehouse.models import Warehouse, BoardGameContainer
 
 
 class WarehouseListView(ListView):
@@ -20,8 +20,8 @@ class WarehouseCreateView(CreateView):
     form_class = WarehouseForm
 
 
-class ContainerCreateView(CreateView):
-    model = Container
-    form_class = ContainerForm
+class BoardGameContainerCreateView(CreateView):
+    model = BoardGameContainer
+    form_class = BoardGameContainerForm
 
 # Create your views here.

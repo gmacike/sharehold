@@ -1,10 +1,10 @@
 from django import forms
 
-from warehouse.models import Warehouse, Container
+from warehouse.models import Warehouse, BoardGameContainer
 
 
 class WarehouseForm(forms.ModelForm):
-    class Meta():
+    class Meta:
         model = Warehouse
         fields = ('name', 'desc')
         labels = {'name': 'nazwa', 'desc': 'opis'}
@@ -13,7 +13,7 @@ class WarehouseForm(forms.ModelForm):
                    'desc': forms.Textarea()}
 
 
-class ContainerForm(forms.ModelForm):
+class BoardGameContainerForm(forms.ModelForm):
     class Meta:
-        model = Container
-        fields = ('warehouse', 'board_game', 'total')
+        model = BoardGameContainer
+        fields = ('warehouse', 'commodity', 'total')

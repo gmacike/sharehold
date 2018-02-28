@@ -10,7 +10,6 @@
         <thead><td>tytuł</td><td>dostępna ilość</td></thead>
     {% for container in warehouse.container_set.all %}
         <tr>
-            <td><a href="{% url 'boardgame_detail' pk=container.board_game.pk %}">{{ container.board_game.getTitle }}</a></td>
             <td>{{ container.total }}</td>
         </tr>
     {% endfor %}
