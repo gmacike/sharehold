@@ -4,13 +4,13 @@
 {% block content %}
 
 <div class="jumbotron">
-  {% if boardgameitem.pk != null %}
-    <h1>Gra planszowa aktualizacja</h1>
+  {% if boardgamecommodity.pk != null %}
+    <h1>Aktualizacja wydania gry planszowej</h1>
   {% else %}
-    <h1>Nowa gra planszowa</h1>
+    <h1>Dodanie wydania gry planszowej</h1>
   {% endif %}
 
-  <form class="boardgame-form" method="post">
+  <form class="boardgamecommodity-form" enctype="multipart/form-data" method="post">
     {% csrf_token %}
 
     {% for hidden in form.hidden_fields %}
@@ -27,17 +27,14 @@
       </div>
     {% endfor %}
 
-    {% if boardgameitem.pk != null %}
-      <label>Dostępne wydania</label>
-      {% include "catalogue/boardgameeditions.html" %}
+    {% if boardgamecommodity.pk != null %}
       <button type="submit" class="save btn btn-primary btn-warning">Aktualizuj</button>
-      {% if perms.catalogue.add_commodity %}
-        <a href="{% url 'boardgame_new_edition' bgpk=boardgameitem.pk %}" class="btn btn-warning">Dodaj wydanie</a>
-      {% endif %}
     {% else %}
-      <button type="submit" class="save btn btn-primary btn-lg" formaction="repeat_add_boardgame">Dodaj i wprowadź następną</button>
+      <button type="submit" class="save btn btn-primary btn-lg" >Dodaj</button>
+      <!-- formaction="return_home" -->
+      <!-- <button type="submit" class="save btn btn-primary btn-lg" formaction="repeat_add_boardgame">Dodaj i wprowadź następną</button>
       <button type="submit" class="save btn btn-secondary btn-lg" formaction="boardgamelist_return">Dodaj i wróć do katalogu</button>
-      <button type="submit" class="save btn btn-secondary btn-lg" formaction="return_home">Dodaj i zakończ wprowadzanie</button>
+      <button type="submit" class="save btn btn-secondary btn-lg" formaction="return_home">Dodaj i zakończ wprowadzanie</button> -->
     {% endif %}
     <a href="{% url 'catalogue_entries' %}" class="btn btn-default">Anuluj</a>
   </form>

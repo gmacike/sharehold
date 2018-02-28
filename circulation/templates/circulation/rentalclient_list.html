@@ -1,30 +1,26 @@
-{% extends "catalogue/base.html" %}
+{% extends "circulation/base.html" %}
 
 {% block content %}
 
 <div class="jumbotron">
 
-  <h1>Gry planszowe w naszej kolekcji</h1>
+  <h1>Zarejestrowani klienci</h1>
 
-  <form class="catalogue_search_form" action="{% url 'catalogue_entries' %}" method="GET">
+  <form class="circulation_search_form" action="{% url 'circulation_entries' %}" method="GET">
     <label for="filter_criteria">Ograniczenie listy</label>
     <input type="text" class="form-control" id="filter_criteria" name="filter"
       placeholder="Podaj kryteria wyszukiwania" value={{ request.GET.filter }}>
-    <button type="submit" class="save btn btn-primary btn-lg" name="search" value="barcode">Szukaj kodu paskowego</button>
-    <button type="submit" class="save btn btn-secondary btn-md" name="search" value="title">Szukaj tytułu</button>
+    <button type="submit" class="save btn btn-primary btn-lg" name="search" value="identificationCode">Szukaj kodu identyfikacyjnego</button>
+    <button type="submit" class="save btn btn-secondary btn-md" name="search" value="initials">Szukaj inicjału</button>
   </form>
 
   <div class="row">
-    {% for item in catalogueitem_list %}
+    {% for item in rentalclient_list %}
        <div class="col-lg-3 col-md-4 col-sm-6 catalogentry">
-         <h2> <a href="{% url 'boardgame_detail' pk=item.pk %}"> {{item.getTitle}} </a> </h2>
-         <!-- <h2 class="barcodefont">{{item.codeValue}}</h2> -->
-         <!-- <h2 class="barcodevalue">{{item.codeValueToStr}}</h2> -->
-         {% if perms.catalogue.change_boardgameitem %}
-            <a href="{% url 'boardgame_edit' pk=item.pk %}" class="btn btn-warning">Edytuj</a>
-         {% endif %}
-         {% if perms.catalogue.add_commodity %}
-           <a href="{% url 'boardgame_new_edition' bgpk=item.pk %}" class="btn btn-warning">Dodaj wydanie</a>
+         <h2> {{item.getIdentificationCode}} </h2>
+         <h2> {{item.getInitials}}</h2>
+         {% if perms.circulation.change_client %}
+            <a href="{% url 'rentalclient_edit' pk=item.pk %}" class="btn btn-warning">Edytuj</a>
          {% endif %}
        </div>
     {% endfor %}

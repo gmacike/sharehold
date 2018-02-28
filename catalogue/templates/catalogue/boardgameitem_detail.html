@@ -4,12 +4,37 @@
 
 <div class="jumbotron">
   <h1>{{boardgameitem.getTitle}}</h1>
-  <h2 class="barcodefont">{{boardgameitem.codeValue}}</h2>
-  <h2 class="barcodevalue">{{boardgameitem.codeValueToStr}}</h2>
-  {% if boardgameitem.bggURL %}
-    <h2> <a href={{boardgameitem.bggURL}}> {{boardgameitem.getTitle}} bgg page </a> </h2>
+
+  {% if boardgameitem.baseGameItem %}
+    <h2>Dodatek do: <a href="{% url 'boardgame_detail' pk=boardgameitem.baseGameItem.pk %}"> {{boardgameitem.baseGameItem.getTitle}} </a></h2>
   {% endif %}
+
+  {% if boardgameitem.extensions.count > 0 %}
+    <h2>Dostępne rozszerzenia: </h2>
+    <ul>
+      {% for gameext in boardgameitem.extensions.all %}
+        <!-- <li>{{gameext.pk}} </li> -->
+        <li> <h3><a href="{% url 'boardgame_detail' pk=gameext.pk %}"> {{ gameext.getTitle }} </a></h3> </li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+
+  {% if boardgameitem.bggURL %}
+    <h2> <a href={{boardgameitem.bggURL}}> {{boardgameitem.getTitle}} na boardgamegeek.com </a> </h2>
+  {% endif %}
+
+  {% if boardgameitem.commodities.count > 0 %}
+    <h2>Dostępne wydania: </h2>
+    {% include "catalogue/boardgameeditions.html" %}
+  {% endif %}
+
   <a href="{% url 'catalogue_entries' %}" class="btn btn-default">Powrót</a>
+
+
 </div>
+
+<!-- <h2 class="barcodefont">{{boardgameitem.codeValue}}</h2> -->
+<!-- <h2 class="barcodevalue">{{boardgameitem.codeValueToStr}}</h2> -->
+
 
 {% endblock %}
