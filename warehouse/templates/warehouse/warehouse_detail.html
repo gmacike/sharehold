@@ -1,0 +1,20 @@
+{% extends "catalogue/base.html" %}
+
+{% block content %}
+
+<div class="jumbotron">
+  <h1>{{warehouse.name}}</h1>
+    <span>{{warehouse.desc}}</span>
+    <h2>Gry w magazynie</h2>
+    <table>
+        <thead><td>tytuł</td><td>dostępna ilość</td></thead>
+    {% for container in warehouse.container_set.all %}
+        <tr>
+            <td>{{ container.total }}</td>
+        </tr>
+    {% endfor %}
+    </table>
+    <a href="{% url 'container_create' %}">dodaj grę</a>
+</div>
+
+{% endblock %}
