@@ -19,7 +19,7 @@
        <div class="col-lg-3 col-md-4 col-sm-6 catalogentry">
          <h2> {{item.getIdentificationCode}} </h2>
          <h2> {{item.getInitials}}</h2>
-         {% if perms.circulation.change_client %}
+         {% if perms.circulation.change_rentalclient %}
             <a href="{% url 'rentalclient_edit' pk=item.pk %}" class="btn btn-warning">Edytuj</a>
          {% endif %}
        </div>

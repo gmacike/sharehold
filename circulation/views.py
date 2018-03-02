@@ -20,25 +20,25 @@ class RentalClientListView(ListView):
                     return RentalClient.objects.filter(identificationCode__startswith=self.filter_criteria).order_by("identificationCode")
                 elif search_type == "initials":
                     return RentalClient.objects.filter(initials__icontains=self.filter_criteria).order_by("initials")
-        return RentalClient.objects.all().order_by("identificationCode")
+        return RentalClient.objects.none()
         
 class RentalClientDetailsView(DetailView):
     model = RentalClient
      
 class RentalClientCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
-    permission_required = 'circulation.add_rentalclient'
+    permission_required = 'circulation.RentalClient.add_rentalclient'
     form_class = RentalClientForm
     model = RentalClient
 	
 class BoardGameUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
-    permission_required = 'circulation.change_rentalclient'
+    permission_required = 'circulation.RentalClient.change_rentalclient'
     raise_exception=True
 
     form_class = RentalClientForm
     model = RentalClient
 	
 @login_required
-@permission_required('circulation.add_rentalclient', raise_exception=True)
+@permission_required('circulation.RentalClient.add_rentalclient', raise_exception=True)
 def return_home (request):
     if request.method == 'POST':
         form = RentalClientForm(request.POST)

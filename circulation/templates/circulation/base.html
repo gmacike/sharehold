@@ -34,7 +34,7 @@
 
         <ul class="nav navbar-nav navbar-right">
           {% if user.is_authenticated %}
-            {% if perms.circulation.add_client %}
+            {% if perms.circulation.add_rentalclient %}
 			  <li> <a href="{% url 'rentalClient_new' %}">Dodaj klienta</a> </li>
             {% endif %}
             <li> <a href="{% url 'logout' %}">Wyloguj {{user.username}}</a> </li>
