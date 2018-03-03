@@ -15,4 +15,13 @@ class RentalClient (models.Model):
         
     def setInitials (self, initials):
         self.initials = initials
+        
+
+class ClientID (models.Model):
+    rentalClient = models.ForeignKey ('RentalClient',
+        on_delete = models.CASCADE, related_name = 'client', null = True, blank = False)
+    ID = models.IntegerField ( primary_key = True, unique = True )
+    active = models.BooleanField (default = True)
+    
+    
     
