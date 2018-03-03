@@ -87,7 +87,8 @@ class BoardGameItem (CatalogueItem):
         'catalogue.BoardGameItem',
         related_name = 'extensions',
         related_query_name="basegame",
-        null = True)
+        null = True,
+        blank = True)
 
     def getTitle (self):
         return self.itemLabel
