@@ -1,3 +1,4 @@
+from django.urls import reverse
 from django.views.generic import ListView, DetailView, CreateView
 
 from warehouse.forms import WarehouseForm, BoardGameContainerForm
@@ -23,5 +24,9 @@ class WarehouseCreateView(CreateView):
 class BoardGameContainerCreateView(CreateView):
     model = BoardGameContainer
     form_class = BoardGameContainerForm
+
+    def get_success_url(self):
+        pk = self.kwargs['pk']
+        return reverse('warehouse_detail', kwargs={'pk': pk})
 
 # Create your views here.

@@ -15,7 +15,7 @@
         </tr>
     {% endfor %}
     </table>
-    <a href="{% url 'container_create' %}">dodaj grę</a>
+    <a href="{% url 'container_create' pk=warehouse.pk %}">dodaj grę</a>
 </div>
 
 {% endblock %}
