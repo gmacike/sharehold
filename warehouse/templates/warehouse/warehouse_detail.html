@@ -8,13 +8,14 @@
     <h2>Gry w magazynie</h2>
     <table>
         <thead><td>tytuł</td><td>dostępna ilość</td></thead>
-    {% for container in warehouse.container_set.all %}
+    {% for container in warehouse.boardgamecontainer_set.all %}
         <tr>
-            <td>{{ container.total }}</td>
+            <td>{{ container.commodity }}</td>
+            <td>{{ container.available }}</td>
         </tr>
     {% endfor %}
     </table>
-    <a href="{% url 'container_create' %}">dodaj grę</a>
+    <a href="{% url 'container_create' pk=warehouse.pk %}">dodaj grę</a>
 </div>
 
 {% endblock %}

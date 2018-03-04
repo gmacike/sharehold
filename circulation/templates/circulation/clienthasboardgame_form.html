@@ -1,0 +1,16 @@
+{% extends "catalogue/base.html" %}
+
+{% block content %}
+
+<div class="jumbotron">
+    <h1>Wypożycz grę</h1>
+
+    <form class="boardgame-form" method="post">
+        {% csrf_token %}
+        {{form.as_p}}
+
+        <button type="submit" class="save btn btn-primary">Dodaj</button>
+    </form>
+</div>
+
+{% endblock %}
