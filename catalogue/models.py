@@ -42,6 +42,13 @@ class BoardGameCommodity (Commodity):
     catalogueEntry = models.ForeignKey ('BoardGameItem',
         on_delete=models.CASCADE, related_name='commodities', null=True, blank=False)
 
+    description = models.TextField (
+        verbose_name = 'Informacje o wydaniu',
+        max_length = 300,
+        blank = True,
+        null = True,
+    )
+
 
     boxFrontImage = models.ImageField (upload_to="bg/img/", null = True, blank=True)
     boxTopImage = models.ImageField (upload_to="bg/img/", null = True, blank=True)
@@ -87,7 +94,8 @@ class BoardGameItem (CatalogueItem):
         'catalogue.BoardGameItem',
         related_name = 'extensions',
         related_query_name="basegame",
-        null = True)
+        null = True,
+        blank = True)
 
     def getTitle (self):
         return self.itemLabel
