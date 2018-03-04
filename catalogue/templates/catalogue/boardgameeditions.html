@@ -4,6 +4,8 @@
       <div class="col-md-4 col-sm-6 boardgameedition">
         {% if commodity.description %}
           <p class='text-left'>{{ commodity.description }}</p>
+        {% else %}
+          <p class='text-left'>Brak dodatkowych informacji o&nbsp;wydaniu</p>
         {% endif %}
         {% if commodity.boxTopImage %}
           <img class="img-responsive img-thumbnail" src="{{commodity.boxTopImage.url}}">
