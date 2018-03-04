@@ -27,7 +27,7 @@
 }
 
 .catalogentry{
-  margin-left: 3px;
+
 }
 
 td {
@@ -37,4 +37,9 @@ td {
 
 .boardgameedition{
   align-items: center;
+}
+
+.pagination{
+  margin-left: auto;
+  margin-right: auto;
 }
