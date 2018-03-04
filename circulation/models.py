@@ -1,18 +1,25 @@
 from django.db import models
 
-class RentalClient (models.Model):
-    identificationCode = models.IntegerField ( unique = True )
-    initials = models.CharField ( max_length = 10 )
+from warehouse.models import BoardGameContainer
 
-    def getIdentificationCode (self):
+
+class RentalClient(models.Model):
+    identificationCode = models.IntegerField(unique=True)
+    initials = models.CharField(max_length=10)
+
+    def getIdentificationCode(self):
         return self.identificationCode
-        
-    def setIdentificationCode (self, identificationCode):
+
+    def setIdentificationCode(self, identificationCode):
         self.identificationCode = identificationCode
-        
-    def getInitials (self):
+
+    def getInitials(self):
         return self.initials
-        
-    def setInitials (self, initials):
+
+    def setInitials(self, initials):
         self.initials = initials
-    
+
+
+class ClientHasBoardGame(models.Model):
+    client = models.ForeignKey(RentalClient)
+    container = models.ForeignKey(BoardGameContainer)

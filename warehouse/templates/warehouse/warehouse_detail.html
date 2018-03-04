@@ -11,7 +11,7 @@
     {% for container in warehouse.boardgamecontainer_set.all %}
         <tr>
             <td>{{ container.commodity }}</td>
-            <td>{{ container.total }}</td>
+            <td>{{ container.available }}</td>
         </tr>
     {% endfor %}
     </table>

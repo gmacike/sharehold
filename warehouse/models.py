@@ -16,5 +16,9 @@ class BoardGameContainer(models.Model):
     commodity = models.ForeignKey(BoardGameCommodity)
     total = models.IntegerField()
 
+    @property
+    def available(self):
+        return self.total - self.clienthasboardgame_set.count()
+
     class Meta:
         unique_together = ('warehouse', 'commodity')

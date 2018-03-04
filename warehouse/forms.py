@@ -9,7 +9,7 @@ class WarehouseForm(forms.ModelForm):
         fields = ('name', 'desc')
         labels = {'name': 'nazwa', 'desc': 'opis'}
         placeholders = {'name': 'dodaj nazwę', 'desc': ''}
-        widgets = {'name': forms.TextInput(attrs={'class': 'textinputclass'}),
+        widgets = {'name': forms.TextInput({'class': 'textinputclass'}),
                    'desc': forms.Textarea()}
 
 

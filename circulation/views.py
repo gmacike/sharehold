@@ -1,9 +1,10 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.contrib.auth.decorators import login_required, permission_required
-from circulation.models import (RentalClient)
-from circulation.forms import (RentalClientForm)
-from django.views.generic import (ListView,DetailView,CreateView, UpdateView)
+from circulation.models import (RentalClient, ClientHasBoardGame)
+from circulation.forms import (RentalClientForm, ClientHasBoardGameForm)
+from django.views.generic import (ListView, DetailView, CreateView, UpdateView)
+
 
 ############################################
 # Client Views
@@ -17,32 +18,46 @@ class RentalClientListView(ListView):
             if self.filter_criteria:
                 search_type = self.request.GET.get("search")
                 if search_type == "identificationCode":
-                    return RentalClient.objects.filter(identificationCode__startswith=self.filter_criteria).order_by("identificationCode")
+                    return RentalClient.objects.filter(identificationCode__startswith=self.filter_criteria).order_by(
+                        "identificationCode")
                 elif search_type == "initials":
                     return RentalClient.objects.filter(initials__icontains=self.filter_criteria).order_by("initials")
         return RentalClient.objects.all().order_by("identificationCode")
-        
+
+
 class RentalClientDetailsView(DetailView):
     model = RentalClient
-     
+
+
 class RentalClientCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     permission_required = 'circulation.add_rentalclient'
     form_class = RentalClientForm
     model = RentalClient
-	
-class BoardGameUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
+
+
+class ClientUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     permission_required = 'circulation.change_rentalclient'
-    raise_exception=True
+    raise_exception = True
 
     form_class = RentalClientForm
     model = RentalClient
-	
+
+
 @login_required
 @permission_required('circulation.add_rentalclient', raise_exception=True)
-def return_home (request):
+def return_home(request):
     if request.method == 'POST':
         form = RentalClientForm(request.POST)
         if form.is_valid():
             boardgame = form.save(commit=False)
             boardgame.save()
     return redirect('welcome')
+
+
+class ClientHasBoardGameList(ListView):
+    model = ClientHasBoardGame
+
+
+class ClientHasBoardGameCreateView(CreateView):
+    model = ClientHasBoardGame
+    form_class = ClientHasBoardGameForm

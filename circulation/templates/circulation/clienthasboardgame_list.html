@@ -1,0 +1,12 @@
+{% extends "catalogue/base.html" %}
+{% block content %}
+<div class="jumbotron">
+    <h1>Wypożyczalnia</h1>
+</div>
+{% for clienthasboardgame in clienthasboardgame_list %}
+<div class="row col-lg-3 col-md-4 col-sm-6 catalogentry">
+    <h2>{{ clienthasboardgame.client}}</h2>
+    <h2>{{ clienthasboardgame.container }}</h2>
+</div>
+{% endfor %}
+{% endblock %}
