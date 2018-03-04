@@ -10,18 +10,6 @@ class RentalClient(models.Model):
     def __str__(self):
         return '{} {}'.format(self.initials, self.identificationCode)
 
-    def getIdentificationCode(self):
-        return self.identificationCode
-
-    def setIdentificationCode(self, identificationCode):
-        self.identificationCode = identificationCode
-
-    def getInitials(self):
-        return self.initials
-
-    def setInitials(self, initials):
-        self.initials = initials
-
 
 class ClientID(models.Model):
     rentalClient = models.ForeignKey('RentalClient',
