@@ -9,6 +9,7 @@ class RentalClient(models.Model):
 
     def __str__(self):
         return '{} {}'.format(self.initials, self.identificationCode)
+
     def getIdentificationCode(self):
         return self.identificationCode
 
