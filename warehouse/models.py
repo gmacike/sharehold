@@ -7,6 +7,9 @@ class Warehouse(models.Model):
     name = models.CharField(max_length=30, unique=True)
     desc = models.CharField(max_length=120)
 
+    def __str__(self):
+        return self.name
+
 
 class BoardGameContainer(models.Model):
     warehouse = models.ForeignKey(Warehouse)

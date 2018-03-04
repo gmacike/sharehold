@@ -8,8 +8,9 @@
     <h2>Gry w magazynie</h2>
     <table>
         <thead><td>tytuł</td><td>dostępna ilość</td></thead>
-    {% for container in warehouse.container_set.all %}
+    {% for container in warehouse.boardgamecontainer_set.all %}
         <tr>
+            <td>{{ container.commodity }}</td>
             <td>{{ container.total }}</td>
         </tr>
     {% endfor %}
