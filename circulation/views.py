@@ -5,24 +5,26 @@ from django.contrib.auth.decorators import login_required, permission_required
 from circulation.models import (RentalClient)
 from circulation.forms import (RentalClientForm)
 from django.views.generic import (ListView,DetailView,CreateView, UpdateView)
+from django.conf import settings
 
 ############################################
 # Client Views
 ############################################
 class RentalClientListView(ListView):
     model = RentalClient
+    paginate_by = settings.CLIENTS_PAGINATION
+    paginate_orphans = settings.CLIENTS_PAGINATION_ORPHANS
 
     def get_queryset(self):
         if self.request.method == 'GET':
             self.filter_criteria = self.request.GET.get("filter")
-            if self.filter_criteria:
+            if self.filter_criteria and len(self.filter_criteria)>=2:
                 search_type = self.request.GET.get("search")
                 if search_type == "identificationCode":
                     return RentalClient.objects.filter(identificationCode__startswith=self.filter_criteria).order_by("identificationCode")
                 elif search_type == "initials":
                     return RentalClient.objects.filter(initials__icontains=self.filter_criteria).order_by("initials")
                     
-                return RentalClient.objects.all()
         return RentalClient.objects.none()
         
 class RentalClientDetailsView(DetailView):
