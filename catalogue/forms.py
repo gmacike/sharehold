@@ -33,7 +33,8 @@ class BoardGameCommodityForm(forms.ModelForm):
         model = BoardGameCommodity
         # extensions =
 
-        fields = ('catalogueEntry', 'codeValue', 'boxFrontImage', 'boxTopImage', 'boxSideImage')
+        fields = ('catalogueEntry', 'codeValue', 'description',
+            'boxFrontImage', 'boxTopImage', 'boxSideImage')
 
         labels = {
             'catalogueEntry': 'Tytuł katalogowy',
