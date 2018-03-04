@@ -27,7 +27,7 @@ class RentalClientListView(ListView):
                 elif search_type == "initials":
                     return RentalClient.objects.filter(initials__icontains=self.filter_criteria).order_by("initials")
 
-        return RentalClient.objects.all().order_by("identificationCode")
+        return RentalClient.objects.none()
 
 
 class RentalClientDetailsView(DetailView):
