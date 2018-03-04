@@ -34,7 +34,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'widget_tweaks',
     'catalogue',
-	'circulation'
+    'warehouse',
+	'circulation',
 ]
 
 MIDDLEWARE = [

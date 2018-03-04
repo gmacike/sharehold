@@ -27,9 +27,19 @@
 }
 
 .catalogentry{
-  margin-left: 3px;
+
+}
+
+td {
+    padding: 5px;
+    text-align: center;
 }
 
 .boardgameedition{
   align-items: center;
+}
+
+.pagination{
+  margin-left: auto;
+  margin-right: auto;
 }
