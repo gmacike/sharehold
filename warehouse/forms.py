@@ -17,3 +17,6 @@ class BoardGameContainerForm(forms.ModelForm):
     class Meta:
         model = BoardGameContainer
         fields = ('warehouse', 'commodity', 'total')
+        labels = {'warehouse': 'magazyn',
+                  'commodity': 'tytuł',
+                  'total': 'liczba egzemplarzy'}

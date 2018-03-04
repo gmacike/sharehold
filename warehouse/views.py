@@ -25,6 +25,9 @@ class BoardGameContainerCreateView(CreateView):
     model = BoardGameContainer
     form_class = BoardGameContainerForm
 
+    def get_initial(self):
+        return {'warehouse': Warehouse.objects.get(pk=self.kwargs['pk'])}
+
     def get_success_url(self):
         pk = self.kwargs['pk']
         return reverse('warehouse_detail', kwargs={'pk': pk})
