@@ -70,6 +70,19 @@ def addAndReturn_rentalClientList(request):
     return redirect('circulation_entries')
 
 @login_required
+@permission_required('circulation.add_rentalclient', raise_exception=True)
+def addAndReturn_rentalClientList(request):
+    if request.method == 'POST':
+        form = RentalClientForm(request.POST)
+        if form.is_valid():
+            rentalClient = form.save(commit=False)
+            rentalClient.save()
+            return redirect_query('rentalClient_new')
+        else:
+            return render(request, 'circulation/rentalclient_form.html', {'form': form})
+    return redirect('rentalClient_new')    
+    
+@login_required
 @permission_required('circulation.change_rentalclient', raise_exception=True)
 def updateAndReturn_rentalClientList(request, pk):
     if request.method == 'POST':
