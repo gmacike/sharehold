@@ -4,7 +4,11 @@
 {% block content %}
 
 <div class="jumbotron">
-  <h1>Nowy klient</h1>
+  {% if rentalclient.pk != null %}
+    <h1>Klient - aktualizacja</h1>
+  {% else %}
+    <h1>Nowy klient</h1>
+  {% endif %}
 
   <form class="retalclient-form" method="post">
     {% csrf_token %}

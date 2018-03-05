@@ -47,18 +47,6 @@ class ClientUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     form_class = RentalClientForm
     model = RentalClient
 
-
-@login_required
-@permission_required('circulation.add_rentalclient', raise_exception=True)
-def return_home(request):
-    if request.method == 'POST':
-        form = RentalClientForm(request.POST)
-        if form.is_valid():
-            boardgame = form.save(commit=False)
-            boardgame.save()
-    return redirect('welcome')
-
-
 def redirect_query(url, params=None):
     response = redirect(url)
     if params:
@@ -69,7 +57,7 @@ def redirect_query(url, params=None):
 
 @login_required
 @permission_required('circulation.add_rentalclient', raise_exception=True)
-def rentalClientList_return(request):
+def addAndReturn_rentalClientList(request):
     if request.method == 'POST':
         form = RentalClientForm(request.POST)
         if form.is_valid():
@@ -81,6 +69,20 @@ def rentalClientList_return(request):
             return render(request, 'circulation/rentalclient_form.html', {'form': form})
     return redirect('circulation_entries')
 
+@login_required
+@permission_required('circulation.change_rentalclient', raise_exception=True)
+def updateAndReturn_rentalClientList(request, pk):
+    if request.method == 'POST':
+        client = get_object_or_404(RentalClient, pk=pk)
+        form = RentalClientForm(request.POST, instance=client)
+        if form.is_valid():
+            rentalClient = form.save(commit=False)
+            rentalClient.save()
+            return redirect_query('circulation_entries',
+                                  {'filter': rentalClient.identificationCode, 'search': 'identificationCode'})
+        else:
+            return render(request, 'circulation/rentalclient_form.html', {'form': form})
+    return redirect('circulation_entries')
 
 class ClientHasBoardGameList(ListView):
     model = ClientHasBoardGame
