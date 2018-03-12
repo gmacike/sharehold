@@ -30,7 +30,7 @@
     {% if boardgameitem.pk != null %}
       <label>Dostępne wydania</label>
       {% include "catalogue/boardgameeditions.html" %}
-      <button type="submit" class="save btn btn-primary btn-warning">Aktualizuj</button>
+      <button type="submit" class="save btn btn-primary btn-warning">Aktualizuj grę</button>
       {% if perms.catalogue.add_commodity %}
         <a href="{% url 'boardgame_new_edition' bgpk=boardgameitem.pk %}" class="btn btn-warning">Dodaj wydanie</a>
       {% endif %}

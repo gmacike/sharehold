@@ -28,6 +28,12 @@
     {% include "catalogue/boardgameeditions.html" %}
   {% endif %}
 
+  {% if perms.catalogue.change_boardgameitem %}
+    <a href="{% url 'boardgame_edit' boardgameitem.pk %}" class="btn btn-default">Edytuj grę</a>
+  {% endif %}
+  {% if perms.catalogue.add_commodity %}
+    <a href="{% url 'boardgame_new_edition' bgpk=boardgameitem.pk %}" class="btn btn-default">Dodaj wydanie</a>
+  {% endif %}
   <a href="{% url 'catalogue_entries' %}" class="btn btn-default">Powrót</a>
 
 
