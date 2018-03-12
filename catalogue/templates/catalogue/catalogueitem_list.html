@@ -22,7 +22,7 @@
            <!-- <h2 class="barcodefont">{{item.codeValue}}</h2> -->
            <!-- <h2 class="barcodevalue">{{item.codeValueToStr}}</h2> -->
            {% if perms.catalogue.change_boardgameitem %}
-              <a href="{% url 'boardgame_edit' pk=item.pk %}" class="btn btn-warning">Edytuj</a>
+              <a href="{% url 'boardgame_edit' pk=item.pk %}" class="btn btn-warning">Edytuj grę</a>
            {% endif %}
            {% if perms.catalogue.add_commodity %}
              <a href="{% url 'boardgame_new_edition' bgpk=item.pk %}" class="btn btn-warning">Dodaj wydanie</a>
