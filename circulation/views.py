@@ -2,7 +2,8 @@ from urllib.parse import urlencode
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.contrib.auth.decorators import login_required, permission_required
-from circulation.models import (RentalClient, ClientHasBoardGame)
+from django.forms import inlineformset_factory
+from circulation.models import (RentalClient, ClientID, ClientHasBoardGame)
 from circulation.forms import (RentalClientForm, ClientHasBoardGameForm)
 from django.views.generic import (ListView, DetailView, CreateView, UpdateView)
 from django.conf import settings
@@ -46,6 +47,28 @@ class ClientUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
 
     form_class = RentalClientForm
     model = RentalClient
+    
+class BoardGameUpdate2View(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
+    permission_required = 'circulation.change_rentalclient'
+    raise_exception=True
+
+    form_class = RentalClientForm
+    model = RentalClient
+    
+@login_required
+@permission_required('circulation.change_rentalclient', raise_exception=True)
+def manage_rentalclient(request, client_id):
+    rentalClient = get_object_or_404(RentalClient, pk=client_id)
+    RentalClientInlineFormSet = inlineformset_factory(RentalClient, ClientID, fields=('ID','active'))
+    if request.method == "POST":
+        formset = RentalClientInlineFormSet(request.POST, request.FILES, instance=rentalClient)
+        if formset.is_valid():
+            formset.save()
+            return redirect_query('circulation_entries', {'filter':rentalClient.identificationCode, 'search':'identificationCode'}) 
+    else:
+        form  = RentalClientForm(instance=rentalClient)
+        formset = RentalClientInlineFormSet(instance=rentalClient)
+    return render(request, 'circulation/rentalclient_details.html', {'form':form, 'formset': formset})
 
 def redirect_query(url, params=None):
     response = redirect(url)
@@ -71,7 +94,7 @@ def addAndReturn_rentalClientList(request):
 
 @login_required
 @permission_required('circulation.add_rentalclient', raise_exception=True)
-def addAndReturn_rentalClientList(request):
+def addAndAddNew_rentalClientList(request):
     if request.method == 'POST':
         form = RentalClientForm(request.POST)
         if form.is_valid():
