@@ -1,0 +1,52 @@
+{% extends "circulation/base.html" %}
+{% load widget_tweaks %}
+
+{% block content %}
+
+<div class="jumbotron">
+  {% if pk != null %}
+    <h1>Klient - aktualizacja</h1>
+  {% else %}
+    <h1>Nowy klient</h1>
+  {% endif %}
+
+  <form class="retalclient-form" method="post">
+    {% csrf_token %}
+
+	{% for hidden in form.hidden_fields %}
+      {{ hidden }}
+    {% endfor %}
+	
+	{% for field in form.visible_fields %}
+	    <div class="form-group">
+            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+            {{ field|add_class:'form-control' }}
+            {% for error in field.errors %}
+              <span class="help-block">{{ error }}</span>
+            {% endfor %}
+        </div>
+    {% endfor %}
+    
+    {{ formset.management_form }}
+    
+    {% for set_form in formset %}
+        {% for hidden in set_form.hidden_fields %}
+          {{ hidden }}
+        {% endfor %}
+        {% for field in set_form.visible_fields %}
+            <div class="row">
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field }}
+                {% for error in field.errors %}
+                  <span class="help-block">{{ error }}</span>
+                {% endfor %}
+            </div>
+        {% endfor %}
+    {% endfor %}
+    
+	<button type="submit" class="save btn btn-secondary btn-lg" formaction="return_rentalClientList">Dodaj i zakończ wprowadzanie</button>
+    <a href="{% url 'return_rentalClientList' %}" class="btn btn-default">Anuluj</a>
+  </form>
+</div>
+
+{% endblock %}
