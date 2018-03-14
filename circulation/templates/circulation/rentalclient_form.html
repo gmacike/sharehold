@@ -31,7 +31,7 @@
         <button type="submit" class="save btn btn-secondary btn-lg" formaction="return_rentalClientList">Zapisz zmiany</button>
     {% else %}
         <button type="submit" class="save btn btn-secondary btn-lg" formaction="return_rentalClientList">Dodaj i zakończ wprowadzanie</button>
-        <button type="submit" class="save btn btn-secondary btn-lg" formaction="return_rentalClientList">Dodaj i wprowadź kolejnego</button>
+        <button type="submit" class="save btn btn-secondary btn-lg" formaction="return_newRentalClient">Dodaj i wprowadź kolejnego</button>
     {% endif %}
     <a href="{% url 'return_rentalClientList' %}" class="btn btn-default">Anuluj</a>
   </form>
