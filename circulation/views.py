@@ -117,7 +117,7 @@ def updateAndReturn_rentalClientList(request, pk):
             return redirect_query('circulation_entries',
                                   {'filter': rentalClient.identificationCode, 'search': 'identificationCode'})
         else:
-            return render(request, 'circulation/rentalclient_form.html', {'form': form})
+            return render(request, 'circulation/rentalclient_form.html', {'form': form, 'rentalclient':client})
     return redirect('circulation_entries')
 
 class ClientHasBoardGameList(ListView):
