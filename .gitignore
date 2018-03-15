@@ -2,4 +2,6 @@
 .idea
 sharehold/db.sqlite3
 sharehold/media/bg/img/*.*
+sharehold/static/*.css
+sharehold/static/*.css
 prod.py
