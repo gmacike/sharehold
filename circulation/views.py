@@ -1,4 +1,6 @@
 from urllib.parse import urlencode
+
+from datetime import datetime
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.contrib.auth.decorators import login_required, permission_required
@@ -134,3 +136,15 @@ class ClientHasBoardGameList(ListView):
 class ClientHasBoardGameCreateView(CreateView):
     model = ClientHasBoardGame
     form_class = ClientHasBoardGameForm
+
+
+class ClientHasBoardGameDetailView(DetailView):
+    model = ClientHasBoardGame
+
+
+def register_return(request, pk):
+    if request.method == 'POST':
+        clienthasboardgame = get_object_or_404(ClientHasBoardGame, pk=pk)
+        clienthasboardgame.returned = datetime.now
+
+    return redirect('clienthasboardgame_detail', pk=pk)

@@ -16,6 +16,11 @@
             {% else %}{{ clienthasboardgame.returned }}
             {% endif %}
         </td>
+        <td>
+            <a href="{% url 'clienthasboardgame_detail' pk=clienthasboardgame.pk %}">
+                przyjmij zwrot
+            </a>
+        </td>
     </tr>
     {% endfor %}
 </table>
