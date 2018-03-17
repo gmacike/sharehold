@@ -1,7 +1,7 @@
-<div class="container text-center" >
-  <div class="row">
+<div class="container" >
+  <div class="row justify-content-around text-center">
     {% for commodity in boardgameitem.commodities.all %}
-      <div class="col-md-4 col-sm-6 boardgameedition">
+      <div class="col-md-4 col-sm-6 container-fluid boardgameedition justify-content-between">
         {% if commodity.description %}
           <p class='text-left'>{{ commodity.description }}</p>
         {% else %}
@@ -16,7 +16,7 @@
         {% if commodity.boxSideImage %}
           <img class="img-responsive img-thumbnail" src="{{commodity.boxSideImage.url}}">
         {% endif %}
-        <h2 class="barcodetextfont"> {{commodity.codeValue}} </h2>
+        <h2 class="barcodetextfont text-center"> {{commodity.codeValue}} </h2>
         {% if perms.catalogue.change_boardgamecommodity %}
           <a href="{% url 'boardgame_edition_edit' pk=commodity.pk %}" class="btn btn-warning">Aktualizuj wydanie</a>
         {% endif %}
