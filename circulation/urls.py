@@ -18,7 +18,7 @@ urlpatterns = [
     url(r'^rental/new$',
         views.ClientHasBoardGameCreateView.as_view(success_url='/rental'),
         name='clienthasboardgame_create'),
-    url(r'^rental/(?P<pk>\d+)',
+    url(r'^rental/(?P<pk>\d+)$',
         views.ClientHasBoardGameDetailView.as_view(),
         name='clienthasboardgame_detail'),
     url(r'^rental/(?P<pk>\d+)/return',

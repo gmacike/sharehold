@@ -145,6 +145,7 @@ class ClientHasBoardGameDetailView(DetailView):
 def register_return(request, pk):
     if request.method == 'POST':
         clienthasboardgame = get_object_or_404(ClientHasBoardGame, pk=pk)
-        clienthasboardgame.returned = datetime.now
+        clienthasboardgame.returned = datetime.now()
+        clienthasboardgame.save()
 
     return redirect('clienthasboardgame_detail', pk=pk)
