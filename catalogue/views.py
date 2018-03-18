@@ -6,6 +6,9 @@ from catalogue.models import (CatalogueItem, BoardGameItem, BoardGameCommodity)
 from catalogue.forms import BoardGameItemForm, BoardGameCommodityForm
 from django.views.generic import (ListView,DetailView,CreateView, UpdateView)
 from django.conf import settings
+from dal import autocomplete
+# for case insensitive qureyset ordering
+from django.db.models.functions import Lower
 
 # Create your views here.
 class CatalogueItemListView(ListView):
@@ -60,7 +63,7 @@ class BoardGameItemUpdateView(LoginRequiredMixin, PermissionRequiredMixin, Updat
 
     form_class = BoardGameItemForm
     model = BoardGameItem
-    
+
 ##########################################
 # BoardGameItem additional views
 ##########################################
@@ -94,6 +97,17 @@ def return_home (request):
             boardgame = form.save(commit=False)
             boardgame.save()
     return redirect('welcome')
+
+class BoardGameAutocompleteView(autocomplete.Select2QuerySetView):
+    # these queryset data will be available through pulib url guard w/ permissions if necessary
+    # here are none as boardgame cataloge is going to be available for publicity
+    def get_queryset(self):
+        qs = BoardGameItem.objects.all().order_by(Lower('itemLabel'))
+
+        if self.q:
+            qs = qs.filter(itemLabel__icontains=self.q)
+
+        return qs
 
 
 class BoardGameCommodityCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
