@@ -1,13 +1,22 @@
 from django import forms
+from dal import autocomplete
+# from django.forms import inlineformset_factory
 from catalogue.models import BoardGameItem, BoardGameCommodity
 
 
 class BoardGameItemForm(forms.ModelForm):
+    # base_game = forms.ModelChoiceField (
+    #     queryset=BoardGameItem.objects.all(),
+    #     widget=autocomplete.ModelSelect2(
+    #         url='boardgame-autocomplete',
+    #         attrs={'data-placeholder': 'Wpisz tytuł gry...',
+    #             'data-minimum-input-length': 3,}))
+
     class Meta():
         model = BoardGameItem
         # extensions =
 
-        fields = ('baseGameItem', 'itemLabel', 'bggURL')
+        fields = ('itemLabel', 'baseGameItem', 'bggURL')
 
         labels = {
             'itemLabel': 'Tytuł',
@@ -17,12 +26,18 @@ class BoardGameItemForm(forms.ModelForm):
 
         widgets = {
             'itemLabel': forms.TextInput(attrs={'class': 'textinputclass',
-                                                'placeholder': 'Wprowadź tytuł'}),
+                                                'placeholder': 'Wprowadź tytuł',
+                                                'autofocus': True,}),
             'bggURL': forms.URLInput(attrs={'class': 'urlinputclass',
                                             'placeholder': 'Podaj adres strony gry w serwisie boardgamegeek.com'}),
-            'baseGameItem': forms.Select(attrs={'class': 'selectclass',
-                                                'empty_label': "Dla dodatku wskaż podstawową grę"}),
+            'baseGameItem': autocomplete.ModelSelect2(
+                url='boardgame-autocomplete',
+                attrs={'data-placeholder': 'Wpisz tytuł gry podstawowej...',
+                    'data-minimum-input-length': 1,}
+                ),
         }
+
+# BoardGameItemFormSet = inlineformset_factory (BoardGameItem, BoardGameItem, form = BoardGameItemForm, extra = 1)
 
 
 class BoardGameCommodityForm(forms.ModelForm):
@@ -46,5 +61,6 @@ class BoardGameCommodityForm(forms.ModelForm):
 
         widgets = {
             'codeValue': forms.TextInput(attrs={'class': 'textinputclass',
-                                                'placeholder': 'Wczytaj kod paskowy'}),
+                                                'placeholder': 'Wczytaj kod paskowy',
+                                                'autofocus': True,}),
         }
