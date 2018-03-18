@@ -3,6 +3,9 @@
 <div class="jumbotron">
     <h1>Wypożyczalnia</h1>
 </div>
+<div>
+    <a href="{% url 'clienthasboardgame_create' %}">wypożycz grę</a>
+</div>
 <table>
     <thead>
     <td></td>
@@ -12,15 +15,17 @@
         <td>{{ clienthasboardgame.client}}</td>
         <td>{{ clienthasboardgame.container.commodity }}</td>
         <td>{{ clienthasboardgame.issued }}</td>
-        <td>{% if clienthasboardgame.returned is None %}oczekuje na zwrot
-            {% else %}{{ clienthasboardgame.returned }}
-            {% endif %}
-        </td>
+        {% if clienthasboardgame.returned is None %}
+        <td>oczekuje na zwrot</td>
         <td>
             <a href="{% url 'clienthasboardgame_detail' pk=clienthasboardgame.pk %}">
                 przyjmij zwrot
             </a>
         </td>
+        {% else %}
+        <td>{{ clienthasboardgame.returned }}</td>
+        <td></td>
+        {% endif %}
     </tr>
     {% endfor %}
 </table>
