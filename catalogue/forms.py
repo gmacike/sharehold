@@ -16,7 +16,7 @@ class BoardGameItemForm(forms.ModelForm):
         model = BoardGameItem
         # extensions =
 
-        fields = ('itemLabel', 'baseGameItem', 'bggURL')
+        fields = ('itemLabel', 'bggURL', 'baseGameItem')
 
         labels = {
             'itemLabel': 'Tytuł',
@@ -63,4 +63,9 @@ class BoardGameCommodityForm(forms.ModelForm):
             'codeValue': forms.TextInput(attrs={'class': 'textinputclass',
                                                 'placeholder': 'Wczytaj kod paskowy',
                                                 'autofocus': True,}),
+            'catalogueEntry': autocomplete.ModelSelect2(
+                url='boardgame-autocomplete',
+                attrs={'data-placeholder': 'Wpisz tytuł gry...',
+                    'data-minimum-input-length': 1,}
+                ),
         }
