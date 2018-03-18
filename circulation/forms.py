@@ -38,7 +38,7 @@ class ClientHasBoardGameForm(forms.ModelForm):
             raise ValidationError('brak dostępnych egzemplarzy w magazynie')
 
         client = cleaned.get('client')
-        if client.clienthasboardgame_set.count() > 0:
+        if client.clienthasboardgame_set.filter(returned=None).count() > 0:
             raise ValidationError('użytkownik wypożyczył już grę')
 
         return cleaned
