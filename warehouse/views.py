@@ -31,5 +31,3 @@ class BoardGameContainerCreateView(CreateView):
     def get_success_url(self):
         pk = self.kwargs['pk']
         return reverse('warehouse_detail', kwargs={'pk': pk})
-
-# Create your views here.

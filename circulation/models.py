@@ -1,3 +1,4 @@
+from datetime import datetime
 from django.db import models
 
 from warehouse.models import BoardGameContainer
@@ -24,3 +25,5 @@ class ClientID(models.Model):
 class ClientHasBoardGame(models.Model):
     client = models.ForeignKey(RentalClient)
     container = models.ForeignKey(BoardGameContainer)
+    issued = models.DateTimeField(default=datetime.now)
+    returned = models.DateTimeField(null=True)
