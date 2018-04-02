@@ -4,11 +4,7 @@
 {% block content %}
 
 <div class="jumbotron">
-  {% if pk != null %}
     <h1>Klient - aktualizacja</h1>
-  {% else %}
-    <h1>Nowy klient</h1>
-  {% endif %}
 
   <form class="retalclient-form" method="post">
     {% csrf_token %}
@@ -30,12 +26,12 @@
     <p>Identyfikatory:</p>
     {{ formset.management_form }}
     
+    {% for error in formset.non_form_errors %}
+        <span class="help-block">{{ error }}</span>
+    {% endfor %}
     {% for set_form in formset %}
         {% for hidden in set_form.hidden_fields %}
           {{ hidden }}
-        {% endfor %}
-        {% for error in formset.non_form_errors %}
-          <span class="help-block">{{ error }}</span>
         {% endfor %}
         <div class="ID_row">
         {% for field in set_form.visible_fields %}
@@ -48,7 +44,7 @@
         </div>
     {% endfor %}
     
-	<button type="submit" class="save btn btn-secondary btn-lg" >Dodaj i zakończ wprowadzanie</button>
+	<button type="submit" class="save btn btn-secondary btn-lg" >Zapisz zmiany</button>
     <a href="{% url 'return_rentalClientList' %}" class="btn btn-default">Anuluj</a>
   </form>
 </div>

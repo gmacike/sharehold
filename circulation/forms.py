@@ -1,7 +1,7 @@
 from django import forms
 from django.core.exceptions import ValidationError
 
-from circulation.models import RentalClient, ClientHasBoardGame
+from circulation.models import RentalClient, ClientID, ClientHasBoardGame
 
 
 class RentalClientForm(forms.ModelForm):
@@ -25,7 +25,7 @@ class RentalClientForm(forms.ModelForm):
             })
         }
         
-class RentalClientIDInlineFormSet(forms.BaseInlineFormSet):
+class RentalClientIDInlineFormSet(forms.BaseInlineFormSet):      
     def clean(self):
         cleaned = super(RentalClientIDInlineFormSet, self).clean()
         numOfActiveIDs = 0;

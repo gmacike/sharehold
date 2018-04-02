@@ -61,10 +61,10 @@ class BoardGameUpdate2View(LoginRequiredMixin, PermissionRequiredMixin, UpdateVi
 
 @login_required
 @permission_required('circulation.change_rentalclient', raise_exception=True)
-def manage_rentalclient(request, client_id):
-    rentalClient = get_object_or_404(RentalClient, pk=client_id)
+def manage_rentalclient(request, pk):
+    rentalClient = get_object_or_404(RentalClient, pk=pk)
     form = RentalClientForm(instance=rentalClient)
-    RentalClientInlineFormSet = inlineformset_factory(RentalClient, ClientID, fields=('ID', 'active'), extra=1, formset=RentalClientIDInlineFormSet)
+    RentalClientInlineFormSet = inlineformset_factory(RentalClient, ClientID, fields=('ID', 'active'), extra=1, formset=RentalClientIDInlineFormSet, can_delete=False)
     if request.method == "POST":
         formset = RentalClientInlineFormSet(request.POST, request.FILES, instance=rentalClient)
         if formset.is_valid():
@@ -83,6 +83,18 @@ def redirect_query(url, params=None):
         response['Location'] += '?' + query_string
     return response
 
+@login_required
+@permission_required('circulation.add_rentalclient', raise_exception=True)
+def addAndEditRentalClient(request):
+    if request.method == 'POST':
+        form = RentalClientForm(request.POST)
+        if form.is_valid():
+            rentalClient = form.save(commit=False)
+            rentalClient.save()
+            return redirect('rentalclient_details', pk=rentalClient.pk)
+        else:
+            return render(request, 'circulation/rentalclient_form.html', {'form': form})
+    return redirect('circulation_entries')    
 
 @login_required
 @permission_required('circulation.add_rentalclient', raise_exception=True)
