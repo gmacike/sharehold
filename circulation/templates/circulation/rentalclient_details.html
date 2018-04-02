@@ -27,24 +27,28 @@
         </div>
     {% endfor %}
     
+    <p>Identyfikatory:</p>
     {{ formset.management_form }}
     
     {% for set_form in formset %}
         {% for hidden in set_form.hidden_fields %}
           {{ hidden }}
         {% endfor %}
+        {% for error in formset.non_form_errors %}
+          <span class="help-block">{{ error }}</span>
+        {% endfor %}
+        <div class="ID_row">
         {% for field in set_form.visible_fields %}
-            <div class="row">
                 <label for="{{ field.id_for_label }}">{{ field.label }}</label>
                 {{ field }}
                 {% for error in field.errors %}
                   <span class="help-block">{{ error }}</span>
                 {% endfor %}
-            </div>
         {% endfor %}
+        </div>
     {% endfor %}
     
-	<button type="submit" class="save btn btn-secondary btn-lg" formaction="return_rentalClientList">Dodaj i zakończ wprowadzanie</button>
+	<button type="submit" class="save btn btn-secondary btn-lg" >Dodaj i zakończ wprowadzanie</button>
     <a href="{% url 'return_rentalClientList' %}" class="btn btn-default">Anuluj</a>
   </form>
 </div>
