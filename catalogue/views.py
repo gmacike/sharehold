@@ -18,6 +18,7 @@ class CatalogueItemListView(ListView):
     template_name = 'catalogue/catalogueitem_list.html'
     paginate_by = settings.CATALOGUE_PAGINATION
     paginate_orphans = settings.CATALOGUE_PAGINATION_ORPHANS
+    paginate_adjactent = settings.CATALOGUE_PAGINATION_ADJACENT_RANGE
 
 
     def get_queryset(self):
