@@ -23,7 +23,6 @@ class CatalogueItemListView(ListView):
 
     def get_queryset(self):
         if self.request.method == 'GET':
-
             filter_criteria = self.request.GET.get("filter")
             if filter_criteria:
                 search_type = self.request.GET.get("search")
@@ -41,7 +40,8 @@ class CatalogueItemListView(ListView):
         # Call the base implementation first to get a context
         context = super().get_context_data(**kwargs)
         req_copy = self.request.GET.copy()
-        req_params = req_copy.pop('page', True) and req_copy.urlencode()
+        req_copy.pop('page', True)
+        req_params = req_copy.urlencode()
         context ['req_params'] = req_params
         return context
 
