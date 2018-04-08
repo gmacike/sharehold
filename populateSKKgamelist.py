@@ -39,8 +39,11 @@ if __name__ == '__main__':
                 print ('{0}: {1} skipped - found as: {2}'.format(r+1, commodity.codeValue, game.itemLabel))
             else:
                 print ('{0}: {1} - missing {2} to be added...'.format(r+1, barcode, title))
-                game = BoardGameItem (itemLabel=title, bggURL=bgg_url)
-                game.save()
+                game, isNew = BoardGameItem.objects.get_or_create (itemLabel=title, bggURL=bgg_url)
+                if isNew:
+                    game.save()
+                else:
+                    print ('{0}: {1} game retrieved'.format(r+1, game.itemLabel))
                 commodity = BoardGameCommodity (codeType=BoardGameCommodity.BARCODE,
                     codeValue = barcode, catalogueEntry = game)
                 commodity.save()

@@ -5,8 +5,12 @@
 }
 
 .pagination li {
-  padding: 10px 40px;
+  padding: 10px 30px;
   color: var(--color4th);
+}
+
+.pagination li span {
+  color: var(--color2nd);
 }
 
 .pagination li a {

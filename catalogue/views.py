@@ -13,35 +13,42 @@ from django.db.models.functions import Lower
 # Create your views here.
 class CatalogueItemListView(ListView):
     queryset = BoardGameItem.objects.all().order_by(Lower("itemLabel"))
-    filter_criteria = ""
+    # filter_criteria = ""
     context_object_name = 'catalogueitem_list'
     template_name = 'catalogue/catalogueitem_list.html'
     paginate_by = settings.CATALOGUE_PAGINATION
     paginate_orphans = settings.CATALOGUE_PAGINATION_ORPHANS
-    paginate_adjactent = settings.CATALOGUE_PAGINATION_ADJACENT_RANGE
 
 
     def get_queryset(self):
         if self.request.method == 'GET':
-
-            self.filter_criteria = self.request.GET.get("filter")
-            if self.filter_criteria:
+            filter_criteria = self.request.GET.get("filter")
+            if filter_criteria:
                 search_type = self.request.GET.get("search")
                 if search_type == "barcode":
-                    commodities_ids = BoardGameCommodity.objects.filter(codeValue__startswith=self.filter_criteria).values_list('catalogueEntry')
+                    commodities_ids = BoardGameCommodity.objects.filter(codeValue__startswith=filter_criteria).values_list('catalogueEntry')
                     self.queryset = BoardGameItem.objects.filter(id__in=commodities_ids).order_by(Lower("itemLabel"))
                     # self.queryset = BoardGameItem.objects.filter(boardgamecommodity__codeValue__startswith=self.filter_criteria).order_by("codeValue")
                 elif search_type == "title":
-                    self.queryset =  BoardGameItem.objects.filter(itemLabel__icontains=self.filter_criteria).order_by(Lower("itemLabel"))
+                    self.queryset =  BoardGameItem.objects.filter(itemLabel__icontains=filter_criteria).order_by(Lower("itemLabel"))
                 # else:
                 #     objects =  self.model.objects.all().order_by("-itemLabel")
             return self.queryset
 
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get a context
+        context = super().get_context_data(**kwargs)
+        req_copy = self.request.GET.copy()
+        req_copy.pop('page', True)
+        req_params = req_copy.urlencode()
+        context ['req_params'] = req_params
+        return context
 
-# class CatalogueItemFilteredListView(CatalogueItemListView):
-#     filterCriteria = ""
-#     def get_queryset(self):
-#         return BoardGameItem.objects.all().order_by("itemLabel")
+    # def get(self, request, *args, **kwargs):
+    #     # extract parameters from request and put them into context
+    #     req_copy = request.GET.copy()
+    #     self.request_parameters = req_copy.pop('page', True) and req_copy.urlencode()
+    #     return render(request, self.template_name)
 
 
 class BoardGameItemDetailsView(DetailView):
