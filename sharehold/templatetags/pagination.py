@@ -6,7 +6,7 @@
 from django import template
 register = template.Library()
 
-def paginator(context, adjacent_pages=2):
+def paginator(context, adjacent_pages=2, show_far_away_page=True, far_away_step=10):
     """
     To be used in conjunction with the object_list generic view.
 
@@ -22,6 +22,10 @@ def paginator(context, adjacent_pages=2):
     startPage = max(current_page - adjacent_pages, 1)
     endPage = current_page + adjacent_pages + 1
     if endPage > number_of_pages: endPage = number_of_pages + 1
+    if show_far_away_page:
+        far_away_page = current_page + far_away_step
+    else:
+        far_away_page = number_of_pages
     page_numbers = [n for n in range(startPage, endPage) \
         if 0 < n <= number_of_pages]
 
@@ -33,6 +37,8 @@ def paginator(context, adjacent_pages=2):
         'page_numbers': page_numbers,
         'has_previous': page_obj.has_previous(),
         'has_next': page_obj.has_next(),
+        'has_far_away': far_away_page < number_of_pages,
+        'far_away_page': far_away_page,
         'show_first': 1 != current_page,
         'show_last': number_of_pages != current_page,
     }

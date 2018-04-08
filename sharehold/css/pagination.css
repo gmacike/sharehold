@@ -9,6 +9,10 @@
   color: var(--color4th);
 }
 
+.pagination li span {
+  color: var(--color2nd);
+}
+
 .pagination li a {
   color: var(--color2nd);
 }

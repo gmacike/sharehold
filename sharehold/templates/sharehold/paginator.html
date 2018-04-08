@@ -12,8 +12,12 @@
         <li><a href="?page={{ one_page }}">{{ one_page }}</a></li>
     {% endifequal %}
 {% endfor %}
+{% if has_far_away %}
+  <li><span>&hellip;</span></li>
+  <li><a href="?page={{ far_away_page }}">{{ far_away_page }}</a></li>
+{% endif %}
 {% if has_next %}
-    <li><a href="?page={{ page_obj.next_page_number }}">&rsaquo;</a></li>
+    <li><a href="?page={{ page_obj.next_page_number }}&{{ req_params }}">&rsaquo;</a></li>
 {% endif %}
 {% if show_last %}
     <li><a href="?page=last">&raquo;</a></li>
