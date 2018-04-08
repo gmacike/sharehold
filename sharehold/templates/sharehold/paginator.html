@@ -1,0 +1,22 @@
+<ul class="pagination techfont">
+{% if show_first %}
+    <li><a href="?page=1">&laquo;</a></li>
+{% endif %}
+{% if has_previous %}
+    <li><a href="?page={{ page_obj.previous_page_number }}">&lsaquo;</a></li>
+{% endif %}
+{% for one_page in page_numbers %}
+    {% ifequal one_page page %}
+        <li class="current">{{ page }}</li>
+    {% else %}
+        <li><a href="?page={{ one_page }}">{{ one_page }}</a></li>
+    {% endifequal %}
+{% endfor %}
+{% if has_next %}
+    <li><a href="?page={{ page_obj.next_page_number }}">&rsaquo;</a></li>
+{% endif %}
+{% if show_last %}
+    <li><a href="?page=last">&raquo;</a></li>
+{% endif %}
+
+</ul>

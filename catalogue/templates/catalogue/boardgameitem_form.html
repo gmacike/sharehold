@@ -1,9 +1,10 @@
 {% extends "catalogue/base.html" %}
+{% load static %}
 {% load widget_tweaks %}
 
 {% block content %}
 
-<div class="jumbotron">
+<div class="jumbotron content">
   {% if boardgameitem.pk != null %}
     <h1>Gra planszowa aktualizacja</h1>
   {% else %}
@@ -21,11 +22,13 @@
       <div class="form-group">
         <label for="{{ field.id_for_label }}">{{ field.label }}</label>
         {{ field|add_class:'form-control' }}
+        {{ field.get_queryset }}
         {% for error in field.errors %}
           <span class="help-block">{{ error }}</span>
         {% endfor %}
       </div>
     {% endfor %}
+
 
     {% if boardgameitem.pk != null %}
       <label>Dostępne wydania</label>
@@ -43,4 +46,6 @@
   </form>
 </div>
 
+<script type="text/javascript" src="{% static 'admin/js/vendor/jquery/jquery.js' %}"></script>
+{{ form.media }}
 {% endblock %}

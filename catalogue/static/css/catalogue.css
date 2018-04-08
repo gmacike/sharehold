@@ -1,19 +1,17 @@
-.techfont{
-  font-family: 'Russo One', sans-serif;
-  font-size: 1.2em;
-  margin-bottom: 10px;
-}
+@import url("/static/sharehold.css");
 
 .barcodefont{
   font-family: 'Libre Barcode 39', cursive;
-  font-size: 3em;
+  font-size: 2em;
+  color: black;
 }
 
 
 .barcodetextfont{
-  font-family: 'Libre Barcode 39 Text', cursive;
-  font-size: 2.5em;
+  font-family: 'Libre Barcode 39 Text',cursive;
+  font-size: 2em;
   text-align: center;
+  color: black;
 }
 
 .barcodefont{
@@ -21,14 +19,23 @@
   margin-bottom: 10px;
 }
 
-
-.bigbrand{
-  font-size: 1.5em;
+.cataloguelist{
 }
 
 .catalogentry{
-
+  background-color: var(--color1st);
+  margin: 5px 5px;
+  min-height: 200px;
 }
+
+.catalogentry h5 a {
+  color: var(--color2nd);
+}
+
+.catalogentry h5 a:hover {
+  color: white;
+}
+
 
 td {
     padding: 5px;
@@ -36,10 +43,15 @@ td {
 }
 
 .boardgameedition{
-  align-items: center;
+  border: 3px solid var(--color5th);
+  color: var(--color2nd);
+  margin-bottom: 5px;
 }
 
-.pagination{
-  margin-left: auto;
-  margin-right: auto;
+.boardgameedition .btn {
+  align-self: flex-end;
+}
+
+.boardgameedition .img {
+  text-align: center;
 }

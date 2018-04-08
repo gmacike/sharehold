@@ -1,0 +1,9 @@
+{% extends "sharehold/base.html" %}
+{% block warehouse_appmenu %}
+  <!-- Navbar -->
+  {% if user.is_authenticated %}
+    {% if perms.catalogue.add_warehouse %}
+      <a class="navbar-nav techfont appmenu" href="{% url 'warehouse_create' %}">Nowy magazyn</a>
+    {% endif %}
+  {% endif %}
+{% endblock %}

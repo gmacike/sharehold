@@ -1,7 +1,7 @@
 from django import forms
 from django.core.exceptions import ValidationError
 
-from circulation.models import RentalClient, ClientHasBoardGame
+from circulation.models import RentalClient, ClientID, ClientHasBoardGame
 
 
 class RentalClientForm(forms.ModelForm):
@@ -24,7 +24,18 @@ class RentalClientForm(forms.ModelForm):
                 'placeholder': 'Wprowadź inicjały'
             })
         }
-
+        
+class RentalClientIDInlineFormSet(forms.BaseInlineFormSet):      
+    def clean(self):
+        cleaned = super(RentalClientIDInlineFormSet, self).clean()
+        numOfActiveIDs = 0;
+        for form in self.forms:
+            if form.cleaned_data.get('active'):
+                numOfActiveIDs+=1;
+        if numOfActiveIDs > 1:
+            raise forms.ValidationError('Tylko jeden identyfikator może być aktywny')
+            
+        return cleaned
 
 class ClientHasBoardGameForm(forms.ModelForm):
     class Meta:
@@ -38,7 +49,7 @@ class ClientHasBoardGameForm(forms.ModelForm):
             raise ValidationError('brak dostępnych egzemplarzy w magazynie')
 
         client = cleaned.get('client')
-        if client.clienthasboardgame_set.count() > 0:
+        if client.clienthasboardgame_set.filter(returned=None).count() > 0:
             raise ValidationError('użytkownik wypożyczył już grę')
 
         return cleaned

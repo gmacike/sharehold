@@ -1,3 +1,4 @@
+from datetime import datetime
 from django.db import models
 
 from warehouse.models import BoardGameContainer
@@ -17,10 +18,12 @@ class ClientID(models.Model):
                                      related_name='client',
                                      null=True,
                                      blank=False)
-    ID = models.IntegerField(primary_key=True, unique=True)
-    active = models.BooleanField(default=True)
+    ID = models.IntegerField(primary_key=True, unique=True, verbose_name='Identyfikator')
+    active = models.BooleanField(default=True, verbose_name='Aktywny')
 
 
 class ClientHasBoardGame(models.Model):
     client = models.ForeignKey(RentalClient)
     container = models.ForeignKey(BoardGameContainer)
+    issued = models.DateTimeField(default=datetime.now)
+    returned = models.DateTimeField(null=True)

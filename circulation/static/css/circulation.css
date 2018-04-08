@@ -1,0 +1,9 @@
+@import url("/static/sharehold.css");
+
+.ID_row{
+  margin: 5px 5px;
+}
+
+.ID_row label{
+  margin: 0px 10px;
+}

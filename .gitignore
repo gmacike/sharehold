@@ -3,5 +3,6 @@
 sharehold/db.sqlite3
 sharehold/media/bg/img/*.*
 sharehold/static/*.css
-sharehold/static/*.css
+/static/*.*
 prod.py
+*skk.games.xlsx

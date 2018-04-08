@@ -1,0 +1,99 @@
+@import url("/static/pagination.css");
+
+:root {
+    --color1st: rgba(183, 183, 183, 1);
+    --color2nd: rgba(23, 55, 83, 1);
+    --color3rd: rgba(186, 216, 60, 1);
+    --color4th: rgba(255, 136, 17, 1);
+    --color5th: rgba(254, 208, 0, 1);
+}
+
+body {
+  background-color: white;
+}
+
+.sidemenu {
+  justify-content: flex-start;
+  background-color: var(--color2nd);
+  padding: 0px;
+}
+
+.logo {
+  width: inherit;
+  margin-left: 0px;
+  margin-right: 0px;
+  background-color: white;
+  text-align: center;
+}
+
+.mainmenu {
+  background-color: var(--color2nd);
+  color: white;
+  font-size: 1.2em;
+  width: inherit;
+  min-height: 3em;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--color1st);
+}
+
+.mainmenu:hover {
+  color: var(--color2nd);
+  background-color: var(--color4th);
+}
+
+.appmenu {
+  background-color: var(--color2nd);
+  color: white;
+  font-size: 1em;
+  padding-left: 1rem;
+  width: inherit;
+  border-bottom: 1px solid var(--color1st);
+}
+
+.appmenu:hover {
+  color: var(--color2nd);
+  background-color: var(--color4th);
+}
+
+.content {
+  background-color: white;
+  min-height: 500px;
+  color: var(--color2nd);
+  padding: 2rem 1rem;
+  margin: 0px;
+}
+
+.brand {
+  width:inherit;
+  background-color: white;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.techfont{
+  font-family: 'Russo One', sans-serif;
+}
+
+.btn-primary {
+  background-color: var(--color3rd);
+  border-color: var(--color3rd);
+  color: var(--color2nd);
+  margin: 3px;
+}
+
+.btn-warning {
+  background-color: var(--color4th);
+  border-color: var(--color4th);
+  color: var(--color2nd);
+  margin: 3px;
+}
+
+.btn-default {
+  color: var(--color2nd);
+}
+
+.btn:hover {
+  background-color: var(--color2nd);
+  border-color: var(--color2nd);
+  color: white;
+}
