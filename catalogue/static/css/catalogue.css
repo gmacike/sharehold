@@ -25,6 +25,7 @@
 .catalogentry{
   background-color: var(--color1st);
   margin: 5px 5px;
+  min-height: 200px;
 }
 
 .catalogentry h5 a {
@@ -53,23 +54,4 @@ td {
 
 .boardgameedition .img {
   text-align: center;
-}
-
-
-.pagination{
-  justify-content: center;
-  font-size: 2em;
-}
-
-.pagination li {
-  padding: 10px 40px;
-  color: var(--color4th);
-}
-
-.pagination li a {
-  color: var(--color2nd);
-}
-
-.pagination li.disabled {
-  color: var(--color1st);
 }

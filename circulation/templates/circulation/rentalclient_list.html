@@ -23,7 +23,7 @@
          <h2> {{item.identificationCode}} </h2>
          <h2> {{item.initials}}</h2>
          {% if perms.circulation.change_rentalclient %}
-            <a href="{% url 'rentalclient_edit' pk=item.pk %}" class="btn btn-warning">Edytuj</a>
+            <a href="{% url 'rentalclient_details' pk=item.pk %}" class="btn btn-warning">Edytuj</a>
          {% endif %}
        </div>
     {% endfor %}

@@ -1,3 +1,5 @@
+@import url("/static/pagination.css");
+
 :root {
     --color1st: rgba(183, 183, 183, 1);
     --color2nd: rgba(23, 55, 83, 1);

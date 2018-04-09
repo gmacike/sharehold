@@ -1,4 +1,5 @@
 {% extends "catalogue/base.html" %}
+{% load pagination %}
 
 {% block content %}
 
@@ -8,7 +9,7 @@
 
   <form class="catalogue_search_form" action="{% url 'catalogue_entries' %}" method="GET">
     <label for="filter_criteria">Ograniczenie listy</label>
-    <input type="text" class="form-control" id="filter_criteria" name="filter"
+    <input type="text" class="form-control" id="filter_criteria" autofocus name="filter"
       placeholder="Podaj kryteria wyszukiwania" value={{ request.GET.filter }}>
     <button type="submit" class="save btn btn-primary btn-lg" name="search" value="barcode">Szukaj kodu paskowego</button>
     <button type="submit" class="save btn btn-secondary btn-md" name="search" value="title">Szukaj tytułu</button>
@@ -33,28 +34,10 @@
   </div>
 </div>
 
-<div class="container">
-  {% if is_paginated %}
-  <ul class="pagination techfont">
-    {% if page_obj.has_previous %}
-      <li><a href="?filter={{ request.GET.filter }}&search={{ request.GET.search }}&page={{ page_obj.previous_page_number }}">&laquo;</a></li>
-    {% else %}
-      <li class="disabled"><span>&laquo;</span></li>
-    {% endif %}
-    {% for i in paginator.page_range %}
-      {% if page_obj.number == i %}
-        <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
-      {% else %}
-        <li><a href="?filter={{ request.GET.filter }}&search={{ request.GET.search }}&page={{ i }}">{{ i }}</a></li>
-      {% endif %}
-    {% endfor %}
-    {% if page_obj.has_next %}
-      <li><a href="?filter={{ request.GET.filter }}&search={{ request.GET.search }}&page={{ page_obj.next_page_number }}">&raquo;</a></li>
-    {% else %}
-      <li class="disabled"><span>&raquo;</span></li>
-    {% endif %}
-  </ul>
-  {% endif %}
-</div>
+{% if is_paginated %}
+  <div class="container">
+      {% paginator %}
+  </div>
+{% endif %}
 
 {% endblock %}

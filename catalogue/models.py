@@ -37,6 +37,9 @@ class Commodity (models.Model):
         if self.codeType == Commodity.BARCODE:
             return self.codeValue
 
+    def get_commodity_by_code (self, code_type, code_value):
+        return None
+
 
 class BoardGameCommodity (Commodity):
     catalogueEntry = models.ForeignKey ('BoardGameItem',
@@ -67,6 +70,9 @@ class BoardGameCommodity (Commodity):
     def get_absolute_url(self):
         return reverse("catalogue_entries")
 
+    def get_commodity_by_code (code_type, code_value):
+        return BoardGameCommodity.objects.filter (codeValue=code_value).filter (codeType=code_type)
+
     # def getBoxImageURL(self, boxImage):
     #     return boxImage
 
@@ -89,6 +95,7 @@ class CatalogueItem (models.Model):
 class BoardGameItem (CatalogueItem):
     bggURL = models.URLField (
         max_length = 100,
+        null = True,
         blank = True)
     baseGameItem = models.ForeignKey (
         'catalogue.BoardGameItem',

@@ -1,0 +1,22 @@
+
+.pagination{
+  justify-content: center;
+  font-size: 2em;
+}
+
+.pagination li {
+  padding: 10px 30px;
+  color: var(--color4th);
+}
+
+.pagination li span {
+  color: var(--color2nd);
+}
+
+.pagination li a {
+  color: var(--color2nd);
+}
+
+.pagination li.disabled {
+  color: var(--color1st);
+}
