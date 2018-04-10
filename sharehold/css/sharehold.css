@@ -6,10 +6,34 @@
     --color3rd: rgba(186, 216, 60, 1);
     --color4th: rgba(255, 136, 17, 1);
     --color5th: rgba(254, 208, 0, 1);
+    --color6th: rgba(248, 248, 248, 1);
 }
 
 body {
   background-color: white;
+}
+
+.topnavbar {
+  background-color: var(--color2nd);
+  min-height: 2em;
+}
+
+.topnav-la {
+  background-color: var(--color2nd);
+  color: white;
+  font-size: 1.5em;
+  /* padding-left: 3px; */
+}
+
+.topnav-ra {
+  background-color: var(--color2nd);
+  color: white;
+  font-size: 1.5em;
+}
+
+.topnav-la:hover, .topnav-ra:hover {
+  color: var(--color2nd);
+  background-color: var(--color4th);
 }
 
 .sidemenu {
@@ -32,6 +56,7 @@ body {
   font-size: 1.2em;
   width: inherit;
   min-height: 3em;
+  padding-left: 3px;
   padding-bottom: 10px;
   border-bottom: 1px solid var(--color1st);
 }
@@ -47,6 +72,7 @@ body {
   font-size: 1em;
   padding-left: 1rem;
   width: inherit;
+  min-height: 2em;
   border-bottom: 1px solid var(--color1st);
 }
 
@@ -59,7 +85,7 @@ body {
   background-color: white;
   min-height: 500px;
   color: var(--color2nd);
-  padding: 2rem 1rem;
+  /* padding: 2rem 1rem; */
   margin: 0px;
 }
 
@@ -72,6 +98,10 @@ body {
 
 .techfont{
   font-family: 'Russo One', sans-serif;
+}
+
+i {
+  vertical-align: middle;
 }
 
 .btn-primary {
