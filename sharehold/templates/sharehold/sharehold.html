@@ -20,6 +20,9 @@
     <link href="https://fonts.googleapis.com/css?family=Montserrat|Russo+One" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Libre+Barcode+39" rel="stylesheet">
 
+    <!-- Icons -->
+    <!-- http://google.github.io/material-design-icons/ -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     {% block refs %}
     <!-- additional references -->
     {% endblock %}
@@ -34,7 +37,21 @@
   </head>
   <body class="loader">
 
-    <!-- Navbar -->
+    <!-- Top Navbar -->
+    <nav class="navbar topnavbar techfont">
+      <ul class="navbar-nav justify-content-start col-2">
+        <li><a class="navbar-item techfont topnav-la" href="{% url 'welcome' %}"><i class="material-icons">home</i></a></li>
+      </ul>
+      <ul class="navbar-nav justify-content-end">
+        {% if user.is_authenticated %}
+          <li><a class="navbar-item techfont topnav-ra" href="{% url 'logout' %}">{{user.username}}<i class="material-icons">exit_to_app</i></a></li>
+        {% else %}
+          <li><a class="navbar-item topnav-ra" href="{% url 'login' %}">Zaloguj się<i class="material-icons">account_box</i></a> </li>
+        {% endif %}
+      </ul>
+    </nav>
+
+    <!-- Side menu -->
     <div class="container-fluid row">
       <nav class="navbar flex-column col-2 sidemenu">
           <a class="navbar-brand logo" href="{% url 'welcome' %}">
@@ -54,11 +71,6 @@
             {% block warehouse_appmenu %}
             <!-- application submenu -->
             {% endblock %}
-            {% if user.is_authenticated %}
-              <a class="navbar-nav techfont mainmenu" href="{% url 'logout' %}">Wyloguj {{user.username}}</a>
-            {% else %}
-              <a class="navbar-nav techfont mainmenu" href="{% url 'login' %}"> <span>Zaloguj</span> </a> </li>
-            {% endif %}
           {% endblock %}
       </nav>
 

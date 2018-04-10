@@ -17,11 +17,6 @@
   {% block clienthasboardgame_appmenu %}
   <!-- application submenu -->
   {% endblock %}
-  {% if user.is_authenticated %}
-    <a class="navbar-nav techfont mainmenu" href="{% url 'logout' %}">Wyloguj {{user.username}}</a>
-  {% else %}
-    <a class="navbar-nav techfont mainmenu" href="{% url 'login' %}"> <span>Zaloguj</span> </a> </li>
-  {% endif %}
 {% endblock %}
 
 {% block content %}
