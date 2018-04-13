@@ -22,12 +22,26 @@
 .cataloguelist{
   margin-left: 0px;
   margin-right: 0px;
+  padding: 0px 0px;
+  background-color: white;
 }
 
 .catalogentry{
-  background-color: var(--color1st);
-  margin: 5px 5px;
-  min-height: 200px;
+  background-color: var(--color6th);
+  padding: 8px;
+  margin-right: 8px;
+  margin-bottom: 8px;
+  flex-basis: 300px;
+  min-width: 250px;
+  max-width: 320px;
+  min-height: 150px;
+  flex-grow: 1;
+  flex-shrink: 2;
+}
+
+.catalogentry img {
+  max-width: 150px;
+  max-height: 150px;
 }
 
 .catalogentry h5 a {
@@ -35,7 +49,7 @@
 }
 
 .catalogentry h5 a:hover {
-  color: white;
+  color: var(--color4th);
 }
 
 

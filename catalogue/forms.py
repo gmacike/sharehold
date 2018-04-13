@@ -16,10 +16,11 @@ class BoardGameItemForm(forms.ModelForm):
         model = BoardGameItem
         # extensions =
 
-        fields = ('itemLabel', 'bggURL', 'baseGameItem')
+        fields = ('itemLabel', 'itemImage', 'bggURL', 'baseGameItem')
 
         labels = {
             'itemLabel': 'Tytuł',
+            'itemImage': 'Zdjęcie pudełka',
             'bggURL': 'BGG link',
             'baseGameItem': "Gra podstawowa"
         }

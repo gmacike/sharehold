@@ -11,7 +11,7 @@
     <h1>Nowa gra planszowa</h1>
   {% endif %}
 
-  <form class="boardgame-form" method="post">
+  <form class="boardgame-form" enctype="multipart/form-data" method="post">
     {% csrf_token %}
 
     {% for hidden in form.hidden_fields %}
