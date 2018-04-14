@@ -2,13 +2,13 @@
 
 {% block content %}
 
-<div class="jumbotron content">
+<div class="jumbotron content pl-3">
   <div class="row justify-content-between">
     <h1>{{boardgameitem.getTitle}}</h1>
 
     {% if boardgameitem.bggURL %}
-      <a href="{{boardgameitem.bggURL}}">
-        <img  class="img " src="https://cf.geekdo-static.com/images/logos/bgg.png" width="60" height="60" alt="{{boardgameitem.getTitle}} na boardgamegeek.com">
+      <a class="pr-5" href="{{boardgameitem.bggURL}}">
+        <img  class="img text-right" src="https://cf.geekdo-static.com/images/logos/bgg.png" width="60" height="60" alt="{{boardgameitem.getTitle}} na boardgamegeek.com">
       </a>
     {% endif %}
   </div>
@@ -23,7 +23,7 @@
   {% endif %}
 
   {% if boardgameitem.extensions.count > 0 %}
-    <div class="row catalogentry justify-content-start">
+    <div class="row justify-content-start">
       <div class="col-6">
         <h3>Dostępne rozszerzenia: </h3>
         <ul>
@@ -36,9 +36,9 @@
     </div>
   {% endif %}
 
-  <div class="row catalogentry">
+  <div class="bgeditons">
     {% if boardgameitem.commodities.count > 0 %}
-      <h3>Dostępne wydania: </h3>
+      <h3 class="w-100">Dostępne wydania: </h3>
       {% include "catalogue/boardgameeditions.html" %}
     {% endif %}
   </div>

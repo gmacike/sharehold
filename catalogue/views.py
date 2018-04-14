@@ -21,18 +21,17 @@ class CatalogueItemListView(ListView):
 
 
     def get_queryset(self):
+        self.queryset = BoardGameItem.objects.none()
         if self.request.method == 'GET':
             filter_criteria = self.request.GET.get("filter")
             if filter_criteria:
-                search_type = self.request.GET.get("search")
-                if search_type == "barcode":
-                    commodities_ids = BoardGameCommodity.objects.filter(codeValue__startswith=filter_criteria).values_list('catalogueEntry')
-                    self.queryset = BoardGameItem.objects.filter(id__in=commodities_ids).order_by(Lower("itemLabel"))
-                    # self.queryset = BoardGameItem.objects.filter(boardgamecommodity__codeValue__startswith=self.filter_criteria).order_by("codeValue")
-                elif search_type == "title":
-                    self.queryset =  BoardGameItem.objects.filter(itemLabel__icontains=filter_criteria).order_by(Lower("itemLabel"))
-                # else:
-                #     objects =  self.model.objects.all().order_by("-itemLabel")
+                commodities_ids = BoardGameCommodity.objects.filter(codeValue__icontains=filter_criteria).values_list('catalogueEntry')
+                games_by_barcode = BoardGameItem.objects.filter(id__in=commodities_ids)
+                games_by_title = BoardGameItem.objects.filter(itemLabel__icontains=filter_criteria)
+                games_filtered = games_by_barcode | games_by_title
+                self.queryset = games_filtered.order_by(Lower("itemLabel"))
+            else:
+                self.queryset = BoardGameItem.objects.all().order_by("itemLabel")
             return self.queryset
 
     def get_context_data(self, **kwargs):

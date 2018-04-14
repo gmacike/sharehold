@@ -10,27 +10,33 @@
 
   <form class="catalogue_search_form" action="{% url 'catalogue_entries' %}" method="GET">
     <label for="filter_criteria">Ograniczenie listy</label>
-    <input type="text" class="form-control" id="filter_criteria" autofocus name="filter"
-      placeholder="Podaj kryteria wyszukiwania" value={{ request.GET.filter }}>
-    <button type="submit" class="save btn btn-primary btn-lg" name="search" value="barcode">Szukaj kodu paskowego</button>
-    <button type="submit" class="save btn btn-secondary btn-md" name="search" value="title">Szukaj tytułu</button>
+    <div class="input-group">
+      <div class="input-group-prepend">
+        <button type="submit" class="save btn btn-primary btn-lg">Szukaj</button>
+      </div>
+      <input type="text" class="form-control" id="filter_criteria" autofocus name="filter"
+        placeholder="Podaj kryteria wyszukiwania" value={{ request.GET.filter }}>
+    </div>
   </form>
 
   <div class="jumbotron cataloguelist row">
     {% for item in catalogueitem_list %}
       <div class="d-flex flex-wrap col-xl-2 col-md-3 col-sm-5 catalogentry">
-        {% if item.getImage %}
-          <img class="img-fluid w-50" src="{{item.getImage.url}}">
-        {% else %}
-          <img class="img-fluid w-50" src="{% static 'noimage.png' %}">
-        {% endif %}
-        <div class="d-flex flex-column w-50 justify-content-start align-items-start">
-          {% if perms.catalogue.change_boardgameitem %}
-            <a href="{% url 'boardgame_edit' pk=item.pk %}" class="btn btn-block btn-warning">Edytuj grę</a>
+        <div class="row justify-content-between w-100">
+          {% if item.getImage %}
+            <img class="img-responsive img-thumbnail w-50" src="{{item.getImage.url}}">
+          {% else %}
+            <img class="img-responsive img-thumbnail" src="{% static 'noimage.png' %}">
           {% endif %}
-          {% if perms.catalogue.add_commodity %}
-            <a href="{% url 'boardgame_new_edition' bgpk=item.pk %}" class="btn btn-block btn-warning">Dodaj wydanie</a>
-          {% endif %}
+          <div class="d-flex flex-column w-50 justify-content-start align-items-end">
+            <a href="#" class="btn btn-block btn-primary">Wypożycz</a>
+            {% if perms.catalogue.change_boardgameitem %}
+              <a href="{% url 'boardgame_edit' pk=item.pk %}" class="btn btn-block btn-warning">Edytuj grę</a>
+            {% endif %}
+            {% if perms.catalogue.add_commodity %}
+              <a href="{% url 'boardgame_new_edition' bgpk=item.pk %}" class="btn btn-block btn-warning">Dodaj wydanie</a>
+            {% endif %}
+          </div>
         </div>
         <div class="w-100"></div>
         <h5 class="align-self-start"> <a href="{% url 'boardgame_detail' pk=item.pk %}"> {{item.getTitle}} </a> </h5>
