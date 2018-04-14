@@ -50,6 +50,21 @@ body {
   text-align: center;
 }
 
+.brand {
+  width:inherit;
+  background-color: white;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.techfont{
+  font-family: 'Russo One', sans-serif;
+}
+
+i {
+  vertical-align: middle;
+}
+
 .mainmenu {
   background-color: var(--color2nd);
   color: white;
@@ -81,27 +96,17 @@ body {
   background-color: var(--color4th);
 }
 
+.canvas {
+  margin: 0px;
+  padding: 0px;
+}
+
 .content {
   background-color: white;
   min-height: 500px;
   color: var(--color2nd);
-  /* padding: 2rem 1rem; */
-  margin: 0px;
-}
-
-.brand {
-  width:inherit;
-  background-color: white;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.techfont{
-  font-family: 'Russo One', sans-serif;
-}
-
-i {
-  vertical-align: middle;
+  padding: 32px 0px 32px 0px;
+  margin: 0px 0px 0px 16px;
 }
 
 .btn-primary {

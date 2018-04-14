@@ -4,14 +4,14 @@
 
 {% block content %}
 
-<div class="jumbotron content">
+<div class="jumbotron content pl-3">
   {% if boardgameitem.pk != null %}
     <h1>Gra planszowa aktualizacja</h1>
   {% else %}
     <h1>Nowa gra planszowa</h1>
   {% endif %}
 
-  <form class="boardgame-form" method="post">
+  <form class="boardgame-form" enctype="multipart/form-data" method="post">
     {% csrf_token %}
 
     {% for hidden in form.hidden_fields %}
@@ -31,10 +31,12 @@
 
 
     {% if boardgameitem.pk != null %}
-      <label>Dostępne wydania</label>
-      {% include "catalogue/boardgameeditions.html" %}
-      <button type="submit" class="save btn btn-primary btn-warning">Aktualizuj grę</button>
+      <div class="bgeditons">
+        <label>Dostępne wydania</label>
+        {% include "catalogue/boardgameeditions.html" %}
+      </div>
       {% if perms.catalogue.add_commodity %}
+        <button type="submit" class="save btn btn-primary btn-warning">Aktualizuj grę</button>
         <a href="{% url 'boardgame_new_edition' bgpk=boardgameitem.pk %}" class="btn btn-warning">Dodaj wydanie</a>
       {% endif %}
     {% else %}

@@ -73,13 +73,12 @@ class BoardGameCommodity (Commodity):
     def get_commodity_by_code (code_type, code_value):
         return BoardGameCommodity.objects.filter (codeValue=code_value).filter (codeType=code_type)
 
-    # def getBoxImageURL(self, boxImage):
-    #     return boxImage
-
 
 #abstract class for univeral handling catalogued items
 class CatalogueItem (models.Model):
     itemLabel = models.CharField (max_length = 50)
+    itemImage = models.ImageField (upload_to="catalogue/", null = True, blank=True)
+
 
     class Meta:
         abstract = True
@@ -91,8 +90,13 @@ class CatalogueItem (models.Model):
     def getCommodities (self):
         return None
 
+    def getImage(self):
+        return self.itemImage
+
 
 class BoardGameItem (CatalogueItem):
+    itemImage = models.ImageField (upload_to="catalogue/bg/", null = True, blank=True)
+
     bggURL = models.URLField (
         max_length = 100,
         null = True,
@@ -115,3 +119,16 @@ class BoardGameItem (CatalogueItem):
 
     def getCommodities (self):
         return self.commodities
+
+    def getImage(self):
+        image = None
+        if self.itemImage:
+            image = self.itemImage
+        else:
+            commodities = self.commodities.exclude(boxFrontImage="")
+            if commodities.exists():
+                for commodity in commodities:
+                    if bool(commodity.boxFrontImage):
+                        image = commodity.boxFrontImage
+                        break
+        return image

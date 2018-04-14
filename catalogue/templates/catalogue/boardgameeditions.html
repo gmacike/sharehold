@@ -1,26 +1,30 @@
-<div class="container" >
-  <div class="row justify-content-around text-center">
-    {% for commodity in boardgameitem.commodities.all %}
-      <div class="col-md-4 col-sm-6 container-fluid boardgameedition justify-content-between">
-        {% if commodity.description %}
-          <p class='text-left'>{{ commodity.description }}</p>
-        {% else %}
-          <p class='text-left'>Brak dodatkowych informacji o&nbsp;wydaniu</p>
-        {% endif %}
-        {% if commodity.boxTopImage %}
-          <img class="img-responsive img-thumbnail" src="{{commodity.boxTopImage.url}}">
-        {% endif %}
-        {% if commodity.boxFrontImage %}
-          <img class="img-responsive img-thumbnail" src="{{commodity.boxFrontImage.url}}">
-        {% endif %}
-        {% if commodity.boxSideImage %}
-          <img class="img-responsive img-thumbnail" src="{{commodity.boxSideImage.url}}">
-        {% endif %}
-        <h2 class="barcodetextfont text-center"> {{commodity.codeValue}} </h2>
-        {% if perms.catalogue.change_boardgamecommodity %}
-          <a href="{% url 'boardgame_edition_edit' pk=commodity.pk %}" class="btn btn-warning">Aktualizuj wydanie</a>
-        {% endif %}
-      </div>
-    {% endfor %}
-  </div>
+{% load staticfiles %}
+
+<div class="row d-flex w-100 justify-content-start text-center">
+  {% for commodity in boardgameitem.commodities.all %}
+    <div class="col-md-4 col-sm-6 boardgameedition">
+      {% if commodity.description %}
+        <h5 class='text-left'>{{ commodity.description }}</h5>
+      {% else %}
+        <h5 class='text-left'>Brak dodatkowych informacji o&nbsp;wydaniu</h5>
+      {% endif %}
+      {% if commodity.boxTopImage %}
+        <img class="img-responsive img-thumbnail" src="{{commodity.boxTopImage.url}}">
+      {% else %}
+        <img class="img-responsive img-thumbnail" src="{% static 'noimage.png' %}">
+      {% endif %}
+      {% if commodity.boxFrontImage %}
+        <img class="img-responsive img-thumbnail" src="{{commodity.boxFrontImage.url}}">
+      {% else %}
+        <img class="img-responsive img-thumbnail" src="{% static 'noimage.png' %}">
+      {% endif %}
+      {% if commodity.boxSideImage %}
+        <img class="img-responsive img-thumbnail" src="{{commodity.boxSideImage.url}}">
+      {% endif %}
+      <h2 class="barcodetextfont text-center"> {{commodity.codeValue}} </h2>
+      {% if perms.catalogue.change_boardgamecommodity %}
+        <a href="{% url 'boardgame_edition_edit' pk=commodity.pk %}" class="btn btn-warning">Aktualizuj wydanie</a>
+      {% endif %}
+    </div>
+  {% endfor %}
 </div>
