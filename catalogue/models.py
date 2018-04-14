@@ -53,9 +53,9 @@ class BoardGameCommodity (Commodity):
     )
 
 
-    boxFrontImage = models.ImageField (upload_to="bg/img/", null = True, blank=True)
-    boxTopImage = models.ImageField (upload_to="bg/img/", null = True, blank=True)
-    boxSideImage = models.ImageField (upload_to="bg/img/", null = True, blank=True)
+    boxFrontImage = models.ImageField (upload_to="catalogue/bg/", null = True, blank=True)
+    boxTopImage = models.ImageField (upload_to="catalogue/bg/", null = True, blank=True)
+    boxSideImage = models.ImageField (upload_to="catalogue/bg/", null = True, blank=True)
 
     class Meta:
         verbose_name = "Wydanie gry planszowej"
