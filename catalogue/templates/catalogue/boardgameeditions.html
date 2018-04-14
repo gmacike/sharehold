@@ -1,3 +1,5 @@
+{% load staticfiles %}
+
 <div class="row d-flex w-100 justify-content-start text-center">
   {% for commodity in boardgameitem.commodities.all %}
     <div class="col-md-4 col-sm-6 boardgameedition">
@@ -11,6 +13,8 @@
       {% endif %}
       {% if commodity.boxFrontImage %}
         <img class="img-responsive img-thumbnail" src="{{commodity.boxFrontImage.url}}">
+      {% else %}
+        <img class="img-responsive img-thumbnail" src="{% static 'noimage.png' %}">
       {% endif %}
       {% if commodity.boxSideImage %}
         <img class="img-responsive img-thumbnail" src="{{commodity.boxSideImage.url}}">
