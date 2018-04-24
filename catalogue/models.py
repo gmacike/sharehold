@@ -53,9 +53,9 @@ class BoardGameCommodity (Commodity):
     )
 
 
-    boxFrontImage = models.ImageField (upload_to="catalogue/bg/", null = True, blank=True)
-    boxTopImage = models.ImageField (upload_to="catalogue/bg/", null = True, blank=True)
-    boxSideImage = models.ImageField (upload_to="catalogue/bg/", null = True, blank=True)
+    boxFrontImage = models.ImageField (upload_to="catalogue/bg/%M", null = True, blank=True)
+    boxTopImage = models.ImageField (upload_to="catalogue/bg/%M", null = True, blank=True)
+    boxSideImage = models.ImageField (upload_to="catalogue/bg/%M", null = True, blank=True)
 
     class Meta:
         verbose_name = "Wydanie gry planszowej"
@@ -77,6 +77,7 @@ class BoardGameCommodity (Commodity):
 #abstract class for univeral handling catalogued items
 class CatalogueItem (models.Model):
     itemLabel = models.CharField (max_length = 50)
+    # keeping all media files in one folder is not efficient, override this in subclasses
     itemImage = models.ImageField (upload_to="catalogue/", null = True, blank=True)
 
 
