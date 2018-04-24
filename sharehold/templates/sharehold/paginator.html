@@ -2,12 +2,12 @@
 {% if show_first %}
     <li><a href="?page=1&{{ req_params }}">&laquo;</a></li>
 {% endif %}
+{% if has_previous %}
+    <li><a href="?page={{ page_obj.previous_page_number }}&{{ req_params }}">&lsaquo;</a></li>
+{% endif %}
 {% if has_far_behind %}
   <li><a href="?page={{ far_behind_page }}&{{ req_params }}">{{ far_behind_page }}</a></li>
   <li><span>&hellip;</span></li>
-{% endif %}
-{% if has_previous %}
-    <li><a href="?page={{ page_obj.previous_page_number }}&{{ req_params }}">&lsaquo;</a></li>
 {% endif %}
 {% for one_page in page_numbers %}
     {% ifequal one_page page %}
@@ -16,12 +16,12 @@
         <li><a href="?page={{ one_page }}&{{ req_params }}">{{ one_page }}</a></li>
     {% endifequal %}
 {% endfor %}
-{% if has_next %}
-    <li><a href="?page={{ page_obj.next_page_number }}&{{ req_params }}">&rsaquo;</a></li>
-{% endif %}
 {% if has_far_away %}
   <li><span>&hellip;</span></li>
   <li><a href="?page={{ far_away_page }}&{{ req_params }}">{{ far_away_page }}</a></li>
+{% endif %}
+{% if has_next %}
+    <li><a href="?page={{ page_obj.next_page_number }}&{{ req_params }}">&rsaquo;</a></li>
 {% endif %}
 {% if show_last %}
     <li><a href="?page=last&{{ req_params }}">&raquo;</a></li>
