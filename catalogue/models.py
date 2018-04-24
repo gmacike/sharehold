@@ -37,6 +37,9 @@ class Commodity (models.Model):
         if self.codeType == Commodity.BARCODE:
             return self.codeValue
 
+    def get_commodity_by_code (self, code_type, code_value):
+        return None
+
 
 class BoardGameCommodity (Commodity):
     catalogueEntry = models.ForeignKey ('BoardGameItem',
@@ -50,9 +53,9 @@ class BoardGameCommodity (Commodity):
     )
 
 
-    boxFrontImage = models.ImageField (upload_to="bg/img/", null = True, blank=True)
-    boxTopImage = models.ImageField (upload_to="bg/img/", null = True, blank=True)
-    boxSideImage = models.ImageField (upload_to="bg/img/", null = True, blank=True)
+    boxFrontImage = models.ImageField (upload_to="catalogue/bg/", null = True, blank=True)
+    boxTopImage = models.ImageField (upload_to="catalogue/bg/", null = True, blank=True)
+    boxSideImage = models.ImageField (upload_to="catalogue/bg/", null = True, blank=True)
 
     class Meta:
         verbose_name = "Wydanie gry planszowej"
@@ -67,13 +70,15 @@ class BoardGameCommodity (Commodity):
     def get_absolute_url(self):
         return reverse("catalogue_entries")
 
-    # def getBoxImageURL(self, boxImage):
-    #     return boxImage
+    def get_commodity_by_code (code_type, code_value):
+        return BoardGameCommodity.objects.filter (codeValue=code_value).filter (codeType=code_type)
 
 
 #abstract class for univeral handling catalogued items
 class CatalogueItem (models.Model):
     itemLabel = models.CharField (max_length = 50)
+    itemImage = models.ImageField (upload_to="catalogue/", null = True, blank=True)
+
 
     class Meta:
         abstract = True
@@ -85,10 +90,16 @@ class CatalogueItem (models.Model):
     def getCommodities (self):
         return None
 
+    def getImage(self):
+        return self.itemImage
+
 
 class BoardGameItem (CatalogueItem):
+    itemImage = models.ImageField (upload_to="catalogue/bg/", null = True, blank=True)
+
     bggURL = models.URLField (
         max_length = 100,
+        null = True,
         blank = True)
     baseGameItem = models.ForeignKey (
         'catalogue.BoardGameItem',
@@ -108,3 +119,16 @@ class BoardGameItem (CatalogueItem):
 
     def getCommodities (self):
         return self.commodities
+
+    def getImage(self):
+        image = None
+        if self.itemImage:
+            image = self.itemImage
+        else:
+            commodities = self.commodities.exclude(boxFrontImage="")
+            if commodities.exists():
+                for commodity in commodities:
+                    if bool(commodity.boxFrontImage):
+                        image = commodity.boxFrontImage
+                        break
+        return image

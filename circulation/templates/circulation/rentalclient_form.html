@@ -4,7 +4,11 @@
 {% block content %}
 
 <div class="jumbotron">
-  <h1>Nowy klient</h1>
+  {% if rentalclient.pk != null %}
+    <h1>Klient - aktualizacja</h1>
+  {% else %}
+    <h1>Nowy klient</h1>
+  {% endif %}
 
   <form class="retalclient-form" method="post">
     {% csrf_token %}
@@ -22,8 +26,15 @@
         {% endfor %}
       </div>
     {% endfor %}
-	<button type="submit" class="save btn btn-secondary btn-lg" formaction="return_home">Dodaj i zakończ wprowadzanie</button>
-    <a href="{% url 'return_home' %}" class="btn btn-default">Anuluj</a>
+    
+    {% if rentalclient.pk != null %}
+        <button type="submit" class="save btn btn-secondary btn-lg" formaction="return_rentalClientList">Zapisz zmiany</button>
+    {% else %}
+        <button type="submit" class="save btn btn-secondary btn-lg" formaction="return_rentalClientList">Dodaj i zakończ wprowadzanie</button>
+        <button type="submit" class="save btn btn-secondary btn-lg" formaction="return_editRentalClient">Dodaj i wprowadź identyfikator</button>
+        <button type="submit" class="save btn btn-secondary btn-lg" formaction="return_newRentalClient">Dodaj i wprowadź kolejnego</button>
+    {% endif %}
+    <a href="{% url 'return_rentalClientList' %}" class="btn btn-default">Anuluj</a>
   </form>
 </div>
 

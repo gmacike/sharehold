@@ -1,5 +1,8 @@
 *.pyc
 .idea
 sharehold/db.sqlite3
-sharehold/media/bg/img/*.*
+sharehold/media/catalogue/bg/*.*
+sharehold/static/*.css
+/static/*.*
 prod.py
+*skk.games.xlsx

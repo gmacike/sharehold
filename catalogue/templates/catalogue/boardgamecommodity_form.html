@@ -1,9 +1,10 @@
 {% extends "catalogue/base.html" %}
+{% load static %}
 {% load widget_tweaks %}
 
 {% block content %}
 
-<div class="jumbotron">
+<div class="jumbotron content">
   {% if boardgamecommodity.pk != null %}
     <h1>Aktualizacja wydania gry planszowej</h1>
   {% else %}
@@ -30,7 +31,7 @@
     {% if boardgamecommodity.pk != null %}
       <button type="submit" class="save btn btn-primary btn-warning">Aktualizuj</button>
     {% else %}
-      <button type="submit" class="save btn btn-primary btn-lg" >Dodaj</button>
+      <button type="submit" class="save btn btn-primary btn-lg">Dodaj</button>
       <!-- formaction="return_home" -->
       <!-- <button type="submit" class="save btn btn-primary btn-lg" formaction="repeat_add_boardgame">Dodaj i wprowadź następną</button>
       <button type="submit" class="save btn btn-secondary btn-lg" formaction="boardgamelist_return">Dodaj i wróć do katalogu</button>
@@ -39,5 +40,9 @@
     <a href="{% url 'catalogue_entries' %}" class="btn btn-default">Anuluj</a>
   </form>
 </div>
+
+<!-- autoselect jquery -->
+<script type="text/javascript" src="{% static 'admin/js/vendor/jquery/jquery.js' %}"></script>
+{{ form.media }}
 
 {% endblock %}

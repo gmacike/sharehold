@@ -6,11 +6,14 @@ from catalogue.models import (CatalogueItem, BoardGameItem, BoardGameCommodity)
 from catalogue.forms import BoardGameItemForm, BoardGameCommodityForm
 from django.views.generic import (ListView,DetailView,CreateView, UpdateView)
 from django.conf import settings
+from dal import autocomplete
+# for case insensitive qureyset ordering
+from django.db.models.functions import Lower
 
 # Create your views here.
 class CatalogueItemListView(ListView):
-    queryset = BoardGameItem.objects.all().order_by("itemLabel")
-    filter_criteria = ""
+    queryset = BoardGameItem.objects.all().order_by(Lower("itemLabel"))
+    # filter_criteria = ""
     context_object_name = 'catalogueitem_list'
     template_name = 'catalogue/catalogueitem_list.html'
     paginate_by = settings.CATALOGUE_PAGINATION
@@ -18,26 +21,33 @@ class CatalogueItemListView(ListView):
 
 
     def get_queryset(self):
+        self.queryset = BoardGameItem.objects.none()
         if self.request.method == 'GET':
-
-            self.filter_criteria = self.request.GET.get("filter")
-            if self.filter_criteria:
-                search_type = self.request.GET.get("search")
-                if search_type == "barcode":
-                    commodities_ids = BoardGameCommodity.objects.filter(codeValue__startswith=self.filter_criteria).values_list('catalogueEntry')
-                    self.queryset = BoardGameItem.objects.filter(id__in=commodities_ids).order_by("itemLabel")
-                    # self.queryset = BoardGameItem.objects.filter(boardgamecommodity__codeValue__startswith=self.filter_criteria).order_by("codeValue")
-                elif search_type == "title":
-                    self.queryset =  BoardGameItem.objects.filter(itemLabel__icontains=self.filter_criteria).order_by("itemLabel")
-                # else:
-                #     objects =  self.model.objects.all().order_by("-itemLabel")
+            filter_criteria = self.request.GET.get("filter")
+            if filter_criteria:
+                commodities_ids = BoardGameCommodity.objects.filter(codeValue__icontains=filter_criteria).values_list('catalogueEntry')
+                games_by_barcode = BoardGameItem.objects.filter(id__in=commodities_ids)
+                games_by_title = BoardGameItem.objects.filter(itemLabel__icontains=filter_criteria)
+                games_filtered = games_by_barcode | games_by_title
+                self.queryset = games_filtered.order_by(Lower("itemLabel"))
+            else:
+                self.queryset = BoardGameItem.objects.all().order_by("itemLabel")
             return self.queryset
 
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get a context
+        context = super().get_context_data(**kwargs)
+        req_copy = self.request.GET.copy()
+        req_copy.pop('page', True)
+        req_params = req_copy.urlencode()
+        context ['req_params'] = req_params
+        return context
 
-# class CatalogueItemFilteredListView(CatalogueItemListView):
-#     filterCriteria = ""
-#     def get_queryset(self):
-#         return BoardGameItem.objects.all().order_by("itemLabel")
+    # def get(self, request, *args, **kwargs):
+    #     # extract parameters from request and put them into context
+    #     req_copy = request.GET.copy()
+    #     self.request_parameters = req_copy.pop('page', True) and req_copy.urlencode()
+    #     return render(request, self.template_name)
 
 
 class BoardGameItemDetailsView(DetailView):
@@ -60,7 +70,7 @@ class BoardGameItemUpdateView(LoginRequiredMixin, PermissionRequiredMixin, Updat
 
     form_class = BoardGameItemForm
     model = BoardGameItem
-    
+
 ##########################################
 # BoardGameItem additional views
 ##########################################
@@ -94,6 +104,17 @@ def return_home (request):
             boardgame = form.save(commit=False)
             boardgame.save()
     return redirect('welcome')
+
+class BoardGameAutocompleteView(autocomplete.Select2QuerySetView):
+    # these queryset data will be available through pulib url guard w/ permissions if necessary
+    # here are none as boardgame cataloge is going to be available for publicity
+    def get_queryset(self):
+        qs = BoardGameItem.objects.all().order_by(Lower('itemLabel'))
+
+        if self.q:
+            qs = qs.filter(itemLabel__icontains=self.q)
+
+        return qs
 
 
 class BoardGameCommodityCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):

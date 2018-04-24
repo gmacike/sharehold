@@ -2,35 +2,56 @@
 
 {% block content %}
 
-<div class="jumbotron">
-  <h1>{{boardgameitem.getTitle}}</h1>
+<div class="jumbotron content pl-3">
+  <div class="row justify-content-between">
+    <h1>{{boardgameitem.getTitle}}</h1>
+
+    {% if boardgameitem.bggURL %}
+      <a class="pr-5" href="{{boardgameitem.bggURL}}">
+        <img  class="img text-right" src="https://cf.geekdo-static.com/images/logos/bgg.png" width="60" height="60" alt="{{boardgameitem.getTitle}} na boardgamegeek.com">
+      </a>
+    {% endif %}
+  </div>
 
   {% if boardgameitem.baseGameItem %}
-    <h2>Dodatek do: <a href="{% url 'boardgame_detail' pk=boardgameitem.baseGameItem.pk %}"> {{boardgameitem.baseGameItem.getTitle}} </a></h2>
+    <div class="row catalogentry justify-content-start">
+      <div class="col-6">
+        <h3>Dodatek do:</h3>
+        <h5><a href="{% url 'boardgame_detail' pk=boardgameitem.baseGameItem.pk %}"> {{boardgameitem.baseGameItem.getTitle}} </a></h5>
+      </div>
+    </div>
   {% endif %}
 
   {% if boardgameitem.extensions.count > 0 %}
-    <h2>Dostępne rozszerzenia: </h2>
-    <ul>
-      {% for gameext in boardgameitem.extensions.all %}
-        <!-- <li>{{gameext.pk}} </li> -->
-        <li> <h3><a href="{% url 'boardgame_detail' pk=gameext.pk %}"> {{ gameext.getTitle }} </a></h3> </li>
-      {% endfor %}
-    </ul>
+    <div class="row justify-content-start">
+      <div class="col-6">
+        <h3>Dostępne rozszerzenia: </h3>
+        <ul>
+          {% for gameext in boardgameitem.extensions.all %}
+            <!-- <li>{{gameext.pk}} </li> -->
+            <li> <h5><a href="{% url 'boardgame_detail' pk=gameext.pk %}"> {{ gameext.getTitle }} </a></h5> </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
   {% endif %}
 
-  {% if boardgameitem.bggURL %}
-    <h2> <a href={{boardgameitem.bggURL}}> {{boardgameitem.getTitle}} na boardgamegeek.com </a> </h2>
-  {% endif %}
+  <div class="bgeditons">
+    {% if boardgameitem.commodities.count > 0 %}
+      <h3 class="w-100">Dostępne wydania: </h3>
+      {% include "catalogue/boardgameeditions.html" %}
+    {% endif %}
+  </div>
 
-  {% if boardgameitem.commodities.count > 0 %}
-    <h2>Dostępne wydania: </h2>
-    {% include "catalogue/boardgameeditions.html" %}
-  {% endif %}
-
-  <a href="{% url 'catalogue_entries' %}" class="btn btn-default">Powrót</a>
-
-
+  <div class="row justify-content-start">
+    {% if perms.catalogue.change_boardgameitem %}
+      <a href="{% url 'boardgame_edit' boardgameitem.pk %}" class="btn btn-warning">Edytuj grę</a>
+    {% endif %}
+    {% if perms.catalogue.add_commodity %}
+      <a href="{% url 'boardgame_new_edition' bgpk=boardgameitem.pk %}" class="btn btn-warning">Dodaj wydanie</a>
+    {% endif %}
+    <a href="{% url 'catalogue_entries' %}" class="btn btn-default">Powrót</a>
+  </div>
 </div>
 
 <!-- <h2 class="barcodefont">{{boardgameitem.codeValue}}</h2> -->

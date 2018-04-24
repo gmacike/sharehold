@@ -26,16 +26,19 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # Application definition
 
 INSTALLED_APPS = [
+    'dal','dal_select2', #these go together for autocomplete light before django.contrib.admin and grapelli if present
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'debug_toolbar',
     'widget_tweaks',
+    'sharehold',
     'catalogue',
     'warehouse',
-	'circulation',
+    'circulation',
 ]
 
 MIDDLEWARE = [
@@ -46,6 +49,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
 ROOT_URLCONF = 'sharehold.urls'
@@ -118,5 +122,10 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join (BASE_DIR, 'static')
+
+STATICFILES_DIRS = [
+    os.path.join (BASE_DIR, 'css'),
+    os.path.join (BASE_DIR, 'images'),
+]
 
 LOGIN_REDIRECT_URL = '/'

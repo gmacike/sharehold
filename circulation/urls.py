@@ -1,17 +1,28 @@
 from django.conf.urls import url
 from circulation import views
+from django.conf.urls.static import static
 
 urlpatterns = [
-#    url(r'^brdgm/$', views.CatalogueItemListView.as_view(), name='catalogue_entries'),
-#    url(r'^brdgm/(?P<pk>\d+)$', views.BoardGameDetailsView.as_view(), name='boardgame_detail'),
-#    url(r'^brdgm/new/$', views.BoardGameCreateView.as_view(), name='boardgame_new'),
-#    url(r'^brdgm/new/repeat_add_boardgame', views.repeat_add_boardgame, name='boardgame_repeat_new'),
-#    url(r'^brdgm/new/boardgamelist_return', views.boardgamelist_return, name='boardgamelist_return'),
-#    url(r'^brdgm/new/return_home', views.return_home, name='return_home'),
-#    url(r'^brdgm/(?P<pk>\d+)/edit/$', views.BoardGameUpdateView.as_view(), name='boardgame_edit'),
     # client links
     url(r'^rClient/$', views.RentalClientListView.as_view(), name='circulation_entries'),
     url(r'^rClient/new/$', views.RentalClientCreateView.as_view(), name='rentalClient_new'),
-    url(r'^rClient/(?P<pk>\d+)/edit/$', views.BoardGameUpdateView.as_view(), name='rentalclient_edit'),
-    url(r'^rClient/new/return_home', views.return_home, name='return_home'),
+    url(r'^rClient/(?P<pk>\d+)/edit/$', views.ClientUpdateView.as_view(), name='rentalclient_edit'),
+    url(r'^rClient/(?P<pk>\d+)/details/$', views.manage_rentalclient, name='rentalclient_details'),
+    url(r'^rClient/new/return_rentalClientList', views.addAndReturn_rentalClientList, name='return_rentalClientList'),
+    url(r'^rClient/new/return_newRentalClient', views.addAndAddNew_rentalClientList, name='return_newRentalClient'),
+    url(r'^rClient/new/return_editRentalClient', views.addAndEditRentalClient, name='return_editRentalClient'),
+    url(r'^rClient/(?P<pk>\d+)/edit/return_rentalClientList', views.updateAndReturn_rentalClientList, name='return_rentalClientList'),
+
+    url(r'^rental$',
+        views.ClientHasBoardGameList.as_view(),
+        name='clienthasboardgame_list'),
+    url(r'^rental/new$',
+        views.ClientHasBoardGameCreateView.as_view(success_url='/rental'),
+        name='clienthasboardgame_create'),
+    url(r'^rental/(?P<pk>\d+)$',
+        views.ClientHasBoardGameDetailView.as_view(),
+        name='clienthasboardgame_detail'),
+    url(r'^rental/(?P<pk>\d+)/return',
+        views.register_return,
+        name='clienthasboardgame_return'),
 ]

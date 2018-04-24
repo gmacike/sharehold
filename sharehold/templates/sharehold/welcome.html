@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-  <div class="jumbotron">
+  <div class="jumbotron content">
     <h1>Witaj{% if user.is_authenticated %} {{user.username}}{% endif %}!</h1>
     <h2>Miło, że zaglądasz. Rozejrzyj się :)</h2>
   </div>

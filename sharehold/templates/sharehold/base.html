@@ -1,60 +1,24 @@
-<!DOCTYPE html>
-{% load staticfiles %}
+{% extends "sharehold.html" %}
 
+{% block sidemenu %}
+  <a class="navbar-nav techfont mainmenu" href="{% url 'catalogue_entries' %}">Katalog</a>
+  {% block catalogue_appmenu %}
+  <!-- application submenu -->
+  {% endblock %}
+  <a class="navbar-nav techfont mainmenu" href="{% url 'circulation_entries' %}">Klienci</a>
+  {% block circulation_appmenu %}
+  <!-- application submenu -->
+  {% endblock %}
+  <a class="navbar-nav techfont mainmenu" href="{% url 'warehouse_index' %}">Magazyny</a>
+  {% block warehouse_appmenu %}
+  <!-- application submenu -->
+  {% endblock %}
+  <a class="navbar-nav techfont mainmenu" href="{% url 'clienthasboardgame_list' %}">Wypożyczalnia</a>
+  {% block clienthasboardgame_appmenu %}
+  <!-- application submenu -->
+  {% endblock %}
+{% endblock %}
 
-<html>
-  <head>
-    <meta charset="utf-8">
-    <title>Sharehold</title>
-
-    <!-- Bootstrap -->
-    <!-- todo: substitude minified bootstrap with one placed at the system server -->
-    <!-- Latest compiled and minified CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-
-    <!-- Optional theme -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
-
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="{% static 'css/catalogue.css' %}">
-
-    <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css?family=Montserrat|Russo+One" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Libre+Barcode+39" rel="stylesheet">
-
-  </head>
-  <body class="loader">
-
-    <!-- Navbar -->
-    <nav class="nabar navbar-default techfont custom-navbar">
-      <div class="container">
-        <ul class="nav navbar-nav">
-          <li><a class="navbar-brand bigbrand" href="{% url 'welcome' %}"> <span class="glyphicon glyphicon-home"></span> </a></li>
-          <!-- <img class="img-fluid" src="{% static 'images/logo.160.png' %}" alt="Sharehold"> -->
-          <li><a class="navbar-brand bigbrand" href="{% url 'catalogue_entries' %}">Katalog</a></li>
-          <li><a class="navbar-brand bigbrand" href="{% url 'circulation_entries' %}">Klienci</a></li>
-        </ul>
-        <!-- <ul class="nav navbar-nav">
-        </ul> -->
-        {% if user.is_authenticated %}
-          <ul class="nav navbar-nav navbar-right">
-            <li> <a href="{% url 'logout' %}">Wyloguj {{user.username}}</a> </li>
-          </ul>
-        {% else %}
-          <ul class="nav navbar-nav navbar-right">
-            <li> <a class="nav navbar-right" href="{% url 'login' %}"> <span class="glyphicon glyphicon-user"></span> </a> </li>
-          </ul>
-        {% endif %}
-      </div>
-    </nav>
-
-
-    <!-- Content block -->
-    <div class="content container">
-      {% block content %}
-
-      {% endblock %}
-    </div>
-
-  </body>
-</html>
+{% block content %}
+<!-- Content block -->
+{% endblock %}
