@@ -28,7 +28,6 @@
         <h3>Dostępne rozszerzenia: </h3>
         <ul>
           {% for gameext in boardgameitem.extensions.all %}
-            <!-- <li>{{gameext.pk}} </li> -->
             <li> <h5><a href="{% url 'boardgame_detail' pk=gameext.pk %}"> {{ gameext.getTitle }} </a></h5> </li>
           {% endfor %}
         </ul>

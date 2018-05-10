@@ -1,8 +1,5 @@
 from django.db import models
 
-from catalogue.models import Commodity, BoardGameCommodity
-
-
 class Warehouse(models.Model):
     name = models.CharField(max_length=30, unique=True)
     desc = models.CharField(max_length=120)
@@ -12,8 +9,8 @@ class Warehouse(models.Model):
 
 
 class BoardGameContainer(models.Model):
-    warehouse = models.ForeignKey(Warehouse)
-    commodity = models.ForeignKey(BoardGameCommodity)
+    warehouse = models.ForeignKey('Warehouse', related_name='containers', null=False, blank=False)
+    commodity = models.ForeignKey('catalogue.BoardGameCommodity', related_name='containers', null=False, blank=False)
     total = models.IntegerField()
 
     def __str__(self):

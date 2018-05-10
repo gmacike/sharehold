@@ -1,7 +1,9 @@
-# from django.conf import settings
 from django.db import models
+from django.db.models import Sum
+from django.apps import apps
 from django.core.urlresolvers import reverse
 from django.core.validators import RegexValidator
+from warehouse.models import BoardGameContainer
 
 # Create your models here.
 
@@ -53,9 +55,9 @@ class BoardGameCommodity (Commodity):
     )
 
 
-    boxFrontImage = models.ImageField (upload_to="catalogue/bg/", null = True, blank=True)
-    boxTopImage = models.ImageField (upload_to="catalogue/bg/", null = True, blank=True)
-    boxSideImage = models.ImageField (upload_to="catalogue/bg/", null = True, blank=True)
+    boxFrontImage = models.ImageField (upload_to="catalogue/bg/%M", null = True, blank=True)
+    boxTopImage = models.ImageField (upload_to="catalogue/bg/%M", null = True, blank=True)
+    boxSideImage = models.ImageField (upload_to="catalogue/bg/%M", null = True, blank=True)
 
     class Meta:
         verbose_name = "Wydanie gry planszowej"
@@ -77,6 +79,7 @@ class BoardGameCommodity (Commodity):
 #abstract class for univeral handling catalogued items
 class CatalogueItem (models.Model):
     itemLabel = models.CharField (max_length = 50)
+    # keeping all media files in one folder is not efficient, override this in subclasses
     itemImage = models.ImageField (upload_to="catalogue/", null = True, blank=True)
 
 
@@ -92,6 +95,9 @@ class CatalogueItem (models.Model):
 
     def getImage(self):
         return self.itemImage
+
+    def availableCommoditiesTotal(self):
+        return Commodity.objects.none();
 
 
 class BoardGameItem (CatalogueItem):
@@ -125,6 +131,7 @@ class BoardGameItem (CatalogueItem):
         if self.itemImage:
             image = self.itemImage
         else:
+            # search for commodities w/ front image
             commodities = self.commodities.exclude(boxFrontImage="")
             if commodities.exists():
                 for commodity in commodities:
@@ -132,3 +139,19 @@ class BoardGameItem (CatalogueItem):
                         image = commodity.boxFrontImage
                         break
         return image
+
+    def commoditiesTotal(self):
+        agg = BoardGameContainer.objects.filter(commodity__catalogueEntry=self).aggregate(total=Sum('total'))
+        total = agg ['total']
+        if total == None:
+            return 0
+        return total
+
+
+    def commoditiesAvailable(self):
+        available = 0
+        containers = BoardGameContainer.objects.filter(commodity__catalogueEntry=self)
+        if containers.exists():
+            for container in containers:
+                available += container.available
+        return available
