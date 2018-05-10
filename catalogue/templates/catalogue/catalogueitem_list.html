@@ -40,7 +40,11 @@
         </div>
         <div class="w-100"></div>
         <h5 class="align-self-start"> <a href="{% url 'boardgame_detail' pk=item.pk %}"> {{item.getTitle}} </a> </h5>
+        <div class="w-100"></div>
+        <h6>Egzemplarzy ogółem: {{item.commoditiesTotal}}</h6>
+        <h6>Egzemplarzy dostępnych: {{item.commoditiesAvailable}}</h6>
       </div>
+
     {% endfor %}
   </div>
 </div>

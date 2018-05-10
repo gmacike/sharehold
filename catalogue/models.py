@@ -1,7 +1,9 @@
-# from django.conf import settings
 from django.db import models
+from django.db.models import Sum
+from django.apps import apps
 from django.core.urlresolvers import reverse
 from django.core.validators import RegexValidator
+from warehouse.models import BoardGameContainer
 
 # Create your models here.
 
@@ -94,6 +96,9 @@ class CatalogueItem (models.Model):
     def getImage(self):
         return self.itemImage
 
+    def availableCommoditiesTotal(self):
+        return Commodity.objects.none();
+
 
 class BoardGameItem (CatalogueItem):
     itemImage = models.ImageField (upload_to="catalogue/bg/", null = True, blank=True)
@@ -126,6 +131,7 @@ class BoardGameItem (CatalogueItem):
         if self.itemImage:
             image = self.itemImage
         else:
+            # search for commodities w/ front image
             commodities = self.commodities.exclude(boxFrontImage="")
             if commodities.exists():
                 for commodity in commodities:
@@ -133,3 +139,19 @@ class BoardGameItem (CatalogueItem):
                         image = commodity.boxFrontImage
                         break
         return image
+
+    def commoditiesTotal(self):
+        agg = BoardGameContainer.objects.filter(commodity__catalogueEntry=self).aggregate(total=Sum('total'))
+        total = agg ['total']
+        if total == None:
+            return 0
+        return total
+
+
+    def commoditiesAvailable(self):
+        available = 0
+        containers = BoardGameContainer.objects.filter(commodity__catalogueEntry=self)
+        if containers.exists():
+            for container in containers:
+                available += container.available
+        return available
