@@ -142,8 +142,34 @@ i {
   color: var(--color2nd);
 }
 
+.btn.disabled {
+  background-color: var(--color1st);
+  border-color: var(--color1st);
+  color: white;
+}
+
 .btn:hover {
   color: var(--color2nd);
   background-color: var(--color5th);
   border-color: var(--color5th);
+}
+
+
+.barcodefont{
+  font-family: 'Libre Barcode 39', cursive;
+  font-size: 2em;
+  color: black;
+}
+
+
+.barcodetextfont{
+  font-family: 'Libre Barcode 39 Text',cursive;
+  font-size: 3em;
+  text-align: center;
+  color: black;
+}
+
+.barcodefont{
+  font-size: 3em;
+  margin-bottom: 10px;
 }

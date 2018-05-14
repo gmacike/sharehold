@@ -1,9 +1,28 @@
 {% extends "sharehold/base.html" %}
+{% load staticfiles %}
+
+{% block refs %}
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="{% static 'css/warehouse.css' %}">
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Montserrat|Russo+One" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Libre+Barcode+39" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Libre+Barcode+39+Text" rel="stylesheet">
+{% endblock %}
+
 {% block warehouse_appmenu %}
   <!-- Navbar -->
   {% if user.is_authenticated %}
-    {% if perms.catalogue.add_warehouse %}
+    {% if perms.warehouse.add_warehouse %}
       <a class="navbar-nav techfont appmenu" href="{% url 'warehouse_create' %}">Nowy magazyn</a>
+    {% endif %}
+    {% if perms.warehouse %}
+      <a class="navbar-nav techfont appmenu" href="{% url 'warehouse_inventory' %}">Stany magazynowe</a>
     {% endif %}
   {% endif %}
 {% endblock %}
+
+    <!-- Content block -->
+  {% block content %}
+  {% endblock %}

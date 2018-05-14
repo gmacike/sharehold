@@ -1,14 +1,30 @@
 {% extends "warehouse/base.html" %}
+{% load staticfiles %}
+{% load widget_tweaks %}
+
 
 {% block content %}
 
-<div class="jumbotron">
+<div class="jumbotron content pl-3">
   <h1>Nowy magazyn</h1>
-</div>
-<div
-  <form class="boardgame-form" method="post">
+
+  <form class="warehouse-form" method="post">
     {% csrf_token %}
-    {{form.as_p}}
+
+    {% for hidden in form.hidden_fields %}
+      {{ hidden }}
+    {% endfor %}
+
+    {% for field in form.visible_fields %}
+      <div class="form-group">
+        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+        {{ field|add_class:'form-control' }}
+        {{ field.get_queryset }}
+        {% for error in field.errors %}
+          <span class="help-block">{{ error }}</span>
+        {% endfor %}
+      </div>
+    {% endfor %}
 
     <button type="submit" class="save btn btn-primary">Dodaj</button>
   </form>
