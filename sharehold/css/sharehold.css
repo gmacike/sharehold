@@ -39,7 +39,7 @@ body {
 
 .topnav-la:hover, .topnav-ra:hover {
   color: var(--color2nd);
-  background-color: var(--color4th);
+  background-color: var(--color5th);
 }
 
 .sidemenu {
