@@ -75,6 +75,14 @@ class BoardGameCommodity (Commodity):
     def get_commodity_by_code (code_type, code_value):
         return BoardGameCommodity.objects.filter (codeValue=code_value).filter (codeType=code_type)
 
+    def getImage(self):
+        image = None
+        if self.boxFrontImage:
+            image = self.boxFrontImage
+        elif self.catalogueEntry.itemImage:
+            image = self.catalogueEntry.itemImage
+        return image    
+
 
 #abstract class for univeral handling catalogued items
 class CatalogueItem (models.Model):
@@ -96,8 +104,11 @@ class CatalogueItem (models.Model):
     def getImage(self):
         return self.itemImage
 
-    def availableCommoditiesTotal(self):
+    def commoditiesTotalCount(self):
         return Commodity.objects.none();
+
+    def commoditiesAvailableCount(self):
+        return 0;
 
 
 class BoardGameItem (CatalogueItem):
@@ -140,7 +151,7 @@ class BoardGameItem (CatalogueItem):
                         break
         return image
 
-    def commoditiesTotal(self):
+    def commoditiesTotalCount(self):
         agg = BoardGameContainer.objects.filter(commodity__catalogueEntry=self).aggregate(total=Sum('total'))
         total = agg ['total']
         if total == None:
@@ -148,7 +159,7 @@ class BoardGameItem (CatalogueItem):
         return total
 
 
-    def commoditiesAvailable(self):
+    def commoditiesAvailableCount(self):
         available = 0
         containers = BoardGameContainer.objects.filter(commodity__catalogueEntry=self)
         if containers.exists():

@@ -11,11 +11,13 @@ urlpatterns = [
         views.WarehouseCreateView.as_view(success_url='/warehouse'),
         name='warehouse_create'),
 
-    url(r'^warehouse/(?P<pk>\d+)$',
+    url(r'^warehouse/inv/(?P<pk>\d+)*$',
         views.WarehouseDetailView.as_view(),
-        name='warehouse_detail'),
+        name='warehouse_inventory'),
 
     url(r'warehouse/(?P<pk>\d+)/add_boardgame$',
         views.BoardGameContainerCreateView.as_view(),
-        name='container_create')
+        name='container_create'),
+
+
 ]

@@ -1,12 +1,28 @@
 {% extends "warehouse/base.html" %}
+{% load staticfiles %}
+
+
 {% block content %}
-<div class="jumbotron">
+<div class="jumbotron content">
     <h1>Magazyny</h1>
+
+    {% for warehouse in warehouse_list %}
+      <div class="d-flex flex-wrap col-5 warehouse">
+        <div class="row justify-content-between w-100">
+          <h2 class="col w-75"><a href="{% url 'warehouse_inventory' pk=warehouse.pk %}">{{ warehouse.name }}</a></h2>
+          <div class="d-flex flex-column w-25 justify-content-start align-items-end">
+            {% if perms.warehouse.change_warehouse %}
+              <a href="{% url 'warehouse_create' %}" class="btn btn-block btn-primary disabled">Edytuj</a>
+            {% endif %}
+          </div>
+
+        </div>
+        <h5 class="w-100">O magazynie:</h5>
+        <h6 class="w-100">{{ warehouse.desc }}</h6>
+        <h6 class="w-100">Magazynowanych tytułów: {{warehouse.catalogueItemsCount}}</h6>
+        <h6 class="w-100">Magazynowanych egzemplarzy: {{warehouse.commoditiesTotalCount}}</h6>
+        <h6 class="w-100">Egzemplarzy dostępnych: {{warehouse.commoditiesAvailableCount}}</h6>
+      </div>
+    {% endfor %}
 </div>
-{% for warehouse in warehouse_list %}
-<div class="row col-lg-3 col-md-4 col-sm-6 catalogentry">
-    <h2><a href="{% url 'warehouse_detail' pk=warehouse.pk %}">{{ warehouse.name }}</a></h2>
-    <h2>{{ warehouse.desc }}</h2>
-</div>
-{% endfor %}
 {% endblock %}

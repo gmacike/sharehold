@@ -1,5 +1,8 @@
 from django.core.validators import MinValueValidator, MaxValueValidator
+from django.apps import apps
 from django.db import models
+from django.db.models import Sum
+
 
 
 class Warehouse(models.Model):
@@ -8,6 +11,31 @@ class Warehouse(models.Model):
 
     def __str__(self):
         return self.name
+
+    def catalogueItems (self):
+        model = apps.get_model('catalogue', 'BoardGameItem')
+        return model.objects.filter(commodities__containers__warehouse=self)
+
+    def catalogueItemsCount (self):
+        agg = BoardGameContainer.objects.filter(warehouse=self).count()
+        if agg == None:
+            return 0
+        return agg
+
+    def commoditiesTotalCount (self):
+        agg = BoardGameContainer.objects.filter(warehouse=self).aggregate(total=Sum('total'))
+        total = agg ['total']
+        if total == None:
+            return 0
+        return total
+
+    def commoditiesAvailableCount (self):
+        available = 0
+        containers = BoardGameContainer.objects.filter(warehouse=self)
+        if containers.exists():
+            for container in containers:
+                available += container.available
+        return available
 
 
 class BoardGameContainer(models.Model):

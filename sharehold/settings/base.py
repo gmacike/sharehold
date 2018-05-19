@@ -16,6 +16,7 @@ import os
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 TEMPLATE_DIR_SITE = os.path.join(BASE_DIR, 'templates/sharehold')
 TEMPLATE_DIR_CATALOGUE = os.path.join(BASE_DIR, 'catalogue/templates/catalogue')
+TEMPLATE_DIR_WAREHOUSE = os.path.join(BASE_DIR, 'warehouse/templates/warehouse')
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
@@ -57,7 +58,7 @@ ROOT_URLCONF = 'sharehold.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [TEMPLATE_DIR_SITE, TEMPLATE_DIR_CATALOGUE,],
+        'DIRS': [TEMPLATE_DIR_SITE, TEMPLATE_DIR_CATALOGUE, TEMPLATE_DIR_WAREHOUSE,],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
