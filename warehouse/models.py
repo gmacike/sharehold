@@ -1,6 +1,8 @@
+from django.core.validators import MinValueValidator, MaxValueValidator
 from django.apps import apps
 from django.db import models
 from django.db.models import Sum
+
 
 
 class Warehouse(models.Model):
@@ -39,7 +41,7 @@ class Warehouse(models.Model):
 class BoardGameContainer(models.Model):
     warehouse = models.ForeignKey('Warehouse', related_name='containers', null=False, blank=False)
     commodity = models.ForeignKey('catalogue.BoardGameCommodity', related_name='containers', null=False, blank=False)
-    total = models.IntegerField()
+    total = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(100)])
 
     def __str__(self):
         return self.commodity.__str__()
