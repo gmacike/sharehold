@@ -20,54 +20,52 @@
     <a href="{% url 'container_create' pk=warehouse.pk %}">Dodaj tytuł katalogowy</a>
   {% endif %}
 
+  <div class="container-fluid inventorylist">
+    <div class="row no-gutters">
+      <h2>Lista magazynowa:</h2>
+    </div>
 
-  <h2 class="w-100">Lista magazynowa:</h2>
-
-  {% regroup warehouse.containers.all by commodity.catalogueEntry as invitems_list %}
-
-  <!-- {{ warehouse.name }}
-  {{ warehouse.containers.all }}
-  {{ warehouse.containers.get.commodity.catalogueEntry.bggURL }} -->
-
-  {% for invitem in invitems_list %}
-    <div class="inventorylist row">
-      <h4 class="w-100">{{ invitem.grouper.itemLabel }}</h4>
-      {% for container in invitem.list %}
-      {% with commodity=container.commodity %}
-        <div class="col containerentry">
-          <p>{{ commodity.desc|default:"Brak dodatkowych informacji o wydaniu." }}</p>
-          <div class="row">
-            <div class="col w-50">
-              {% if commodity.getImage %}
-              <a class="w-50" href="{% url 'boardgame_edition_edit' pk=container.commodity.pk %}"><img class="img-responsive img-thumbnail" src="{{container.commodity.getImage.url}}"></a>
-              {% else %}
-              <a class="w-50" href="{% url 'boardgame_edition_edit' pk=container.commodity.pk %}"><img class="img-responsive img-thumbnail" src="{% static 'noimage.png' %}"></a>
-              {% endif %}
-            </div>
-            <div class="col w-50">
-              <h5>Przypisanych do magazynu:</h5>
-              <div class="row w-100">
-                {% if perms.warehouse.change_boardgamecontainer %}
-                  <a class="btn btn-warning">+</a>
-                {% endif %}
-                <p class="inventoryvolume">{{container.total}}</p>
-                {% if perms.warehouse.change_boardgamecontainer %}
-                  <a class="btn btn-warning">-</a>
+    <div class="row">
+      {% regroup warehouse.containers.all by commodity.catalogueEntry as invitems_list %}
+      {% for invitem in invitems_list %}
+        <div class="col-4">
+          <h4>{{ invitem.grouper.itemLabel }}</h4>
+          {% for container in invitem.list %}
+          {% with commodity=container.commodity %}
+            <p>{{ commodity.desc|default:"Brak dodatkowych informacji o wydaniu." }}</p>
+            <div class="row containerentry">
+              <div class="col col-4">
+                {% if commodity.getImage %}
+                  <a href="{% url 'boardgame_edition_edit' pk=container.commodity.pk %}"><img class="img-responsive img-thumbnail" src="{{container.commodity.getImage.url}}"></a>
+                {% else %}
+                  <a href="{% url 'boardgame_edition_edit' pk=container.commodity.pk %}"><img class="img-responsive img-thumbnail" src="{% static 'noimage.png' %}"></a>
                 {% endif %}
               </div>
-              <h5>Dostępnych: {{ container.available }}</h5>
+              <div class="col col-8">
+                <h5>Przypisanych do magazynu:</h5>
+                <div class="row no-gutters justify-content-around">
+                  {% if perms.warehouse.change_boardgamecontainer %}
+                    <button type="button" class="btn btn-warning" onclick="contaier_total_inc ({{container.pk}})"><i class="material-icons md-36">remove_circle_outline</i></button>
+                  {% endif %}
+                  <p class="inventoryvolume">{{container.total}}</p>
+                  {% if perms.warehouse.change_boardgamecontainer %}
+                    <button type="button" class="btn btn-warning"><i class="material-icons md-36">add_circle_outline</i></button>
+                  {% endif %}
+                </div>
+              </div>
+              <h5>Dostępnych w magazynie: <span class="availablevolume">{{ container.available }}</span></h5>
+                <p class="barcodetextfont w-100">{{ commodity.codeValue }}</p>
             </div>
-            <p class="barcodetextfont w-100">{{ commodity.codeValue }}</p>
-          </div>
+          {% endwith %}
+          {% empty %}
+            <p>Brak egzemplarzy przedmiotu przypisanych do magazynu.</p>
+          {% endfor %}
         </div>
-      {% endwith %}
       {% empty %}
-        <p>Brak egzemplarzy przedmiotu przypisanych do magazynu.</p>
+        <p>Brak przedmiotów przypisanych do magazynu.</p>
       {% endfor %}
     </div>
-  {% empty %}
-    <p>Brak przedmiotów przypisanych do magazynu.</p>
-  {% endfor %}
+  </div>
 
     <!-- <div class="jumbotron inventorylist row">
       {% for item in warehouse.catalogueItems %}

@@ -41,7 +41,7 @@ class Warehouse(models.Model):
 class BoardGameContainer(models.Model):
     warehouse = models.ForeignKey('Warehouse', related_name='containers', null=False, blank=False)
     commodity = models.ForeignKey('catalogue.BoardGameCommodity', related_name='containers', null=False, blank=False)
-    total = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(100)])
+    total = models.IntegerField(validators=[MinValueValidator(0), ])
 
     def __str__(self):
         return self.commodity.__str__()
