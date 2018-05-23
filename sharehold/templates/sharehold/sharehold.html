@@ -40,13 +40,13 @@
     <!-- Top Navbar -->
     <nav class="navbar topnavbar techfont">
       <ul class="navbar-nav justify-content-start col-2">
-        <li><a class="navbar-item techfont topnav-la" href="{% url 'welcome' %}"><i class="material-icons">home</i></a></li>
+        <li><a class="navbar-item techfont topnav-la" href="{% url 'welcome' %}"><i class="material-icons md-36">home</i></a></li>
       </ul>
       <ul class="navbar-nav justify-content-end">
         {% if user.is_authenticated %}
           <li><a class="navbar-item techfont topnav-ra" href="{% url 'logout' %}">{{user.username}}<i class="material-icons">exit_to_app</i></a></li>
         {% else %}
-          <li><a class="navbar-item topnav-ra" href="{% url 'login' %}">Zaloguj się<i class="material-icons">account_box</i></a> </li>
+          <li><a class="navbar-item topnav-ra" href="{% url 'login' %}">Zaloguj się<i class="material-icons md-36">account_box</i></a> </li>
         {% endif %}
       </ul>
     </nav>
@@ -59,18 +59,9 @@
           </a>
 
           {% block sidemenu %}
-            <!-- <a class="navbar-nav techfont mainmenu" href="{% url 'catalogue_entries' %}">Katalog</a> -->
-            <!-- {% block catalogue_appmenu %} -->
-            <!-- application submenu -->
-            <!-- {% endblock %} -->
-            <!-- <a class="navbar-nav techfont mainmenu" href="{% url 'circulation_entries' %}">Klienci</a> -->
-            <!-- {% block circulation_appmenu %} -->
-            <!-- application submenu -->
-            <!-- {% endblock %} -->
-            <!-- <a class="navbar-nav techfont mainmenu" href="{% url 'warehouse_index' %}">Magazyny</a> -->
-            <!-- {% block warehouse_appmenu %} -->
-            <!-- application submenu -->
-            <!-- {% endblock %} -->
+
+          <!-- sidemenu block to be defined in applications -->
+
           {% endblock %}
       </nav>
 

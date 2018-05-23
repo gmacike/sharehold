@@ -1,5 +1,7 @@
 from django.urls import reverse
 from django.views.generic import ListView, DetailView, CreateView
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.contrib.auth.decorators import login_required, permission_required
 
 from warehouse.forms import WarehouseForm, BoardGameContainerForm
 from warehouse.models import Warehouse, BoardGameContainer
@@ -18,6 +20,13 @@ class WarehouseDetailView(DetailView):
     model = Warehouse
     permission_required = 'warehouse'
     raise_exception=True
+
+@login_required
+@permission_required('warehouse.change_boardgamecontainer', raise_exception=True)
+def container_inc (request):
+    if request.method == 'POST':
+        pass
+    return redirect('WarehouseDetailView')
 
 
 class WarehouseCreateView(CreateView):

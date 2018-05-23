@@ -8,7 +8,7 @@
   margin-bottom: 16px;
   flex-basis: 320px;
   min-width: 350px;
-  max-width: 500px;
+  /* max-width: 500px; */
   min-height: 150px;
   flex-grow: 1;
   flex-shrink: 2;
@@ -26,6 +26,18 @@
   margin-right: 8px;
 }
 
+.inventoryvolume {
+  font-size: 5em;
+}
+
+.availablevolume {
+  font-size: 3em;
+}
+
+.inventorybtn {
+  font-size: 5em;
+}
+
 .commoditylist{
   /* max-width: 100%; */
 }
@@ -35,9 +47,8 @@
   padding: 8px;
   margin-right: 16px;
   margin-bottom: 16px;
-  flex-basis: 320px;
-  min-width: 200px;
-  /* max-width: 600px; */
+  flex-basis: 200px;
+  min-width: 500px;
   min-height: 150px;
   flex-grow: 1;
   flex-shrink: 2;
@@ -50,4 +61,6 @@
 .containerentry img {
   max-width: 150px;
   max-height: 150px;
+  flex-grow: 1;
+  flex-shrink: 2;
 }
