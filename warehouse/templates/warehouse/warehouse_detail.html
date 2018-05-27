@@ -3,6 +3,8 @@
 
 {% block content %}
 
+<i class="material-icons md-36">remove_circle_outline</i>
+
 <div class="jumbotron content pl-3">
 
   <form class="warehouse_search_form" action="{% url 'warehouse_index' %}" method="GET">
@@ -45,11 +47,13 @@
                 <h5>Przypisanych do magazynu:</h5>
                 <div class="row no-gutters justify-content-around">
                   {% if perms.warehouse.change_boardgamecontainer %}
-                    <button type="button" class="btn btn-warning" onclick="contaier_total_inc ({{container.pk}})"><i class="material-icons md-36">remove_circle_outline</i></button>
+                    <a class="btn btn-warning inventorybtn" href="{% url 'bgcontainer_dec' cntpk=container.pk %}">
+                      <i class="material-icons md-36">remove_circle_outline</i></a>
                   {% endif %}
                   <p class="inventoryvolume">{{container.total}}</p>
                   {% if perms.warehouse.change_boardgamecontainer %}
-                    <button type="button" class="btn btn-warning"><i class="material-icons md-36">add_circle_outline</i></button>
+                    <a class="btn btn-warning inventorybtn" href="{% url 'bgcontainer_inc' cntpk=container.pk %}">
+                      <i class="material-icons md-36">add_circle_outline</i></a>
                   {% endif %}
                 </div>
               </div>

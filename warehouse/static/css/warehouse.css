@@ -26,6 +26,15 @@
   margin-right: 8px;
 }
 
+.inventorybtn {
+  height: 5em;
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
+.inventorybtn i {
+}
+
 .inventoryvolume {
   font-size: 5em;
 }
@@ -34,9 +43,6 @@
   font-size: 3em;
 }
 
-.inventorybtn {
-  font-size: 5em;
-}
 
 .commoditylist{
   /* max-width: 100%; */

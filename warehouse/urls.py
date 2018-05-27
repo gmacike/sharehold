@@ -19,5 +19,11 @@ urlpatterns = [
         views.BoardGameContainerCreateView.as_view(),
         name='container_create'),
 
+    url(r'warehouse/bgcnt/(?P<cntpk>\d+)/inc$',
+        views.bgcontainer_inc,
+        name='bgcontainer_inc'),
 
+    url(r'warehouse/bgcnt/(?P<cntpk>\d+)/dec$',
+        views.bgcontainer_dec,
+        name='bgcontainer_dec'),
 ]

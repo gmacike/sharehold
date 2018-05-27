@@ -1,5 +1,8 @@
+from django.http import Http404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
 from django.views.generic import ListView, DetailView, CreateView
+from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.contrib.auth.decorators import login_required, permission_required
 
@@ -23,10 +26,34 @@ class WarehouseDetailView(DetailView):
 
 @login_required
 @permission_required('warehouse.change_boardgamecontainer', raise_exception=True)
-def container_inc (request):
-    if request.method == 'POST':
-        pass
-    return redirect('WarehouseDetailView')
+def bgcontainer_inc (request, *args, **kwargs):
+
+    try:
+        container = BoardGameContainer.objects.get (pk=kwargs.pop('cntpk'))
+        if container:
+            container.total += 1
+            container.save()
+    except BoardGameContainer.DoesNotExist as exc:
+        messages.add_message(request, messages.ERROR, exc)
+        raise Http404
+
+    return redirect ('warehouse_inventory', pk=container.warehouse.pk)
+
+@login_required
+@permission_required('warehouse.change_boardgamecontainer', raise_exception=True)
+def bgcontainer_dec (request, *args, **kwargs):
+
+    try:
+        container = BoardGameContainer.objects.get (pk=kwargs.pop('cntpk'))
+        if container:
+            if container.total > 0:
+                container.total -= 1
+                container.save()
+    except BoardGameContainer.DoesNotExist as exc:
+        messages.add_message(request, messages.ERROR, exc)
+        raise Http404
+
+    return redirect ('warehouse_inventory', pk=container.warehouse.pk)
 
 
 class WarehouseCreateView(CreateView):
