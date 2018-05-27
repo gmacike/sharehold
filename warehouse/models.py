@@ -44,7 +44,7 @@ class BoardGameContainer(models.Model):
     total = models.IntegerField(validators=[MinValueValidator(0), ])
 
     def __str__(self):
-        return self.commodity.__str__()
+        return self.commodity.__str__() + "@" + self.warehouse.__str__()
 
     @property
     def available(self):

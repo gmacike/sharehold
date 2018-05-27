@@ -7,6 +7,11 @@ urlpatterns = [
         views.WarehouseListView.as_view(),
         name='warehouse_index'),
 
+    url(r'^warehouse-autocomp/$',
+        views.WarehouseAutocompleteView.as_view(),
+        name='warehouse-autocomplete'),
+
+
     url(r'^warehouse/create$',
         views.WarehouseCreateView.as_view(success_url='/warehouse'),
         name='warehouse_create'),

@@ -5,16 +5,9 @@ from catalogue.models import BoardGameItem, BoardGameCommodity
 
 
 class BoardGameItemForm(forms.ModelForm):
-    # base_game = forms.ModelChoiceField (
-    #     queryset=BoardGameItem.objects.all(),
-    #     widget=autocomplete.ModelSelect2(
-    #         url='boardgame-autocomplete',
-    #         attrs={'data-placeholder': 'Wpisz tytuł gry...',
-    #             'data-minimum-input-length': 3,}))
 
     class Meta():
         model = BoardGameItem
-        # extensions =
 
         fields = ('itemLabel', 'itemImage', 'bggURL', 'baseGameItem')
 
@@ -42,8 +35,6 @@ class BoardGameItemForm(forms.ModelForm):
 
 
 class BoardGameCommodityForm(forms.ModelForm):
-    # def __init__ (self, *args, **kwargs):
-    #     super.__init__(*args, **kwargs)
 
     class Meta():
         model = BoardGameCommodity

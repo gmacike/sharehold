@@ -19,9 +19,9 @@
     {% if perms.warehouse.add_warehouse %}
       <a class="navbar-nav techfont appmenu" href="{% url 'warehouse_create' %}">Nowy magazyn</a>
     {% endif %}
-    {% if perms.warehouse %}
+    <!-- {% if perms.warehouse %}
       <a class="navbar-nav techfont appmenu" href="{% url 'warehouse_inventory' %}">Stany magazynowe</a>
-    {% endif %}
+    {% endif %} -->
   {% endif %}
 {% endblock %}
 

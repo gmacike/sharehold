@@ -1,17 +1,41 @@
 {% extends "warehouse/base.html" %}
+{% load static %}
+{% load widget_tweaks %}
 
 {% block content %}
 
-<div class="jumbotron">
-    <h1>Nowa gra planszowa</h1>
-</div>
-<div>
-    <form class="boardgame-form" method="post">
-        {% csrf_token %}
-        {{form.as_p}}
 
-        <button type="submit" class="save btn btn-primary">Dodaj</button>
-    </form>
+<div class="jumbotron content pl-3">
+    <h1>Nowy przedmiot katalogowy w magazynie</h1>
 </div>
+
+<form class="container-form" method="post">
+  {% csrf_token %}
+
+  {% for hidden in form.hidden_fields %}
+    {{ hidden }}
+  {% endfor %}
+
+  {% for field in form.visible_fields %}
+    <div class="form-group">
+      <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+      {{ field|add_class:'form-control' }}
+      {{ field.get_queryset }}
+      {% for error in field.errors %}
+        <span class="help-block">{{ error }}</span>
+      {% endfor %}
+    </div>
+  {% endfor %}
+
+  <!-- {% if perms.catalogue.add_commodity %} -->
+    <button type="submit" class="save btn btn-primary btn-warning">Dodaj do magazynu</button>
+  <!-- {% endif %} -->
+  <!-- docelowo powrót do magazynu, z którego przyszliśmy -->
+  <a href="{% url 'warehouse_index' %}" class="btn btn-default">Anuluj</a>
+</form>
+</div>
+
+<script type="text/javascript" src="{% static 'admin/js/vendor/jquery/jquery.js' %}"></script>
+{{ form.media }}
 
 {% endblock %}
