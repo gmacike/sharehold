@@ -1,5 +1,4 @@
 from django.shortcuts import render, get_object_or_404, redirect
-# from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.contrib.auth.decorators import login_required, permission_required
 from catalogue.models import (CatalogueItem, BoardGameItem, BoardGameCommodity)
@@ -145,3 +144,14 @@ class BoardGameCommodityUpdateView(LoginRequiredMixin, PermissionRequiredMixin, 
 
     form_class = BoardGameCommodityForm
     model = BoardGameCommodity
+
+class BoardGameCommodityNotInWarehouseAutocompleteView(autocomplete.Select2QuerySetView):
+    # these queryset data will be available through pulib url guard w/ permissions if necessary
+    # here are none as boardgame cataloge is going to be available for publicity
+    def get_queryset(self):
+        qs = BoardGameCommodity.objects.all().order_by('codeValue')
+
+        if self.q:
+             qs = qs.filter(codeValue__icontains=self.q)
+
+        return qs

@@ -9,7 +9,6 @@
   <link href="https://fonts.googleapis.com/css?family=Montserrat|Russo+One" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css?family=Libre+Barcode+39" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css?family=Libre+Barcode+39+Text" rel="stylesheet">
-  <script type="text/javascript" src="{% static 'js/warehouse.js' %}">
 
   </script>
 {% endblock %}
@@ -20,9 +19,9 @@
     {% if perms.warehouse.add_warehouse %}
       <a class="navbar-nav techfont appmenu" href="{% url 'warehouse_create' %}">Nowy magazyn</a>
     {% endif %}
-    {% if perms.warehouse %}
+    <!-- {% if perms.warehouse %}
       <a class="navbar-nav techfont appmenu" href="{% url 'warehouse_inventory' %}">Stany magazynowe</a>
-    {% endif %}
+    {% endif %} -->
   {% endif %}
 {% endblock %}
 

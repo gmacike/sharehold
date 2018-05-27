@@ -9,20 +9,21 @@
     <label for="filter_criteria">Ograniczenie listy</label>
     <div class="input-group">
       <div class="input-group-prepend">
-        <button type="submit" class="save btn btn-primary btn-lg mt-0 mb-0 disabled">Szukaj</button>
+        <button type="submit" class="save btn btn-primary btn-lg mt-0 mb-0 disabled">Szukaj w magazynie</button>
       </div>
       <input type="text" class="form-control" id="filter_criteria" autofocus name="filter"
-        placeholder="Podaj kryteria wyszukiwania" value={{ request.GET.filter }}>
+        placeholder="Podaj kryteria wyszukiwania w magazynie" value={{ request.GET.filter }}>
     </div>
   </form>
 
-  {% if perms.warehouse.add_container %}
-    <a href="{% url 'container_create' pk=warehouse.pk %}">Dodaj tytuł katalogowy</a>
-  {% endif %}
 
   <div class="container-fluid inventorylist">
     <div class="row no-gutters">
-      <h2>Lista magazynowa:</h2>
+      <h2 class="w-100">Lista magazynowa:</h2>
+
+      {% if perms.warehouse.add_boardgamecontainer %}
+        <a class="btn btn-warning" href="{% url 'container_create' pk=warehouse.pk %}">Dodaj przedmiot katalogowy</a>
+      {% endif %}
     </div>
 
     <div class="row">
@@ -45,11 +46,13 @@
                 <h5>Przypisanych do magazynu:</h5>
                 <div class="row no-gutters justify-content-around">
                   {% if perms.warehouse.change_boardgamecontainer %}
-                    <button type="button" class="btn btn-warning" onclick="contaier_total_inc ({{container.pk}})"><i class="material-icons md-36">remove_circle_outline</i></button>
+                    <a class="btn btn-warning inventorybtn" href="{% url 'bgcontainer_dec' cntpk=container.pk %}">
+                      <i class="material-icons md-36">remove_circle_outline</i></a>
                   {% endif %}
                   <p class="inventoryvolume">{{container.total}}</p>
                   {% if perms.warehouse.change_boardgamecontainer %}
-                    <button type="button" class="btn btn-warning"><i class="material-icons md-36">add_circle_outline</i></button>
+                    <a class="btn btn-warning inventorybtn" href="{% url 'bgcontainer_inc' cntpk=container.pk %}">
+                      <i class="material-icons md-36">add_circle_outline</i></a>
                   {% endif %}
                 </div>
               </div>
