@@ -48,7 +48,7 @@ class WarehouseDetailView(LoginRequiredMixin, PermissionRequiredMixin, SingleObj
                 filter_criteria = self.request.GET.get("filter")
                 self.request.session ['warehouse_filter'] = filter_criteria
             else:
-                filter_criteria = self.request.session ['warehouse_filter', None]
+                filter_criteria = self.request.session.get('warehouse_filter', None)
             if filter_criteria != None:
                 containers_by_barcode = self.object.containers.filter(commodity__codeValue__icontains=filter_criteria)
                 containers_by_label =  self.object.containers.filter(commodity__catalogueEntry__itemLabel__icontains=filter_criteria)
