@@ -28,15 +28,15 @@
       {% endif %}
     </div>
 
-        <div class="row">
+    <div class="row no-gutters">
       {% regroup object_list.all by commodity.catalogueEntry as invitems_list %}
       {% for invitem in invitems_list %}
-        <div class="col-4">
-          <h4>{{ invitem.grouper.itemLabel }}</h4>
+        <div class="d-flex flex-wrap col-lg-4 col-sm-6 containerentry">
+          <h4 class="w-100">{{ invitem.grouper.itemLabel }}</h4>
           {% for container in invitem.list %}
           {% with commodity=container.commodity %}
             <p>{{ commodity.desc|default:"Brak dodatkowych informacji o wydaniu." }}</p>
-            <div class="row containerentry">
+            <div class="row no-gutters">
               <div class="col col-4">
                 {% if commodity.getImage %}
                   <a href="{% url 'boardgame_edition_edit' pk=container.commodity.pk %}"><img class="img-responsive img-thumbnail" src="{{container.commodity.getImage.url}}"></a>

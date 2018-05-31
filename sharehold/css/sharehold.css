@@ -19,6 +19,14 @@ body {
   background-color: white;
 }
 
+h2 {
+  padding-top: 16px;
+}
+
+i {
+  vertical-align: middle;
+}
+
 .topnavbar {
   background-color: var(--color2nd);
   min-height: 2em;
@@ -66,10 +74,6 @@ body {
 
 .techfont{
   font-family: 'Russo One', sans-serif;
-}
-
-i {
-  vertical-align: middle;
 }
 
 .mainmenu {

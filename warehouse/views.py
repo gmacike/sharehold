@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.http import Http404
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
@@ -8,6 +9,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMix
 from django.contrib.auth.decorators import login_required, permission_required
 from dal import autocomplete
 
+from django.db.models.functions import Lower
 from warehouse.forms import WarehouseForm, BoardGameContainerForm
 from warehouse.models import Warehouse, BoardGameContainer
 
@@ -26,7 +28,8 @@ class WarehouseDetailView(LoginRequiredMixin, PermissionRequiredMixin, SingleObj
     permission_required = 'warehouse.add_warehouse'
     raise_exception=True
     template_name = 'warehouse/warehouse_detail.html'
-    paginate_by = 6
+    paginate_by = settings.WAREHOUSE_PAGINATION
+    paginate_orphans = settings.WAREHOUSE_PAGINATION_ORPHANS
     # ListView context object => list of warehouse containers
     # context_object_name = 'warehouse_containers'
 
@@ -50,7 +53,7 @@ class WarehouseDetailView(LoginRequiredMixin, PermissionRequiredMixin, SingleObj
                 containers_by_barcode = self.object.containers.filter(commodity__codeValue__icontains=filter_criteria)
                 containers_by_label =  self.object.containers.filter(commodity__catalogueEntry__itemLabel__icontains=filter_criteria)
                 contaiers_filtered = containers_by_barcode | containers_by_label
-                self.queryset = contaiers_filtered
+                self.queryset = contaiers_filtered.order_by(Lower("commodity__catalogueEntry__itemLabel"))
                 # self.queryset = games_filtered.order_by(Lower("itemLabel"))
             else:
                 self.queryset = self.object.containers.all()
