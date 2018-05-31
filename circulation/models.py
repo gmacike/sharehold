@@ -22,8 +22,9 @@ class ClientID(models.Model):
     active = models.BooleanField(default=True, verbose_name='Aktywny')
 
 
-class ClientHasBoardGame(models.Model):
+class BoardGameLending(models.Model):
     client = models.ForeignKey(RentalClient)
     container = models.ForeignKey(BoardGameContainer)
+
     issued = models.DateTimeField(default=datetime.now)
     returned = models.DateTimeField(null=True)

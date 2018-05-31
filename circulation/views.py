@@ -5,8 +5,8 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.contrib.auth.decorators import login_required, permission_required
 from django.forms import inlineformset_factory
-from circulation.models import (RentalClient, ClientID, ClientHasBoardGame)
-from circulation.forms import (RentalClientForm, RentalClientIDInlineFormSet, ClientHasBoardGameForm)
+from circulation.models import (RentalClient, ClientID, BoardGameLending)
+from circulation.forms import (RentalClientForm, RentalClientIDInlineFormSet, BoardGameLendingForm)
 from django.views.generic import (ListView, DetailView, CreateView, UpdateView)
 from django.conf import settings
 
@@ -141,23 +141,23 @@ def updateAndReturn_rentalClientList(request, pk):
     return redirect('circulation_entries')
 
 
-class ClientHasBoardGameList(ListView):
-    model = ClientHasBoardGame
+class BoardGameLendingList(ListView):
+    model = BoardGameLending
 
 
-class ClientHasBoardGameCreateView(CreateView):
-    model = ClientHasBoardGame
-    form_class = ClientHasBoardGameForm
+class BoardGameLendingCreateView(CreateView):
+    model = BoardGameLending
+    form_class = BoardGameLendingForm
 
 
-class ClientHasBoardGameDetailView(DetailView):
-    model = ClientHasBoardGame
+class BoardGameLendingDetailView(DetailView):
+    model = BoardGameLending
 
 
 def register_return(request, pk):
     if request.method == 'POST':
-        clienthasboardgame = get_object_or_404(ClientHasBoardGame, pk=pk)
-        clienthasboardgame.returned = datetime.now()
-        clienthasboardgame.save()
+        BoardGameLending = get_object_or_404(BoardGameLending, pk=pk)
+        BoardGameLending.returned = datetime.now()
+        BoardGameLending.save()
 
-    return redirect('clienthasboardgame_detail', pk=pk)
+    return redirect('BoardGameLending_detail', pk=pk)

@@ -1,8 +1,8 @@
 {% extends "sharehold.html" %}
 
 {% block sidemenu %}
-  <a class="navbar-nav techfont mainmenu" href="{% url 'clienthasboardgame_list' %}">Wypożyczalnia</a>
-  {% block clienthasboardgame_appmenu %}
+  <a class="navbar-nav techfont mainmenu" href="{% url 'BoardGameLending_list' %}">Wypożyczalnia</a>
+  {% block BoardGameLending_appmenu %}
   <!-- application submenu -->
   {% endblock %}
   <a class="navbar-nav techfont mainmenu" href="{% url 'circulation_entries' %}">Klienci</a>

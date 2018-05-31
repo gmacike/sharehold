@@ -4,26 +4,26 @@
     <h1>Wypożyczalnia</h1>
 </div>
 <div>
-    <a href="{% url 'clienthasboardgame_create' %}">wypożycz grę</a>
+    <a href="{% url 'BoardGameLending_create' %}">wypożycz grę</a>
 </div>
 <table>
     <thead>
     <td></td>
     </thead>
-    {% for clienthasboardgame in clienthasboardgame_list %}
+    {% for BoardGameLending in BoardGameLending_list %}
     <tr>
-        <td>{{ clienthasboardgame.client}}</td>
-        <td>{{ clienthasboardgame.container.commodity }}</td>
-        <td>{{ clienthasboardgame.issued }}</td>
-        {% if clienthasboardgame.returned is None %}
+        <td>{{ BoardGameLending.client}}</td>
+        <td>{{ BoardGameLending.container.commodity }}</td>
+        <td>{{ BoardGameLending.issued }}</td>
+        {% if BoardGameLending.returned is None %}
         <td>oczekuje na zwrot</td>
         <td>
-            <a href="{% url 'clienthasboardgame_detail' pk=clienthasboardgame.pk %}">
+            <a href="{% url 'BoardGameLending_detail' pk=BoardGameLending.pk %}">
                 przyjmij zwrot
             </a>
         </td>
         {% else %}
-        <td>{{ clienthasboardgame.returned }}</td>
+        <td>{{ BoardGameLending.returned }}</td>
         <td></td>
         {% endif %}
     </tr>

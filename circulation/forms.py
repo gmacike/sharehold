@@ -1,7 +1,7 @@
 from django import forms
 from django.core.exceptions import ValidationError
 
-from circulation.models import RentalClient, ClientID, ClientHasBoardGame
+from circulation.models import RentalClient, ClientID, BoardGameLending
 
 
 class RentalClientForm(forms.ModelForm):
@@ -37,9 +37,9 @@ class RentalClientIDInlineFormSet(forms.BaseInlineFormSet):
             
         return cleaned
 
-class ClientHasBoardGameForm(forms.ModelForm):
+class BoardGameLendingForm(forms.ModelForm):
     class Meta:
-        model = ClientHasBoardGame
+        model = BoardGameLending
         fields = ('client', 'container')
 
     def clean(self):
@@ -49,7 +49,7 @@ class ClientHasBoardGameForm(forms.ModelForm):
             raise ValidationError('brak dostępnych egzemplarzy w magazynie')
 
         client = cleaned.get('client')
-        if client.clienthasboardgame_set.filter(returned=None).count() > 0:
+        if client.BoardGameLending_set.filter(returned=None).count() > 0:
             raise ValidationError('użytkownik wypożyczył już grę')
 
         return cleaned
