@@ -1,18 +1,20 @@
 {% extends "warehouse/base.html" %}
 {% load staticfiles %}
+{% load pagination %}
 
 {% block content %}
 
 <div class="jumbotron content pl-3">
+  <h1>Przemioty w magazynie {{warehouse.name}}</h1>
 
-  <form class="warehouse_search_form" action="{% url 'warehouse_index' %}" method="GET">
+  <form class="warehouse_search_form" action="{% url 'warehouse_inventory' pk=warehouse.pk %}" method="GET">
     <label for="filter_criteria">Ograniczenie listy</label>
     <div class="input-group">
       <div class="input-group-prepend">
-        <button type="submit" class="save btn btn-primary btn-lg mt-0 mb-0 disabled">Szukaj w magazynie</button>
+        <button type="submit" class="save btn btn-primary btn-lg mt-0 mb-0">Szukaj w magazynie</button>
       </div>
       <input type="text" class="form-control" id="filter_criteria" autofocus name="filter"
-        placeholder="Podaj kryteria wyszukiwania w magazynie" value={{ request.GET.filter }}>
+        placeholder="Podaj kryteria wyszukiwania w magazynie" value={{ request.session.warehouse_filter }}>
     </div>
   </form>
 
@@ -26,8 +28,8 @@
       {% endif %}
     </div>
 
-    <div class="row">
-      {% regroup warehouse.containers.all by commodity.catalogueEntry as invitems_list %}
+        <div class="row">
+      {% regroup object_list.all by commodity.catalogueEntry as invitems_list %}
       {% for invitem in invitems_list %}
         <div class="col-4">
           <h4>{{ invitem.grouper.itemLabel }}</h4>
@@ -69,33 +71,13 @@
       {% endfor %}
     </div>
   </div>
-
-    <!-- <div class="jumbotron inventorylist row">
-      {% for item in warehouse.catalogueItems %}
-        <div class="d-flex flex-wrap col-md-3 col-sm-5 inventoryitem">
-        {% for container in warehouse.containers.all %}
-          <div class="row justify-content-between invcontainerlist">
-            <div class="col containerinv">
-              <p class="dupa">
-                {% if container.commodity.desc %}
-                  {{ container.commodity.desc }}
-                {% else %}
-                  Brak dodatkowych informacji o wydaniu.
-                {% endif %}
-              </p>
-              {% if container.commodity.getImage %}
-                <a class="w-50" href="{% url 'boardgame_edition_edit' pk=container.commodity.pk %}"><img class="img-responsive img-thumbnail" src="{{container.commodity.getImage.url}}"></a>
-              {% else %}
-                <a class="w-50" href="{% url 'boardgame_edition_edit' pk=container.commodity.pk %}"><img class="img-responsive img-thumbnail" src="{% static 'noimage.png' %}"></a>
-              {% endif %}
-            </div>
-          </div>
-        {% endfor %}
-        </div>
-      {% endfor %}
-    </div>
-
-    <div class="w-100"></div> -->
 </div>
+
+{% if is_paginated %}
+  <div class="container">
+    {% paginator 5%}
+  </div>
+{% endif %}
+
 
 {% endblock %}
