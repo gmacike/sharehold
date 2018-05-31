@@ -13,6 +13,6 @@ urlpatterns = [
     url(r'^brdgmed/new/$', views.BoardGameCommodityCreateView.as_view(), name='boardgame_new_edition'),
     url(r'^brdgmed/new/(?P<bgpk>\d+)$', views.BoardGameCommodityCreateView.as_view(), name='boardgame_new_edition'),
     url(r'^brdgmed/(?P<pk>\d+)/edit/$', views.BoardGameCommodityUpdateView.as_view(), name='boardgame_edition_edit'),
-    url(r'^brdgm-commnotinwrhs-autocomp/$', views.BoardGameCommodityNotInWarehouseAutocompleteView.as_view(), name='commodity-notinwarehouse-autocomplete'),
+    url(r'^brdgm-commnotinwrhs-autocomp/$', views.BoardGameCommodityNotInWarehouseAutocompleteViewByCode.as_view(), name='commodity-notinwarehouse-autocomplete'),
     url(r'^brdgmed/new/return_home', views.return_home, name='return_home'),
 ]

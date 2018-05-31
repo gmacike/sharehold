@@ -10,8 +10,9 @@
 .catalogentry{
   background-color: var(--color6th);
   padding: 8px;
+  margin-top: 8px;
   margin-right: 16px;
-  margin-bottom: 16px;
+  margin-bottom: 8px;
   flex-basis: 320px;
   min-width: 300px;
   max-width: 360px;

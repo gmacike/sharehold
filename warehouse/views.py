@@ -1,12 +1,15 @@
+from django.conf import settings
 from django.http import Http404
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
 from django.views.generic import ListView, DetailView, CreateView
+from django.views.generic.detail import SingleObjectMixin
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.contrib.auth.decorators import login_required, permission_required
 from dal import autocomplete
 
+from django.db.models.functions import Lower
 from warehouse.forms import WarehouseForm, BoardGameContainerForm
 from warehouse.models import Warehouse, BoardGameContainer
 
@@ -20,10 +23,42 @@ class WarehouseListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
         return Warehouse.objects.all()
 
 
-class WarehouseDetailView(LoginRequiredMixin, PermissionRequiredMixin, DetailView):
+class WarehouseDetailView(LoginRequiredMixin, PermissionRequiredMixin, SingleObjectMixin, ListView):
     model = Warehouse
     permission_required = 'warehouse.add_warehouse'
     raise_exception=True
+    template_name = 'warehouse/warehouse_detail.html'
+    paginate_by = settings.WAREHOUSE_PAGINATION
+    paginate_orphans = settings.WAREHOUSE_PAGINATION_ORPHANS
+    # ListView context object => list of warehouse containers
+    # context_object_name = 'warehouse_containers'
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object(queryset=Warehouse.objects.all())
+        return super().get(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['warehouse'] = self.object
+        return context
+
+    def get_queryset(self):
+        if self.request.method == 'GET':
+            if self.request.GET.__contains__("filter"):
+                filter_criteria = self.request.GET.get("filter")
+                self.request.session ['warehouse_filter'] = filter_criteria
+            else:
+                filter_criteria = self.request.session ['warehouse_filter']
+            if filter_criteria != None:
+                containers_by_barcode = self.object.containers.filter(commodity__codeValue__icontains=filter_criteria)
+                containers_by_label =  self.object.containers.filter(commodity__catalogueEntry__itemLabel__icontains=filter_criteria)
+                contaiers_filtered = containers_by_barcode | containers_by_label
+                self.queryset = contaiers_filtered.order_by(Lower("commodity__catalogueEntry__itemLabel"))
+                # self.queryset = games_filtered.order_by(Lower("itemLabel"))
+            else:
+                self.queryset = self.object.containers.all()
+        # return self.object.containers.all()
+        return self.queryset
 
 # @login_required
 # @permission_required('warehouse', raise_exception=True)
@@ -63,6 +98,7 @@ def bgcontainer_dec (request, *args, **kwargs):
         if container:
             if container.total > 0:
                 container.total -= 1
+                # TODO: who did what to be registered
                 container.save()
     except BoardGameContainer.DoesNotExist as exc:
         messages.add_message(request, messages.ERROR, exc)

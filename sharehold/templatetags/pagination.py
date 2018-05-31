@@ -19,7 +19,6 @@ def paginator(context, adjacent_pages=2, show_far_away_pages=True, far_away_step
     number_of_pages = context['paginator'].num_pages
     page_obj = context['page_obj']
     paginator = context['paginator']
-    request_parameters = context['req_params']
     startPage = max(current_page - adjacent_pages, 1)
     endPage = current_page + adjacent_pages + 1
     if endPage > number_of_pages: endPage = number_of_pages + 1
@@ -46,7 +45,6 @@ def paginator(context, adjacent_pages=2, show_far_away_pages=True, far_away_step
         'far_away_page': far_away_page,
         'show_first': 1 != current_page,
         'show_last': number_of_pages != current_page,
-        'req_params': request_parameters,
     }
 
 register.inclusion_tag('paginator.html', takes_context=True)(paginator)
