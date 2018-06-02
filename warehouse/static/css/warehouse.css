@@ -1,5 +1,10 @@
 @import url("/static/sharehold.css");
 
+.nav-warehouse {
+  color: var(--color2nd);
+  background-color: var(--color5th);
+}
+
 .inventorylist{
   margin-left: 0px;
   margin-right: 0px;

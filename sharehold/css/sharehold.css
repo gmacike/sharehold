@@ -30,22 +30,27 @@ i {
 .topnavbar {
   background-color: var(--color2nd);
   min-height: 2em;
+  padding: 8px 0px 16px 0px;
+  /* line-height: 36px; */
+}
+
+.navbar-item {
+  background-color: var(--color2nd);
+  color: white;
+  font-size: 1.5em;
+  padding-right: 0.5em;
 }
 
 .topnav-la {
-  background-color: var(--color2nd);
-  color: white;
-  font-size: 1.5em;
-  /* padding-left: 3px; */
+  /* justify-content: flex-start; */
+  padding-left: 3px;
 }
 
 .topnav-ra {
-  background-color: var(--color2nd);
-  color: white;
-  font-size: 1.5em;
+  padding-right: 3px;
 }
 
-.topnav-la:hover, .topnav-ra:hover {
+.navbar-item:hover {
   color: var(--color2nd);
   background-color: var(--color5th);
 }
