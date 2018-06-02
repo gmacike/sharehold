@@ -56,7 +56,7 @@ class WarehouseDetailView(LoginRequiredMixin, PermissionRequiredMixin, SingleObj
                 self.queryset = contaiers_filtered.order_by(Lower("commodity__catalogueEntry__itemLabel"))
                 # self.queryset = games_filtered.order_by(Lower("itemLabel"))
             else:
-                self.queryset = self.object.containers.all()
+                self.queryset = self.object.containers.all().order_by(Lower("commodity__catalogueEntry__itemLabel"))
         # return self.object.containers.all()
         return self.queryset
 
