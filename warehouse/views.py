@@ -22,7 +22,6 @@ class WarehouseListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     def get_queryset(self):
         return Warehouse.objects.all()
 
-
 class WarehouseDetailView(LoginRequiredMixin, PermissionRequiredMixin, SingleObjectMixin, ListView):
     model = Warehouse
     permission_required = 'warehouse.add_warehouse'
@@ -73,10 +72,21 @@ class WarehouseAutocompleteView(LoginRequiredMixin, PermissionRequiredMixin, aut
 
         return qs
 
+@login_required
+def warehouse_select (request, *args, **kwargs):
+    try:
+        selected_warehouse = Warehouse.objects.get (pk=kwargs.pop('wrhpk'))
+        if selected_warehouse:
+            request.session ['warehouse_context_pk'] = selected_warehouse.pk
+    except Warehouse.DoesNotExist as exc:
+        messages.add_message(request, messages.ERROR, exc)
+        raise Http404
+    return redirect ('warehouse_index')
 
 @login_required
 @permission_required('warehouse.change_boardgamecontainer', raise_exception=True)
 def bgcontainer_inc (request, *args, **kwargs):
+
 
     try:
         container = BoardGameContainer.objects.get (pk=kwargs.pop('cntpk'))

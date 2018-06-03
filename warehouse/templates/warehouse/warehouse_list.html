@@ -6,23 +6,30 @@
 <div class="jumbotron content">
     <h1>Magazyny</h1>
 
-    {% for warehouse in warehouse_list %}
-      <div class="d-flex flex-wrap col-5 warehouse">
-        <div class="row justify-content-between w-100">
-          <h2 class="col w-75"><a href="{% url 'warehouse_inventory' pk=warehouse.pk %}">{{ warehouse.name }}</a></h2>
-          <div class="d-flex flex-column w-25 justify-content-start align-items-end">
+    <div class="d-flex flex-row flex-wrap">
+      {% for warehouse in warehouse_list %}
+      <div class="col-4 flex-column warehouse">
+        <h2 class="text-center"><a href="{% url 'warehouse_inventory' pk=warehouse.pk %}">{{ warehouse.name }}</a></h2>
+        <h5>O magazynie:</h5>
+        <h6>{{ warehouse.getDesc }}</h6>
+
+        <div class="flex-row d-flex justify-content-between">
+          <div class="flex-column col-8 p-0">
+            <h6>Magazynowanych tytułów: {{warehouse.catalogueItemsCount}}</h6>
+            <h6>Magazynowanych egzemplarzy: {{warehouse.commoditiesTotalCount}}</h6>
+            <h6>Egzemplarzy dostępnych: {{warehouse.commoditiesAvailableCount}}</h6>
+          </div>
+
+          <div class="flex-column col-4 p-0">
+            {% if user.is_authenticated %}
+              <a href="{% url 'warehouse_select' wrhpk=warehouse.pk %}" class="btn btn-block btn-primary">Pracuj z</a>
+            {% endif %}
             {% if perms.warehouse.change_warehouse %}
               <a href="{% url 'warehouse_create' %}" class="btn btn-block btn-primary disabled">Edytuj</a>
             {% endif %}
           </div>
-
         </div>
-        <h5 class="w-100">O magazynie:</h5>
-        <h6 class="w-100">{{ warehouse.desc }}</h6>
-        <h6 class="w-100">Magazynowanych tytułów: {{warehouse.catalogueItemsCount}}</h6>
-        <h6 class="w-100">Magazynowanych egzemplarzy: {{warehouse.commoditiesTotalCount}}</h6>
-        <h6 class="w-100">Egzemplarzy dostępnych: {{warehouse.commoditiesAvailableCount}}</h6>
       </div>
-    {% endfor %}
+      {% endfor %}
 </div>
 {% endblock %}

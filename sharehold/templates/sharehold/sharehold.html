@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 {% load staticfiles %}
+{% load warehouseattribute %}
 
 
 <html>
@@ -53,6 +54,7 @@
             <span>Magazyn: </span>
             <span>
               {% if request.session.warehouse_context_pk %}
+                {% get_warehouse_attribute request.session.warehouse_context_pk "name" %}
               {% else %}
                 <i>nie wskazano</i>
               {% endif %}

@@ -37,6 +37,12 @@ class Warehouse(models.Model):
                 available += container.available
         return available
 
+    def getDesc (self):
+        if self.desc != "":
+            return self.desc
+        else:
+            return "Brak dodatkowych informacji."
+
 
 class BoardGameContainer(models.Model):
     warehouse = models.ForeignKey('Warehouse', related_name='containers', null=False, blank=False)

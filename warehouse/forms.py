@@ -13,6 +13,16 @@ class WarehouseForm(forms.ModelForm):
         widgets = {'name': forms.TextInput({'class': 'textinputclass'}),
                    'desc': forms.Textarea()}
 
+# class WarehouseSelectionForm(forms.ModelForm):
+#     model = Warehouse
+#     fields = ('pk', 'name')
+#
+#     warehouse_pk = None
+#
+#     def __init__ (self, *args, **kwargs):
+#         initVals = kwargs.get('initial', {})
+#         self.warehouse_pk = initVals.pop ('pk', None)
+#         super(WarehouseSelectionForm, self).__init__(*args, **kwargs)
 
 class BoardGameContainerForm(forms.ModelForm):
 
