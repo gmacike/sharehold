@@ -14,9 +14,9 @@ from warehouse.forms import WarehouseForm, BoardGameContainerForm
 from warehouse.models import Warehouse, BoardGameContainer
 
 
-class WarehouseListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
+class WarehouseListView(LoginRequiredMixin, ListView):
     model = Warehouse
-    permission_required = 'warehouse.add_warehouse'
+    # permission_required = 'warehouse.add_warehouse'
     raise_exception=True
 
     def get_queryset(self):
