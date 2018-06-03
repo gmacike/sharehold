@@ -1,0 +1,20 @@
+{% extends "circulation/base.html" %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block content %}
+
+<div class="jumbotron content pl-3">
+  <h1>Wypożycz grę</h1>
+
+  <form class="boardgame-form" method="post">
+    {% include "sharehold/formfieldsgenerator.html" %}
+
+    <button type="submit" class="save btn btn-primary">Wypożycz</button>
+  </form>
+</div>
+
+<script type="text/javascript" src="{% static 'admin/js/vendor/jquery/jquery.js' %}"></script>
+{{ form.media }}
+
+{% endblock %}

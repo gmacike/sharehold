@@ -13,7 +13,6 @@ class WarehouseForm(forms.ModelForm):
         widgets = {'name': forms.TextInput({'class': 'textinputclass'}),
                    'desc': forms.Textarea()}
 
-
 class BoardGameContainerForm(forms.ModelForm):
 
     def __init__ (self, *args, **kwargs):

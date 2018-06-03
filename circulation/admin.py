@@ -1,9 +1,15 @@
 from django.contrib import admin
-from circulation.models import (RentalClient, ClientID)
+from circulation.models import (RentalClient, ClientID, BoardGameLending)
 
-class ClientIDAdmin(admin.StackedInline):
-    model = ClientID
-    extra = 0
+# Register your models here.
+admin.site.register (RentalClient)
+admin.site.register (ClientID)
+admin.site.register (BoardGameLending)
 
-class RentalClientAdmin(admin.ModelAdmin):
-    inlines = [ClientIDAdmin]
+
+# class ClientIDAdmin(admin.StackedInline):
+#     model = ClientID
+#     extra = 0
+#
+# class RentalClientAdmin(admin.ModelAdmin):
+#     inlines = [ClientIDAdmin]

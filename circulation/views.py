@@ -4,9 +4,11 @@ from datetime import datetime
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.contrib.auth.decorators import login_required, permission_required
+from dal import autocomplete
 from django.forms import inlineformset_factory
-from circulation.models import (RentalClient, ClientID, ClientHasBoardGame)
-from circulation.forms import (RentalClientForm, RentalClientIDInlineFormSet, ClientHasBoardGameForm)
+from circulation.models import (RentalClient, ClientID, BoardGameLending)
+from warehouse.models import Warehouse, BoardGameContainer
+from circulation.forms import (RentalClientForm, RentalClientIDInlineFormSet, BoardGameLendingForm)
 from django.views.generic import (ListView, DetailView, CreateView, UpdateView)
 from django.conf import settings
 
@@ -49,6 +51,18 @@ class ClientUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
 
     form_class = RentalClientForm
     model = RentalClient
+
+
+# @login_required
+# @permission_required('warehouse', raise_exception=True)
+class ClientAutocompleteViewByIDlabel(LoginRequiredMixin, PermissionRequiredMixin, autocomplete.Select2QuerySetView):
+    permission_required = 'circulation.add_boardgamelending'
+
+    def get_queryset(self):
+        qs = RentalClient.objects.all().order_by('clientIDs__IDlabel')
+        if self.q:
+            qs = qs.filter(clientIDs__IDlabel__icontains=self.q)
+        return qs
 
 
 class BoardGameUpdate2View(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
@@ -94,7 +108,7 @@ def addAndEditRentalClient(request):
             return redirect('rentalclient_details', pk=rentalClient.pk)
         else:
             return render(request, 'circulation/rentalclient_form.html', {'form': form})
-    return redirect('circulation_entries')    
+    return redirect('circulation_entries')
 
 @login_required
 @permission_required('circulation.add_rentalclient', raise_exception=True)
@@ -141,23 +155,58 @@ def updateAndReturn_rentalClientList(request, pk):
     return redirect('circulation_entries')
 
 
-class ClientHasBoardGameList(ListView):
-    model = ClientHasBoardGame
+class BoardGameLendingList(ListView):
+    model = BoardGameLending
 
 
-class ClientHasBoardGameCreateView(CreateView):
-    model = ClientHasBoardGame
-    form_class = ClientHasBoardGameForm
+class BoardGameLendingCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
+    model = BoardGameLending
+    permission_required = 'circulation.add_boardgamelending'
+    raise_exception=True
+    form_class = BoardGameLendingForm
 
 
-class ClientHasBoardGameDetailView(DetailView):
-    model = ClientHasBoardGame
+class BoardGameLendingDetailView(DetailView):
+    model = BoardGameLending
 
 
 def register_return(request, pk):
     if request.method == 'POST':
-        clienthasboardgame = get_object_or_404(ClientHasBoardGame, pk=pk)
-        clienthasboardgame.returned = datetime.now()
-        clienthasboardgame.save()
+        BoardGameLending = get_object_or_404(BoardGameLending, pk=pk)
+        BoardGameLending.returned = datetime.now()
+        BoardGameLending.save()
 
-    return redirect('clienthasboardgame_detail', pk=pk)
+    return redirect('BoardGameLending_detail', pk=pk)
+
+
+# TODO add PermissionRequiredMixin
+class BoardGameContainerInWarehouseAutocompleteViewByCommodity(autocomplete.Select2QuerySetView):
+    # these queryset data will be available through pulib url guard w/ permissions if necessary
+    # here are none as boardgame cataloge is going to be available for publicity
+
+    def get_queryset(self):
+        selected_warehouse = None
+        warehouse_pk = None
+
+        if self.request.method == 'GET':
+            if self.request.GET.__contains__("wrhpk"):
+                warehouse_pk = self.request.GET.get("wrhpk")
+            else:
+                warehouse_pk = self.request.session.get('warehouse_context_pk', None)
+
+        if warehouse_pk != None:
+            try:
+                selected_warehouse = Warehouse.objects.get (pk=warehouse_pk)
+            except Warehouse.DoesNotExist as exc:
+                messages.add_message(request, messages.ERROR, exc)
+                raise Http404
+
+            if self.q:
+                qs = BoardGameContainer.objects.filter(warehouse=selected_warehouse,
+                    commodity__codeValue__icontains=self.q).order_by('commodity__codeValue')
+            else:
+                qs = BoardGameContainer.objects.filter(warehouse=selected_warehouse).order_by('codeValue')
+        else:
+            qs = BoardGameContainer.objects.none()
+
+        return qs

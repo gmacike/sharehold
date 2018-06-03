@@ -1,5 +1,10 @@
 @import url("/static/sharehold.css");
 
+.nav-circulation {
+  color: var(--color2nd);
+  background-color: var(--color5th);
+}
+
 .ID_row{
   margin: 5px 5px;
 }

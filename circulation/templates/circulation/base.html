@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 {% extends "sharehold/base.html" %}
 {% load staticfiles %}
 
@@ -16,9 +15,11 @@
 {% block circulation_appmenu %}
   <!-- Navbar -->
     {% if user.is_authenticated %}
-        {% if perms.circulation.add_rentalclient %}
-            <a class="navbar-nav techfont appmenu" href="{% url 'rentalClient_new' %}">Dodaj klienta</a>
-        {% endif %}
+      {% if perms.circulation.add_boardgamelending %}
+          <a class="navbar-nav techfont appmenu" href="{% url 'rentalClient_new' %}">Dodaj klienta</a>
+      {% endif %}
+      {% if perms.circulation.add_rentalclient %}
+          <a class="navbar-nav techfont appmenu" href="{% url 'rentalClient_new' %}">Dodaj klienta</a>
+      {% endif %}
     {% endif %}
 {% endblock %}
-

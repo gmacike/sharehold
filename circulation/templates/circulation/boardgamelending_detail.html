@@ -1,0 +1,23 @@
+{% extends "circulation/base.html" %}
+
+{% block content %}
+<div class="jumbotron">
+    <h1>Zwrot</h1>
+</div>
+<div>{{ BoardGameLending.client }}</div>
+<div>{{ BoardGameLending.container }}</div>
+<div>{{ BoardGameLending.issued }}</div>
+<div>{% if BoardGameLending.returned is None %}
+    <span>Oczekuje na zwrot</span>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit"
+                formaction="{% url 'BoardGameLending_return' pk=BoardGameLending.pk %}"
+        >
+            zarejestruj zwrot
+        </button>
+    </form>
+    {% else %}{{ BoardGameLending.returned }}
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,21 +1,21 @@
 from django import forms
 from django.core.exceptions import ValidationError
+from dal import autocomplete
 
-from circulation.models import RentalClient, ClientID, ClientHasBoardGame
-
+from circulation.models import RentalClient, ClientID, BoardGameLending
 
 class RentalClientForm(forms.ModelForm):
     class Meta:
         model = RentalClient
-        fields = ('identificationCode', 'initials')
+        fields = ('registrationNumber', 'initials')
 
         labels = {
-            'identificationCode': 'Oznaczenie Identyfikacyjne',
+            'registrationNumber': 'Zarejestrowany jako',
             'initials': 'Inicjały',
         }
 
         widgets = {
-            'identificationCode': forms.TextInput({
+            'registrationNumber': forms.TextInput({
                 'class': 'textinputclass',
                 'placeholder': 'Wprowadź oznaczenie identyfikacyjne'
             }),
@@ -24,8 +24,8 @@ class RentalClientForm(forms.ModelForm):
                 'placeholder': 'Wprowadź inicjały'
             })
         }
-        
-class RentalClientIDInlineFormSet(forms.BaseInlineFormSet):      
+
+class RentalClientIDInlineFormSet(forms.BaseInlineFormSet):
     def clean(self):
         cleaned = super(RentalClientIDInlineFormSet, self).clean()
         numOfActiveIDs = 0;
@@ -34,13 +34,34 @@ class RentalClientIDInlineFormSet(forms.BaseInlineFormSet):
                 numOfActiveIDs+=1;
         if numOfActiveIDs > 1:
             raise forms.ValidationError('Tylko jeden identyfikator może być aktywny')
-            
+
         return cleaned
 
-class ClientHasBoardGameForm(forms.ModelForm):
+class BoardGameLendingForm(forms.ModelForm):
     class Meta:
-        model = ClientHasBoardGame
+        model = BoardGameLending
+
         fields = ('client', 'container')
+
+        labels = {'client': 'Dla klienta',
+                  'container': 'Kontener',
+        }
+
+        widgets = {
+            'client': autocomplete.ModelSelect2(
+                url='clientbyidlabel-autocomplete',
+                attrs={'data-placeholder': 'Podaj identyfikator klienta...',
+                    'data-minimum-input-length': 3,}
+                ),
+
+            'container': autocomplete.ModelSelect2(
+                url='containerbycommodity-autocomplete',
+                attrs={'data-placeholder': 'Wpisz kod przedmiotu...',
+                    'data-minimum-input-length': 1,}
+                ),
+
+        }
+
 
     def clean(self):
         cleaned = super().clean()
@@ -49,7 +70,7 @@ class ClientHasBoardGameForm(forms.ModelForm):
             raise ValidationError('brak dostępnych egzemplarzy w magazynie')
 
         client = cleaned.get('client')
-        if client.clienthasboardgame_set.filter(returned=None).count() > 0:
-            raise ValidationError('użytkownik wypożyczył już grę')
+        # if client.BoardGameLending.objects.filter(returned=None).count() > 0:
+        #     raise ValidationError('użytkownik wypożyczył już grę')
 
         return cleaned

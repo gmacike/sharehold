@@ -1,19 +1,19 @@
 {% extends "sharehold.html" %}
 
 {% block sidemenu %}
-  <a class="navbar-nav techfont mainmenu" href="{% url 'clienthasboardgame_list' %}">Wypożyczalnia</a>
-  {% block clienthasboardgame_appmenu %}
-  <!-- application submenu -->
-  {% endblock %}
-  <a class="navbar-nav techfont mainmenu" href="{% url 'circulation_entries' %}">Klienci</a>
-  {% block circulation_appmenu %}
-  <!-- application submenu -->
-  {% endblock %}
-  <a class="navbar-nav techfont mainmenu" href="{% url 'catalogue_entries' %}">Katalog</a>
+  <a class="navbar-nav techfont mainmenu nav-catalogue" href="{% url 'catalogue_entries' %}">Katalog</a>
   {% block catalogue_appmenu %}
   <!-- application submenu -->
   {% endblock %}
-  <a class="navbar-nav techfont mainmenu" href="{% url 'warehouse_index' %}">Magazyny</a>
+  <a class="navbar-nav techfont mainmenu nav-circulation" href="{% url 'BoardGameLending_create' %}">Wypożyczalnia</a>
+  {% block BoardGameLending_appmenu %}
+  <!-- application submenu -->
+  {% endblock %}
+  <a class="navbar-nav techfont mainmenu nav-customers" href="{% url 'circulation_entries' %}">Klienci</a>
+  {% block circulation_appmenu %}
+  <!-- application submenu -->
+  {% endblock %}
+  <a class="navbar-nav techfont mainmenu nav-warehouse" href="{% url 'warehouse_index' %}">Magazyny</a>
   {% block warehouse_appmenu %}
   <!-- application submenu -->
   {% endblock %}

@@ -1,0 +1,32 @@
+{% extends "circulation/base.html" %}
+{% block content %}
+<div class="jumbotron">
+    <h1>Wypożyczalnia</h1>
+</div>
+<div>
+    <a href="{% url 'BoardGameLending_create' %}">wypożycz grę</a>
+</div>
+<table>
+    <thead>
+    <td></td>
+    </thead>
+    {% for BoardGameLending in BoardGameLending_list %}
+    <tr>
+        <td>{{ BoardGameLending.client}}</td>
+        <td>{{ BoardGameLending.container.commodity }}</td>
+        <td>{{ BoardGameLending.issued }}</td>
+        {% if BoardGameLending.returned is None %}
+        <td>oczekuje na zwrot</td>
+        <td>
+            <a href="{% url 'BoardGameLending_detail' pk=BoardGameLending.pk %}">
+                przyjmij zwrot
+            </a>
+        </td>
+        {% else %}
+        <td>{{ BoardGameLending.returned }}</td>
+        <td></td>
+        {% endif %}
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}

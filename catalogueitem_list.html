@@ -1,0 +1,58 @@
+{% extends "catalogue/base.html" %}
+{% load staticfiles %}
+{% load pagination %}
+
+{% block content %}
+
+<div class="jumbotron content">
+
+  <h1>Gry planszowe w naszej kolekcji</h1>
+
+  <form class="catalogue_search_form" action="{% url 'catalogue_entries' %}" method="GET">
+    <label for="filter_criteria">Ograniczenie listy</label>
+    <div class="input-group">
+      <div class="input-group-prepend">
+        <button type="submit" class="save btn btn-primary btn-lg mt-0 mb-0">Szukaj</button>
+      </div>
+      <input type="text" class="form-control" id="filter_criteria" name="filter"
+        placeholder="Podaj kryteria wyszukiwania" value={{ request.session.catalogue_filter }}>
+    </div>
+  </form>
+
+  <div class="jumbotron cataloguelist row">
+    {% for item in catalogueitem_list %}
+      <div class="d-flex flex-wrap col-xl-2 col-md-3 col-sm-5 catalogentry">
+        <div class="row justify-content-between w-100">
+          {% if item.getImage %}
+            <a class="w-50" href="{% url 'boardgame_detail' pk=item.pk %}"><img class="img-responsive img-thumbnail" src="{{item.getImage.url}}"></a>
+          {% else %}
+            <a class="w-50" href="{% url 'boardgame_detail' pk=item.pk %}"><img class="img-responsive img-thumbnail" src="{% static 'noimage.png' %}"></a>
+          {% endif %}
+          <div class="d-flex flex-column w-50 justify-content-start align-items-end">
+            <a href="#" class="btn btn-block btn-primary">Wypożycz</a>
+            {% if perms.catalogue.change_boardgameitem %}
+              <a href="{% url 'boardgame_edit' pk=item.pk %}" class="btn btn-block btn-warning">Edytuj grę</a>
+            {% endif %}
+            {% if perms.catalogue.add_commodity %}
+              <a href="{% url 'boardgame_new_edition' bgpk=item.pk %}" class="btn btn-block btn-warning">Dodaj wydanie</a>
+            {% endif %}
+          </div>
+        </div>
+        <div class="w-100"></div>
+        <h5 class="align-self-start"> <a href="{% url 'boardgame_detail' pk=item.pk %}"> {{item.getTitle}} </a> </h5>
+        <div class="w-100"></div>
+        <h6>Egzemplarzy ogółem: {{item.commoditiesTotal}}</h6>
+        <h6>Egzemplarzy dostępnych: {{item.commoditiesAvailable}}</h6>
+      </div>
+
+    {% endfor %}
+  </div>
+</div>
+
+{% if is_paginated %}
+  <div class="container">
+      {% paginator %}
+  </div>
+{% endif %}
+
+{% endblock %}
