@@ -6,11 +6,11 @@
   <!-- application submenu -->
   {% endblock %}
   <a class="navbar-nav techfont mainmenu nav-circulation" href="{% url 'BoardGameLending_create' %}">Wypożyczalnia</a>
-  {% block BoardGameLending_appmenu %}
+  {% block circulation_appmenu %}
   <!-- application submenu -->
   {% endblock %}
-  <a class="navbar-nav techfont mainmenu nav-customers" href="{% url 'circulation_entries' %}">Klienci</a>
-  {% block circulation_appmenu %}
+  <a class="navbar-nav techfont mainmenu nav-customers" href="{% url 'circulation_entries' %}">Dane osobowe</a>
+  {% block personaldata_appmenu %}
   <!-- application submenu -->
   {% endblock %}
   <a class="navbar-nav techfont mainmenu nav-warehouse" href="{% url 'warehouse_index' %}">Magazyny</a>

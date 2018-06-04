@@ -16,7 +16,7 @@
   <!-- Navbar -->
     {% if user.is_authenticated %}
       {% if perms.circulation.add_boardgamelending %}
-          <a class="navbar-nav techfont appmenu" href="{% url 'rentalClient_new' %}">Dodaj klienta</a>
+          <a class="navbar-nav techfont appmenu" href="{% url 'BoardGameLending_create' %}">Wypożyczenie</a>
       {% endif %}
       {% if perms.circulation.add_rentalclient %}
           <a class="navbar-nav techfont appmenu" href="{% url 'rentalClient_new' %}">Dodaj klienta</a>
