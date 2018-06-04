@@ -10,7 +10,14 @@
   <form class="boardgame-form" method="post">
     {% include "sharehold/formfieldsgenerator.html" %}
 
-    <button type="submit" class="save btn btn-primary">Wypożycz</button>
+    {% if request.session.warehouse_context_pk %}
+      <button type="submit" class="btn btn-primary">Wypożycz</button>
+    {% else %}
+      <button type="submit" class="btn btn-primary" disabled>Wypożycz</button>
+      <a href="{% url 'warehouse_index' %}" class="btn btn-warning">Wybierz magazyn do pracy</a>
+    {% endif %}
+
+
   </form>
 </div>
 

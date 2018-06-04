@@ -44,7 +44,7 @@ i {
 .navbar-label {
   color: white;
   font-size: 1.5em;
-  padding-right: 0.5em;  
+  padding-right: 0.5em;
 }
 
 .topnav-la {
@@ -158,13 +158,13 @@ i {
   color: var(--color2nd);
 }
 
-.btn.disabled {
+.btn:disabled  {
   background-color: var(--color1st);
   border-color: var(--color1st);
   color: white;
 }
 
-.btn:hover {
+.btn:hover:enabled {
   color: var(--color2nd);
   background-color: var(--color5th);
   border-color: var(--color5th);
