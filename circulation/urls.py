@@ -16,8 +16,8 @@ urlpatterns = [
     url(r'^containerbycommodity-autocomp/$',views.BoardGameContainerInWarehouseAutocompleteViewByCommodity.as_view(),name='containerbycommodity-autocomplete'),
 
     url(r'^lending$',
-        views.BoardGameLendingList.as_view(),
-        name='BoardGameLending_list'),
+        views.circulation_home,
+        name='circulation_home'),
     url(r'^lending/new$',
         views.BoardGameLendingCreateView.as_view(success_url='/lending/new'),
         name='BoardGameLending_create'),

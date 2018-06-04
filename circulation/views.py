@@ -11,6 +11,19 @@ from warehouse.models import Warehouse, BoardGameContainer
 from circulation.forms import (RentalClientForm, RentalClientIDInlineFormSet, BoardGameLendingForm)
 from django.views.generic import (ListView, DetailView, CreateView, UpdateView)
 from django.conf import settings
+from sharehold.templatetags.anypermission import has_any_permission
+
+
+@login_required
+@has_any_permission (('circulation.add_boardgamelending', 'circulation.change_boardgamelending',
+    'circulation.add_rentalclient', 'circulation.change_rentalclient'))
+def circulation_home(request):
+    if request.user.has_perm ('circulation.add_boardgamelending') or request.user.has_perm('circulation.change_boardgamelending'):
+        return redirect('BoardGameLending_create')
+
+    if request.user.has_perm ('circulation.add_rentalclient') or request.user.has_perm('circulation.change_rentalclient'):
+        return redirect('rentalClient_new')
+    return redirect('circulation_entries')
 
 
 ############################################
