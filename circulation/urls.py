@@ -3,7 +3,7 @@ from circulation import views
 from django.conf.urls.static import static
 
 urlpatterns = [
-    # client links
+    # customer links
     # url(r'^Customer/$', views.CustomerListView.as_view(), name='circulation_newcustomer'),
     url(r'^customer/new/$', views.CustomerCreateView.as_view(), name='circulation_newcustomer'),
     url(r'^customer/(?P<pk>\d+)/edit/$', views.CustomerUpdateView.as_view(), name='circulation_customeredit'),
@@ -12,7 +12,7 @@ urlpatterns = [
     # url(r'^Customer/new/return_newCustomer', views.addAndAddNew_CustomerList, name='return_newCustomer'),
     url(r'^customer/new/repeat_add_customer$', views.repeat_add_customer, name='repeat_add_customer'),
     # url(r'^Customer/(?P<pk>\d+)/edit/return_CustomerList', views.updateAndReturn_CustomerList, name='return_CustomerList'),
-    url(r'^clientbyidlabel-autocomp/$',views.ClientAutocompleteViewByIDlabel.as_view(),name='clientbyidlabel-autocomplete'),
+    url(r'^customerbyidlabel-autocomp/$',views.CustomerAutocompleteViewByIDlabel.as_view(),name='customerbyidlabel-autocomplete'),
     url(r'^containerbycommodity-autocomp/$',views.BoardGameContainerInWarehouseAutocompleteViewByCommodity.as_view(),name='containerbycommodity-autocomplete'),
 
     url(r'^lending$', views.circulation_home, name='circulation_home'),

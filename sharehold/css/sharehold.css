@@ -29,7 +29,8 @@ i {
 
 .help-block {
   background-color: var(--color5th);
-  color: var(--color3rd);
+  color: var(--color4th);
+  margin: 8px;
 }
 
 .topnavbar {

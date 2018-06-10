@@ -11,10 +11,8 @@
     <h1>Rejestracja klienta</h1>
   {% endif %}
 
-  <form class="retalclient-form" method="post">
+  <form class="customer-form" method="post">
     {% include "sharehold/formfieldsgenerator.html" %}
-
-
 
     {% if customer.pk != null %}
       <h2>Identyfikatory wydane klinetowi:</h2> {{customer.active_IDs_count}}

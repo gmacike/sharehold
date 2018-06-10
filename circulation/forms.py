@@ -5,6 +5,9 @@ from dal import autocomplete
 from circulation.models import Customer, CustomerID, BoardGameLending
 
 class CustomerForm(forms.ModelForm):
+    newCustomerID = forms.CharField(max_length=12, required=True, label='Nowy identyfikator dla klienta',
+        widget=forms.TextInput(attrs={'placeholder': 'Podaj numer nowego identyfikatora wydawanego klientowi'}))
+
     class Meta:
         model = Customer
         fields = ('registrationNumber', 'initials')
@@ -25,6 +28,12 @@ class CustomerForm(forms.ModelForm):
             })
         }
 
+    def clean(self):
+        cleaned = super(CustomerForm, self).clean()
+        if CustomerID.objects.filter(IDlabel__iexact=cleaned['newCustomerID']).exists():
+            raise forms.ValidationError ('Podany identyfikator został już zarejestrowany')
+        return cleaned
+
 class RentalCustomerIDInlineFormSet(forms.BaseInlineFormSet):
     def clean(self):
         cleaned = super(RentalCustomerIDInlineFormSet, self).clean()
@@ -41,15 +50,15 @@ class BoardGameLendingForm(forms.ModelForm):
     class Meta:
         model = BoardGameLending
 
-        fields = ('client', 'container')
+        fields = ('customer', 'container')
 
-        labels = {'client': 'Dla klienta',
+        labels = {'customer': 'Dla klienta',
                   'container': 'Kontener',
         }
 
         widgets = {
-            'client': autocomplete.ModelSelect2(
-                url='clientbyidlabel-autocomplete',
+            'customer': autocomplete.ModelSelect2(
+                url='customerbyidlabel-autocomplete',
                 attrs={'data-placeholder': 'Podaj identyfikator klienta...',
                     'data-minimum-input-length': 3,}
                 ),
@@ -69,8 +78,8 @@ class BoardGameLendingForm(forms.ModelForm):
         if container.available <= 0:
             raise ValidationError('brak dostępnych egzemplarzy w magazynie')
 
-        client = cleaned.get('client')
-        # if client.BoardGameLending.objects.filter(returned=None).count() > 0:
+        customer = cleaned.get('customer')
+        # if customer.BoardGameLending.objects.filter(returned=None).count() > 0:
         #     raise ValidationError('użytkownik wypożyczył już grę')
 
         return cleaned

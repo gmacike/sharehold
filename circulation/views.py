@@ -27,7 +27,7 @@ def circulation_home(request):
 
 
 ############################################
-# Client Views
+# customer Views
 ############################################
 # class CustomerListView(ListView):
 #     model = Customer
@@ -68,7 +68,7 @@ class CustomerUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView
 
 # @login_required
 # @permission_required('warehouse', raise_exception=True)
-class ClientAutocompleteViewByIDlabel(LoginRequiredMixin, PermissionRequiredMixin, autocomplete.Select2QuerySetView):
+class CustomerAutocompleteViewByIDlabel(LoginRequiredMixin, PermissionRequiredMixin, autocomplete.Select2QuerySetView):
     permission_required = 'circulation.add_boardgamelending'
 
     def get_queryset(self):
@@ -116,8 +116,12 @@ def repeat_add_customer(request):
     if request.method == 'POST':
         form = CustomerForm(request.POST)
         if form.is_valid():
-            Customer = form.save(commit=False)
-            Customer.save()
+            cust = form.save()
+            custID = CustomerID.objects.create (customer=cust, IDlabel=form.cleaned_data['newCustomerID'])
+            custID.activate()
+            # TODO: zarejestrować kto i kiedy
+            # customer.save()
+            custID.save()
         else:
             return render(request, 'circulation/customer_form.html', {'form': form})
     return redirect('circulation_newcustomer')
@@ -155,7 +159,7 @@ def repeat_add_customer(request):
 # @permission_required('circulation.change_customer', raise_exception=True)
 # def updateAndReturn_CustomerList(request, pk):
 #     if request.method == 'POST':
-#         client = get_object_or_404(Customer, pk=pk)
+#         customer = get_object_or_404(Customer, pk=pk)
 #         form = CustomerForm(request.POST, instance=client)
 #         if form.is_valid():
 #             Customer = form.save(commit=False)
@@ -163,7 +167,7 @@ def repeat_add_customer(request):
 #             return redirect_query('circulation_newcustomer',
 #                                   {'filter': Customer.identificationCode, 'search': 'identificationCode'})
 #         else:
-#             return render(request, 'circulation/customer_form.html', {'form': form, 'Customer': client})
+#             return render(request, 'circulation/customer_form.html', {'form': form, 'Customer': customer})
 #     return redirect('circulation_newcustomer')
 #
 
