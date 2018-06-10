@@ -2,11 +2,11 @@ from django import forms
 from django.core.exceptions import ValidationError
 from dal import autocomplete
 
-from circulation.models import RentalClient, ClientID, BoardGameLending
+from circulation.models import Customer, CustomerID, BoardGameLending
 
-class RentalClientForm(forms.ModelForm):
+class CustomerForm(forms.ModelForm):
     class Meta:
-        model = RentalClient
+        model = Customer
         fields = ('registrationNumber', 'initials')
 
         labels = {
@@ -25,9 +25,9 @@ class RentalClientForm(forms.ModelForm):
             })
         }
 
-class RentalClientIDInlineFormSet(forms.BaseInlineFormSet):
+class RentalCustomerIDInlineFormSet(forms.BaseInlineFormSet):
     def clean(self):
-        cleaned = super(RentalClientIDInlineFormSet, self).clean()
+        cleaned = super(RentalCustomerIDInlineFormSet, self).clean()
         numOfActiveIDs = 0;
         for form in self.forms:
             if form.cleaned_data.get('active'):

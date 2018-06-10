@@ -1,0 +1,37 @@
+{% extends "circulation/base.html" %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block content %}
+
+<div class="jumbotron content pl-3">
+  {% if customer.pk != null %}
+    <h1>Akktualizacja danych klienta</h1>
+  {% else %}
+    <h1>Rejestracja klienta</h1>
+  {% endif %}
+
+  <form class="retalclient-form" method="post">
+    {% include "sharehold/formfieldsgenerator.html" %}
+
+
+
+    {% if customer.pk != null %}
+      <h2>Identyfikatory wydane klinetowi:</h2> {{customer.active_IDs_count}}
+      {% for customerid in customer.customerids %}
+        <p class="barcodetextfont text-center">{{customerid.idlabel}} - status {{customeid.status}}</p>
+      {% empty %}
+        <p>Nie wydano identyfikatora.</p>
+      {% endfor %}
+    {% endif %}
+
+    {% if customer.pk != null %}
+        <button type="submit" class="save btn btn-secondary btn-lg" formaction="circulation_customeredit">Zapisz zmiany</button>
+    {% else %}
+        <button type="submit" class="save btn btn-secondary btn-lg" formaction="repeat_add_customer">Dodaj i wprowadź kolejnego</button>
+    {% endif %}
+    <a href="{% url 'circulation_home' %}" class="btn btn-default">Anuluj</a>
+  </form>
+</div>
+
+{% endblock %}

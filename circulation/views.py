@@ -6,9 +6,9 @@ from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMix
 from django.contrib.auth.decorators import login_required, permission_required
 from dal import autocomplete
 from django.forms import inlineformset_factory
-from circulation.models import (RentalClient, ClientID, BoardGameLending)
+from circulation.models import (Customer, CustomerID, BoardGameLending)
 from warehouse.models import Warehouse, BoardGameContainer
-from circulation.forms import (RentalClientForm, RentalClientIDInlineFormSet, BoardGameLendingForm)
+from circulation.forms import (CustomerForm, RentalCustomerIDInlineFormSet, BoardGameLendingForm)
 from django.views.generic import (ListView, DetailView, CreateView, UpdateView)
 from django.conf import settings
 from sharehold.templatetags.anypermission import has_any_permission
@@ -16,54 +16,54 @@ from sharehold.templatetags.anypermission import has_any_permission
 
 @login_required
 @has_any_permission (('circulation.add_boardgamelending', 'circulation.change_boardgamelending',
-    'circulation.add_rentalclient', 'circulation.change_rentalclient'))
+    'circulation.add_customer', 'circulation.change_customer'))
 def circulation_home(request):
     if request.user.has_perm ('circulation.add_boardgamelending') or request.user.has_perm('circulation.change_boardgamelending'):
-        return redirect('BoardGameLending_create')
+        return redirect('circulation_lend')
 
-    if request.user.has_perm ('circulation.add_rentalclient') or request.user.has_perm('circulation.change_rentalclient'):
-        return redirect('rentalClient_new')
-    return redirect('circulation_entries')
+    if request.user.has_perm ('circulation.add_customer') or request.user.has_perm('circulation.change_customer'):
+        return redirect('circulation_newcustomer')
+    return redirect('circulation_newcustomer')
 
 
 ############################################
 # Client Views
 ############################################
-class RentalClientListView(ListView):
-    model = RentalClient
-    paginate_by = settings.CLIENTS_PAGINATION
-    paginate_orphans = settings.CLIENTS_PAGINATION_ORPHANS
+# class CustomerListView(ListView):
+#     model = Customer
+#     paginate_by = settings.CLIENTS_PAGINATION
+#     paginate_orphans = settings.CLIENTS_PAGINATION_ORPHANS
+#
+#     def get_queryset(self):
+#         if self.request.method == 'GET':
+#             self.filter_criteria = self.request.GET.get("filter")
+#             if self.filter_criteria and len(self.filter_criteria) >= 2:
+#                 search_type = self.request.GET.get("search")
+#                 if search_type == "identificationCode":
+#                     return Customer.objects.filter(identificationCode__startswith=self.filter_criteria).order_by(
+#                         "identificationCode")
+#                 elif search_type == "initials":
+#                     return Customer.objects.filter(initials__icontains=self.filter_criteria).order_by("initials")
+#
+#         return Customer.objects.none()
+#
+#
+# class CustomerDetailsView(DetailView):
+#     model = Customer
+#
+#
+class CustomerCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
+    permission_required = 'circulation.add_customer'
+    form_class = CustomerForm
+    model = Customer
 
-    def get_queryset(self):
-        if self.request.method == 'GET':
-            self.filter_criteria = self.request.GET.get("filter")
-            if self.filter_criteria and len(self.filter_criteria) >= 2:
-                search_type = self.request.GET.get("search")
-                if search_type == "identificationCode":
-                    return RentalClient.objects.filter(identificationCode__startswith=self.filter_criteria).order_by(
-                        "identificationCode")
-                elif search_type == "initials":
-                    return RentalClient.objects.filter(initials__icontains=self.filter_criteria).order_by("initials")
 
-        return RentalClient.objects.none()
-
-
-class RentalClientDetailsView(DetailView):
-    model = RentalClient
-
-
-class RentalClientCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
-    permission_required = 'circulation.add_rentalclient'
-    form_class = RentalClientForm
-    model = RentalClient
-
-
-class ClientUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
-    permission_required = 'circulation.change_rentalclient'
+class CustomerUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
+    permission_required = 'circulation.change_customer'
     raise_exception = True
 
-    form_class = RentalClientForm
-    model = RentalClient
+    form_class = CustomerForm
+    model = Customer
 
 
 # @login_required
@@ -72,101 +72,100 @@ class ClientAutocompleteViewByIDlabel(LoginRequiredMixin, PermissionRequiredMixi
     permission_required = 'circulation.add_boardgamelending'
 
     def get_queryset(self):
-        qs = RentalClient.objects.all().order_by('clientIDs__IDlabel')
+        qs = Customer.objects.all().order_by('CustomerIDs__IDlabel')
         if self.q:
-            qs = qs.filter(clientIDs__IDlabel__icontains=self.q)
+            qs = qs.filter(CustomerIDs__IDlabel__icontains=self.q)
         return qs
 
 
 class BoardGameUpdate2View(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
-    permission_required = 'circulation.change_rentalclient'
+    permission_required = 'circulation.change_Customer'
     raise_exception = True
 
-    form_class = RentalClientForm
-    model = RentalClient
+    form_class = CustomerForm
+    model = Customer
 
+#
+# @login_required
+# @permission_required('circulation.change_customer', raise_exception=True)
+# def manage_Customer(request, pk):
+#     Customer = get_object_or_404(Customer, pk=pk)
+#     form = CustomerForm(instance=Customer)
+#     CustomerInlineFormSet = inlineformset_factory(Customer, CustomerID, fields=('ID', 'active'), extra=1, formset=RentalCustomerIDInlineFormSet, can_delete=False)
+#     if request.method == "POST":
+#         formset = CustomerInlineFormSet(request.POST, request.FILES, instance=Customer)
+#         if formset.is_valid():
+#             formset.save()
+#             return redirect_query('circulation_newcustomer',
+#                                   {'filter': Customer.identificationCode, 'search': 'identificationCode'})
+#     else:
+#         formset = CustomerInlineFormSet(instance=Customer)
+#     return render(request, 'circulation/circulation_customerdetails.html', {'form': form, 'formset': formset})
+#
+#
+# def redirect_query(url, params=None):
+#     response = redirect(url)
+#     if params:
+#         query_string = urlencode(params)
+#         response['Location'] += '?' + query_string
+#     return response
 
 @login_required
-@permission_required('circulation.change_rentalclient', raise_exception=True)
-def manage_rentalclient(request, pk):
-    rentalClient = get_object_or_404(RentalClient, pk=pk)
-    form = RentalClientForm(instance=rentalClient)
-    RentalClientInlineFormSet = inlineformset_factory(RentalClient, ClientID, fields=('ID', 'active'), extra=1, formset=RentalClientIDInlineFormSet, can_delete=False)
-    if request.method == "POST":
-        formset = RentalClientInlineFormSet(request.POST, request.FILES, instance=rentalClient)
-        if formset.is_valid():
-            formset.save()
-            return redirect_query('circulation_entries',
-                                  {'filter': rentalClient.identificationCode, 'search': 'identificationCode'})
-    else:
-        formset = RentalClientInlineFormSet(instance=rentalClient)
-    return render(request, 'circulation/rentalclient_details.html', {'form': form, 'formset': formset})
-
-
-def redirect_query(url, params=None):
-    response = redirect(url)
-    if params:
-        query_string = urlencode(params)
-        response['Location'] += '?' + query_string
-    return response
-
-@login_required
-@permission_required('circulation.add_rentalclient', raise_exception=True)
-def addAndEditRentalClient(request):
+@permission_required('circulation.add_customer', raise_exception=True)
+def repeat_add_customer(request):
     if request.method == 'POST':
-        form = RentalClientForm(request.POST)
+        form = CustomerForm(request.POST)
         if form.is_valid():
-            rentalClient = form.save(commit=False)
-            rentalClient.save()
-            return redirect('rentalclient_details', pk=rentalClient.pk)
+            Customer = form.save(commit=False)
+            Customer.save()
         else:
-            return render(request, 'circulation/rentalclient_form.html', {'form': form})
-    return redirect('circulation_entries')
-
-@login_required
-@permission_required('circulation.add_rentalclient', raise_exception=True)
-def addAndReturn_rentalClientList(request):
-    if request.method == 'POST':
-        form = RentalClientForm(request.POST)
-        if form.is_valid():
-            rentalClient = form.save(commit=False)
-            rentalClient.save()
-            return redirect_query('circulation_entries',
-                                  {'filter': rentalClient.identificationCode, 'search': 'identificationCode'})
-        else:
-            return render(request, 'circulation/rentalclient_form.html', {'form': form})
-    return redirect('circulation_entries')
-
-
-@login_required
-@permission_required('circulation.add_rentalclient', raise_exception=True)
-def addAndAddNew_rentalClientList(request):
-    if request.method == 'POST':
-        form = RentalClientForm(request.POST)
-        if form.is_valid():
-            rentalClient = form.save(commit=False)
-            rentalClient.save()
-            return redirect_query('rentalClient_new')
-        else:
-            return render(request, 'circulation/rentalclient_form.html', {'form': form})
-    return redirect('rentalClient_new')
-
-
-@login_required
-@permission_required('circulation.change_rentalclient', raise_exception=True)
-def updateAndReturn_rentalClientList(request, pk):
-    if request.method == 'POST':
-        client = get_object_or_404(RentalClient, pk=pk)
-        form = RentalClientForm(request.POST, instance=client)
-        if form.is_valid():
-            rentalClient = form.save(commit=False)
-            rentalClient.save()
-            return redirect_query('circulation_entries',
-                                  {'filter': rentalClient.identificationCode, 'search': 'identificationCode'})
-        else:
-            return render(request, 'circulation/rentalclient_form.html', {'form': form, 'rentalclient': client})
-    return redirect('circulation_entries')
-
+            return render(request, 'circulation/customer_form.html', {'form': form})
+    return redirect('circulation_newcustomer')
+#
+# @login_required
+# @permission_required('circulation.add_customer', raise_exception=True)
+# def addAndReturn_CustomerList(request):
+#     if request.method == 'POST':
+#         form = CustomerForm(request.POST)
+#         if form.is_valid():
+#             Customer = form.save(commit=False)
+#             Customer.save()
+#             return redirect_query('circulation_newcustomer',
+#                                   {'filter': Customer.identificationCode, 'search': 'identificationCode'})
+#         else:
+#             return render(request, 'circulation/customer_form.html', {'form': form})
+#     return redirect('circulation_newcustomer')
+#
+#
+# @login_required
+# @permission_required('circulation.add_customer', raise_exception=True)
+# def addAndAddNew_CustomerList(request):
+#     if request.method == 'POST':
+#         form = CustomerForm(request.POST)
+#         if form.is_valid():
+#             Customer = form.save(commit=False)
+#             Customer.save()
+#             return redirect_query('circulation_newcustomer')
+#         else:
+#             return render(request, 'circulation/customer_form.html', {'form': form})
+#     return redirect('circulation_newcustomer')
+#
+#
+# @login_required
+# @permission_required('circulation.change_customer', raise_exception=True)
+# def updateAndReturn_CustomerList(request, pk):
+#     if request.method == 'POST':
+#         client = get_object_or_404(Customer, pk=pk)
+#         form = CustomerForm(request.POST, instance=client)
+#         if form.is_valid():
+#             Customer = form.save(commit=False)
+#             Customer.save()
+#             return redirect_query('circulation_newcustomer',
+#                                   {'filter': Customer.identificationCode, 'search': 'identificationCode'})
+#         else:
+#             return render(request, 'circulation/customer_form.html', {'form': form, 'Customer': client})
+#     return redirect('circulation_newcustomer')
+#
 
 class BoardGameLendingList(ListView):
     model = BoardGameLending
