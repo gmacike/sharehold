@@ -119,7 +119,7 @@ class CustomerAutocompleteViewByActiveIDlabel(LoginRequiredMixin, PermissionRequ
     raise_exception = True
 
     def get_queryset(self):
-        qs = Customer.objects.all().order_by('CustomerIDs__IDlabel')
+        qs = Customer.objects.all().exclude(CustomerIDs__IDstatus!=CustomerID.AKTYWNY).order_by('CustomerIDs__IDlabel')
         if self.q:
             qs = qs.filter(CustomerIDs__IDlabel__icontains=self.q)
         return qs

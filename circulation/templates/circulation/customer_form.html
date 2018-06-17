@@ -1,6 +1,7 @@
 {% extends "circulation/base.html" %}
 {% load static %}
 {% load widget_tweaks %}
+{% load qs_ordering %}
 
 {% block content %}
 
@@ -47,7 +48,7 @@
     {% endif %}
 
     <div class="row no-gutters">
-      {% for customerid in customer.CustomerIDs.all %}
+      {% for customerid in customer.CustomerIDs.all|order_by:"IDstatus, IDlabel" %}
       <div class="d-flex flex-wrap col-lg-4 col-md-6 customerIDentry">
         <div class="row no-gutters w-100">
           <div class="col-8">
