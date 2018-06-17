@@ -38,22 +38,6 @@ class CatalogueItemListView(ListView):
                 self.queryset = BoardGameItem.objects.all().order_by("itemLabel")
             return self.queryset
 
-    # def get_context_data(self, **kwargs):
-    #     # Call the base implementation first to get a context
-    #     context = super().get_context_data(**kwargs)
-    #     req_copy = self.request.GET.copy()
-    #     req_copy.pop('page', True)
-    #     req_params = req_copy.urlencode()
-    #     context ['req_params'] = req_params
-    #     return context
-
-    # def get(self, request, *args, **kwargs):
-    #     # extract parameters from request and put them into context
-    #     req_copy = request.GET.copy()
-    #     self.request_parameters = req_copy.pop('page', True) and req_copy.urlencode()
-    #     return render(request, self.template_name)
-
-
 class BoardGameItemDetailsView(DetailView):
     model = BoardGameItem
 
@@ -86,6 +70,8 @@ def repeat_add_boardgame(request):
         if form.is_valid():
             boardgame = form.save(commit=False)
             boardgame.save()
+        else:
+            return render(request, 'catalogue/boardgameitem_form.html', {'form': form})
     return redirect('boardgame_new')
 
 @login_required

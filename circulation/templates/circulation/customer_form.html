@@ -1,0 +1,84 @@
+{% extends "circulation/base.html" %}
+{% load static %}
+{% load widget_tweaks %}
+{% load qs_ordering %}
+
+{% block content %}
+
+<div class="jumbotron content pl-3">
+  <form class="customer_search_form" action="{% url 'circulation_customergetbyid' %}" method="GET">
+    <label for="filter_criteria">Identyfikator klienta</label>
+    <div class="input-group">
+      <div class="input-group-prepend">
+        <button type="submit" class="save btn btn-primary btn-lg mt-0 mb-0">Identyfikuj</button>
+      </div>
+      <input type="text" class="form-control" id="filter_customerID" name="filter"
+      placeholder="Podaj pełny identyfikator klienta">
+    </div>
+  </form>
+
+  {% if customer != null %}
+    <h1>Aktualizacja danych klienta</h1>
+  {% else %}
+    <h1>Rejestracja klienta</h1>
+  {% endif %}
+
+
+  <form class="customer-form" method="post">
+    {% include "sharehold/formfieldsgenerator.html" %}
+
+    {% if customer != null %}
+      {% if perms.circulation.change_customer %}
+        <button type="submit" class="save btn btn-warning btn-lg" formaction="{% url 'circulation_customeredit' pk=customer.pk %}">Zapisz zmiany</button>
+      <!-- {% elif perms.circulation.add_customerid %}
+        <button type="submit" class="save btn btn-primary btn-lg" formaction="{% url 'circulation_bindcustomerid' %}">Dodaj nowy identyfikator</button>
+      {% endif %} -->
+    {% else %}
+      {% if perms.circulation.add_customer %}
+        <button type="submit" class="save btn btn-primary btn-lg" formaction="{% url 'repeat_add_customer' %}">Dodaj i wprowadź kolejnego</button>
+      {% endif %}
+    {% endif %}
+    <a href="{% url 'circulation_home' %}" class="btn btn-default">Anuluj</a>
+  </form>
+
+  {% if customer != null %}
+    <h2>Identyfikatory wydane klinetowi: </h2>
+    {% if debug %}
+    <p>debug info: (aktywnych {{customer.active_IDs_count}})</p>
+    {% endif %}
+
+    <div class="row no-gutters">
+      {% for customerid in customer.CustomerIDs.all|order_by:"IDstatus, IDlabel" %}
+      <div class="d-flex flex-wrap col-lg-4 col-md-6 customerIDentry">
+        <div class="row no-gutters w-100">
+          <div class="col-8">
+            <p class="barcodetextfont text-center">{{customerid.IDlabel}}</p>
+            {% if debug %}
+            <p>debug info: {{customerid.get_status_str }}</p>
+            {% endif %}
+          </div>
+          <div class="col-4 align-items-end">
+            {% if perms.circulation.change_customerid %}
+              {% if customerid.IDstatus == customerid.AKTYWNY %}
+                <a class="btn btn-warning customerID-btn" href="{% url 'customerID_deactivate' IDpk=customerid.pk %}">Dezaktywuj</a>
+              {% endif %}
+              {% if customerid.IDstatus == customerid.ZABLOKOWANY %}
+                <a class="btn btn-primary customerID-btn" href="{% url 'customerID_activate' IDpk=customerid.pk %}">Aktywuj</a>
+              {% endif %}
+              <!-- {% if customerid.IDstatus != customerid.UTRACONY and customerid.IDstatus != customerid.ZWROCONY %}
+                <a class="btn btn-secondary customerID-btn" disabled href="{% url 'welcome' %}">Przyjmij zwrot</a>
+                <a class="btn btn-danger customerID-btn" disabled href="{% url 'welcome' %}">Blokuj utracony</a>
+              {% endif %} -->
+            {% endif %}
+          </div>
+        </div>
+      </div>
+      {% empty %}
+        <p>Nie wydano identyfikatora.</p>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+</div>
+
+{% endblock %}

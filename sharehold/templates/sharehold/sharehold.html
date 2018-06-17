@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 {% load staticfiles %}
+{% load warehouseattribute %}
 
 
 <html>
@@ -38,17 +39,39 @@
   <body class="loader">
 
     <!-- Top Navbar -->
-    <nav class="navbar topnavbar techfont">
-      <ul class="navbar-nav justify-content-start col-2">
-        <li><a class="navbar-item techfont topnav-la" href="{% url 'welcome' %}"><i class="material-icons md-36">home</i></a></li>
-      </ul>
-      <ul class="navbar-nav justify-content-end">
-        {% if user.is_authenticated %}
-          <li><a class="navbar-item techfont topnav-ra" href="{% url 'logout' %}">{{user.username}}<i class="material-icons">exit_to_app</i></a></li>
-        {% else %}
-          <li><a class="navbar-item topnav-ra" href="{% url 'login' %}">Zaloguj się<i class="material-icons md-36">account_box</i></a> </li>
-        {% endif %}
-      </ul>
+    <nav class="navbar topnavbar techfont flex-row">
+      <!-- part over sidemenu -->
+      <div class="topnav-la col-2 flex-column align-items-start">
+        <ul class="navbar-nav flex-row justify-content-start">
+          <li><a class="navbar-item techfont topnav-la" href="{% url 'welcome' %}"><i class="material-icons md-36">home</i></a></li>
+        </ul>
+      </div>
+
+      <!-- middle main part -->
+      <div class="topnav-la col-8 flex-column align-items-start">
+        <ul class="navbar-nav flex-row justify-content-start">
+          <li class="navbar-label techfont">
+            <span>Magazyn: </span>
+            <span>
+              {% if request.session.warehouse_context_pk %}
+                {% get_warehouse_attribute request.session.warehouse_context_pk "name" %}
+              {% else %}
+                <i>nie wskazano</i>
+              {% endif %}
+            </span>
+          </li>
+        </ul>
+      </div>
+      <!-- right side part -->
+      <div class="topnav-ra col-2 flex-column-reverse align-items-start">
+        <ul class="navbar-nav flex-row justify-content-end">
+          {% if user.is_authenticated %}
+          <li><a class="navbar-item techfont" href="{% url 'logout' %}">{{user.username}}<i class="material-icons">exit_to_app</i></a></li>
+          {% else %}
+          <li><a class="navbar-item" href="{% url 'login' %}">Zaloguj się<i class="material-icons md-36">account_box</i></a> </li>
+          {% endif %}
+        </ul>
+      </div>
     </nav>
 
     <!-- Side menu -->

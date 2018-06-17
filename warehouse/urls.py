@@ -12,6 +12,10 @@ urlpatterns = [
         name='warehouse-autocomplete'),
 
 
+    url(r'^warehouse/select/(?P<wrhpk>\d+)$',
+        views.warehouse_select,
+        name='warehouse_select'),
+
     url(r'^warehouse/create$',
         views.WarehouseCreateView.as_view(success_url='/warehouse'),
         name='warehouse_create'),

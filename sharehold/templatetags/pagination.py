@@ -1,7 +1,7 @@
 # taken from https://djangosnippets.org/snippets/73/
 # use in template by inserting:
 # {% load pagination %}
-# {% paginator 5 %}
+# {% paginator %} 
 
 from django import template
 register = template.Library()

@@ -27,25 +27,53 @@ i {
   vertical-align: middle;
 }
 
+.message {
+
+}
+
+.messages .info {
+  background-color: var(--color2nd);
+  color: var(--color5th);
+  padding: 5px;
+  list-style: none;
+}
+
+.help-block {
+  background-color: var(--color5th);
+  color: var(--color4th);
+  margin: 8px;
+}
+
 .topnavbar {
   background-color: var(--color2nd);
   min-height: 2em;
+  padding: 8px 0px 16px 0px;
+  /* line-height: 36px; */
+}
+
+.navbar-item {
+  background-color: var(--color2nd);
+  color: white;
+  font-size: 1.5em;
+  padding-right: 0.5em;
+}
+
+.navbar-label {
+  color: white;
+  font-size: 1.5em;
+  padding-right: 0.5em;
 }
 
 .topnav-la {
-  background-color: var(--color2nd);
-  color: white;
-  font-size: 1.5em;
-  /* padding-left: 3px; */
+  /* justify-content: flex-start; */
+  padding-left: 3px;
 }
 
 .topnav-ra {
-  background-color: var(--color2nd);
-  color: white;
-  font-size: 1.5em;
+  padding-right: 3px;
 }
 
-.topnav-la:hover, .topnav-ra:hover {
+.navbar-item:hover {
   color: var(--color2nd);
   background-color: var(--color5th);
 }
@@ -143,17 +171,26 @@ i {
   margin: 3px;
 }
 
-.btn-default {
-  color: var(--color2nd);
+.btn-danger {
+  /* background-color: var(--color4th);
+  border-color: var(--color4th);
+  color: white; */
+  margin: 3px;
 }
 
-.btn.disabled {
+
+.btn-default {
+  color: var(--color2nd);
+  margin: 3px;
+}
+
+.btn:disabled  {
   background-color: var(--color1st);
   border-color: var(--color1st);
   color: white;
 }
 
-.btn:hover {
+.btn:hover:enabled {
   color: var(--color2nd);
   background-color: var(--color5th);
   border-color: var(--color5th);

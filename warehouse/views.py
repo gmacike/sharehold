@@ -14,14 +14,13 @@ from warehouse.forms import WarehouseForm, BoardGameContainerForm
 from warehouse.models import Warehouse, BoardGameContainer
 
 
-class WarehouseListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
+class WarehouseListView(LoginRequiredMixin, ListView):
     model = Warehouse
-    permission_required = 'warehouse.add_warehouse'
+    # permission_required = 'warehouse.add_warehouse'
     raise_exception=True
 
     def get_queryset(self):
         return Warehouse.objects.all()
-
 
 class WarehouseDetailView(LoginRequiredMixin, PermissionRequiredMixin, SingleObjectMixin, ListView):
     model = Warehouse
@@ -48,7 +47,7 @@ class WarehouseDetailView(LoginRequiredMixin, PermissionRequiredMixin, SingleObj
                 filter_criteria = self.request.GET.get("filter")
                 self.request.session ['warehouse_filter'] = filter_criteria
             else:
-                filter_criteria = self.request.session ['warehouse_filter']
+                filter_criteria = self.request.session.get('warehouse_filter', None)
             if filter_criteria != None:
                 containers_by_barcode = self.object.containers.filter(commodity__codeValue__icontains=filter_criteria)
                 containers_by_label =  self.object.containers.filter(commodity__catalogueEntry__itemLabel__icontains=filter_criteria)
@@ -56,7 +55,7 @@ class WarehouseDetailView(LoginRequiredMixin, PermissionRequiredMixin, SingleObj
                 self.queryset = contaiers_filtered.order_by(Lower("commodity__catalogueEntry__itemLabel"))
                 # self.queryset = games_filtered.order_by(Lower("itemLabel"))
             else:
-                self.queryset = self.object.containers.all()
+                self.queryset = self.object.containers.all().order_by(Lower("commodity__catalogueEntry__itemLabel"))
         # return self.object.containers.all()
         return self.queryset
 
@@ -73,10 +72,21 @@ class WarehouseAutocompleteView(LoginRequiredMixin, PermissionRequiredMixin, aut
 
         return qs
 
+@login_required
+def warehouse_select (request, *args, **kwargs):
+    try:
+        selected_warehouse = Warehouse.objects.get (pk=kwargs.pop('wrhpk'))
+        if selected_warehouse:
+            request.session ['warehouse_context_pk'] = selected_warehouse.pk
+    except Warehouse.DoesNotExist as exc:
+        messages.add_message(request, messages.ERROR, exc)
+        raise Http404
+    return redirect ('circulation_home')
 
 @login_required
 @permission_required('warehouse.change_boardgamecontainer', raise_exception=True)
 def bgcontainer_inc (request, *args, **kwargs):
+
 
     try:
         container = BoardGameContainer.objects.get (pk=kwargs.pop('cntpk'))
