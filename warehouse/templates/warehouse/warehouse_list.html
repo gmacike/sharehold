@@ -25,7 +25,8 @@
               <a href="{% url 'warehouse_select' wrhpk=warehouse.pk %}" class="btn btn-block btn-primary">Pracuj z</a>
             {% endif %}
             {% if perms.warehouse.change_warehouse %}
-              <a href="{% url 'warehouse_create' %}" class="btn btn-block btn-primary disabled">Edytuj</a>
+              <a href="{% url 'warehouse_inventory' pk=warehouse.pk %}" class="btn btn-block btn-primary">Stany magazynowe</a>
+              <!-- <a href="{% url 'warehouse_create' %}" class="btn btn-block btn-warning" disabled>Edytuj</a> -->
             {% endif %}
           </div>
         </div>

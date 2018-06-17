@@ -14,7 +14,11 @@
       <button type="submit" class="save btn btn-primary btn-warning">Dodaj do magazynu</button>
       <!-- {% endif %} -->
       <!-- docelowo powrót do magazynu, z którego przyszliśmy -->
-      <a href="{% url 'warehouse_index' %}" class="btn btn-default">Anuluj</a>
+      {% if warehouse.pk %}
+        <a href="{% url 'warehouse_inventory' pk=request.pk %}" class="btn btn-default">Anuluj</a>
+      {% else %}
+        <a href="{% url 'warehouse_index' %}" class="btn btn-default">Anuluj</a>
+      {% endif %}
     </form>
 </div>
 

@@ -43,7 +43,8 @@ class BoardGameContainerForm(forms.ModelForm):
             'commodity': autocomplete.ModelSelect2(
                 url='commodity-notinwarehouse-autocomplete',
                 attrs={'data-placeholder': 'Wpisz kod przedmiotu...',
-                    'data-minimum-input-length': 1,}
+                    'data-minimum-input-length': 1,},
+                forward=('warehouse',),
                 ),
 
             'total': forms.NumberInput(attrs={'class': 'numberinputclass',
