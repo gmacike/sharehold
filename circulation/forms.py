@@ -63,7 +63,7 @@ class BoardGameLendingForm(forms.ModelForm):
         widgets = {
             'customer': autocomplete.ModelSelect2(
                 url='customerbyactiveidlabel-autocomplete',
-                attrs={'data-placeholder': 'Podaj identyfikator klienta...',
+                attrs={'data-placeholder': 'Podaj aktywny identyfikator klienta...',
                     'data-minimum-input-length': 3,}
                 ),
 
