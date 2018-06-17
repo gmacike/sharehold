@@ -70,6 +70,8 @@ def repeat_add_boardgame(request):
         if form.is_valid():
             boardgame = form.save(commit=False)
             boardgame.save()
+        else:
+            return render(request, 'catalogue/boardgameitem_form.html', {'form': form})
     return redirect('boardgame_new')
 
 @login_required

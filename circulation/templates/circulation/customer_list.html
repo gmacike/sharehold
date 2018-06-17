@@ -6,7 +6,7 @@
 
   <h1>Zarejestrowani klienci</h1>
 
-  <form class="circulation_search_form" action="{% url 'circulation_entries' %}" method="GET">
+  <form class="circulation_search_form" action="{% url 'circulation_newcustomer' %}" method="GET">
     <label for="filter_criteria">Ograniczenie listy</label>
     <input type="text" class="form-control" id="filter_criteria" name="filter"
       placeholder="Podaj kryteria wyszukiwania" value={{ request.GET.filter }}>
@@ -18,12 +18,12 @@
   </form>
 
   <div class="row">
-    {% for item in rentalclient_list %}
+    {% for item in Customer_list %}
        <div class="col-lg-3 col-md-4 col-sm-6 catalogentry">
          <h2> {{item.identificationCode}} </h2>
          <h2> {{item.initials}}</h2>
-         {% if perms.circulation.change_rentalclient %}
-            <a href="{% url 'rentalclient_details' pk=item.pk %}" class="btn btn-warning">Edytuj</a>
+         {% if perms.circulation.change_Customer %}
+            <a href="{% url 'circulation_customerdetails' pk=item.pk %}" class="btn btn-warning">Edytuj</a>
          {% endif %}
        </div>
     {% endfor %}

@@ -12,3 +12,21 @@
 .ID_row label{
   margin: 0px 10px;
 }
+
+.customerID-btn {
+  min-width: 150px;
+}
+
+.customerIDentry{
+  background-color: var(--color6th);
+  padding: 8px;
+  margin-top: 8px;
+  margin-right: 16px;
+  margin-bottom: 8px;
+  flex-basis: 500px;
+  min-width: 480px;
+  max-width: 520px;
+  min-height: 150px;
+  flex-grow: 1;
+  flex-shrink: 2;
+}

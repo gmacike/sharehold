@@ -27,6 +27,23 @@ i {
   vertical-align: middle;
 }
 
+.message {
+
+}
+
+.messages .info {
+  background-color: var(--color2nd);
+  color: var(--color5th);
+  padding: 5px;
+  list-style: none;
+}
+
+.help-block {
+  background-color: var(--color5th);
+  color: var(--color4th);
+  margin: 8px;
+}
+
 .topnavbar {
   background-color: var(--color2nd);
   min-height: 2em;
@@ -44,7 +61,7 @@ i {
 .navbar-label {
   color: white;
   font-size: 1.5em;
-  padding-right: 0.5em;  
+  padding-right: 0.5em;
 }
 
 .topnav-la {
@@ -154,17 +171,26 @@ i {
   margin: 3px;
 }
 
-.btn-default {
-  color: var(--color2nd);
+.btn-danger {
+  /* background-color: var(--color4th);
+  border-color: var(--color4th);
+  color: white; */
+  margin: 3px;
 }
 
-.btn.disabled {
+
+.btn-default {
+  color: var(--color2nd);
+  margin: 3px;
+}
+
+.btn:disabled  {
   background-color: var(--color1st);
   border-color: var(--color1st);
   color: white;
 }
 
-.btn:hover {
+.btn:hover:enabled {
   color: var(--color2nd);
   background-color: var(--color5th);
   border-color: var(--color5th);

@@ -2,11 +2,14 @@ from django import forms
 from django.core.exceptions import ValidationError
 from dal import autocomplete
 
-from circulation.models import RentalClient, ClientID, BoardGameLending
+from circulation.models import Customer, CustomerID, BoardGameLending
 
-class RentalClientForm(forms.ModelForm):
+class CustomerForm(forms.ModelForm):
+    newCustomerID = forms.CharField(max_length=12, required=False, label='Nowy identyfikator dla klienta',
+        widget=forms.TextInput(attrs={'placeholder': 'Podaj numer nowego identyfikatora wydawanego klientowi'}))
+
     class Meta:
-        model = RentalClient
+        model = Customer
         fields = ('registrationNumber', 'initials')
 
         labels = {
@@ -25,32 +28,42 @@ class RentalClientForm(forms.ModelForm):
             })
         }
 
-class RentalClientIDInlineFormSet(forms.BaseInlineFormSet):
-    def clean(self):
-        cleaned = super(RentalClientIDInlineFormSet, self).clean()
-        numOfActiveIDs = 0;
-        for form in self.forms:
-            if form.cleaned_data.get('active'):
-                numOfActiveIDs+=1;
-        if numOfActiveIDs > 1:
-            raise forms.ValidationError('Tylko jeden identyfikator może być aktywny')
 
-        return cleaned
+    def clean_newCustomerID(self):
+        # cleaned = super(CustomerForm, self).clean()
+        newID = self.cleaned_data['newCustomerID']
+        if self.instance.pk == None and newID == "":
+            raise forms.ValidationError ('Dla nowego klienta podanie identyfikatora jest obowiązkowe', code='missing required data')
+        if newID != "" and CustomerID.objects.filter(IDlabel__iexact=newID).exists():
+            raise forms.ValidationError ('Podany identyfikator został już zarejestrowany', code='duplicated unique data')
+        return newID
+
+# class RentalCustomerIDInlineFormSet(forms.BaseInlineFormSet):
+#     def clean(self):
+#         cleaned = super(RentalCustomerIDInlineFormSet, self).clean()
+#         numOfActiveIDs = 0;
+#         for form in self.forms:
+#             if form.cleaned_data.get('active'):
+#                 numOfActiveIDs+=1;
+#         if numOfActiveIDs > 1:
+#             raise forms.ValidationError('Tylko jeden identyfikator może być aktywny')
+#
+#         return cleaned
 
 class BoardGameLendingForm(forms.ModelForm):
     class Meta:
         model = BoardGameLending
 
-        fields = ('client', 'container')
+        fields = ('customer', 'container')
 
-        labels = {'client': 'Dla klienta',
+        labels = {'customer': 'Dla klienta',
                   'container': 'Kontener',
         }
 
         widgets = {
-            'client': autocomplete.ModelSelect2(
-                url='clientbyidlabel-autocomplete',
-                attrs={'data-placeholder': 'Podaj identyfikator klienta...',
+            'customer': autocomplete.ModelSelect2(
+                url='customerbyactiveidlabel-autocomplete',
+                attrs={'data-placeholder': 'Podaj aktywny identyfikator klienta...',
                     'data-minimum-input-length': 3,}
                 ),
 
@@ -69,8 +82,8 @@ class BoardGameLendingForm(forms.ModelForm):
         if container.available <= 0:
             raise ValidationError('brak dostępnych egzemplarzy w magazynie')
 
-        client = cleaned.get('client')
-        # if client.BoardGameLending.objects.filter(returned=None).count() > 0:
+        customer = cleaned.get('customer')
+        # if customer.BoardGameLending.objects.filter(returned=None).count() > 0:
         #     raise ValidationError('użytkownik wypożyczył już grę')
 
         return cleaned

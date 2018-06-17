@@ -81,7 +81,7 @@ def warehouse_select (request, *args, **kwargs):
     except Warehouse.DoesNotExist as exc:
         messages.add_message(request, messages.ERROR, exc)
         raise Http404
-    return redirect ('warehouse_index')
+    return redirect ('circulation_home')
 
 @login_required
 @permission_required('warehouse.change_boardgamecontainer', raise_exception=True)
