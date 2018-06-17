@@ -17,19 +17,19 @@ from sharehold.templatetags.anypermission import has_any_permission
 
 
 @login_required
-@has_any_permission (('circulation.add_boardgamelending', 'circulation.change_boardgamelending',
-    'circulation.add_customer', 'circulation.change_customer'))
+# @has_any_permission (('circulation.add_boardgamelending', 'circulation.change_boardgamelending',
+#     'circulation.add_customer', 'circulation.change_customer'))
 def circulation_home(request):
     if request.user.has_perm ('circulation.add_boardgamelending') or request.user.has_perm('circulation.change_boardgamelending'):
         return redirect('circulation_lend')
     if request.user.has_perm ('circulation.add_customer') or request.user.has_perm('circulation.change_customer'):
         return redirect('circulation_newcustomer')
-    if request.user.has_perm ('circulation.add_customerid'):
-        return redirect('circulation_addcustomerid')
-    if request.user.has_perm('circulation.change_customerid'):
-        # TODO implement view for changing idstatus only
-        pass
-    return redirect('circulation_newcustomer')
+    # if request.user.has_perm ('circulation.add_customerid'):
+    #     return redirect('circulation_addcustomerid')
+    # if request.user.has_perm('circulation.change_customerid'):
+    #     # TODO implement view for changing idstatus only
+    #     pass
+    return redirect('welcome')
 
 
 ############################################
