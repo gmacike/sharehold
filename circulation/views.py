@@ -1,14 +1,16 @@
 from urllib.parse import urlencode
 
 from datetime import datetime
+from django.core.exceptions import ValidationError
 from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.contrib.auth.decorators import login_required, permission_required
 from dal import autocomplete
 from django.forms import inlineformset_factory
 from circulation.models import (Customer, CustomerID, BoardGameLending)
 from warehouse.models import Warehouse, BoardGameContainer
-from circulation.forms import (CustomerForm, RentalCustomerIDInlineFormSet, BoardGameLendingForm)
+from circulation.forms import (CustomerForm, BoardGameLendingForm)
 from django.views.generic import (ListView, DetailView, CreateView, UpdateView)
 from django.conf import settings
 from sharehold.templatetags.anypermission import has_any_permission
@@ -20,9 +22,13 @@ from sharehold.templatetags.anypermission import has_any_permission
 def circulation_home(request):
     if request.user.has_perm ('circulation.add_boardgamelending') or request.user.has_perm('circulation.change_boardgamelending'):
         return redirect('circulation_lend')
-
     if request.user.has_perm ('circulation.add_customer') or request.user.has_perm('circulation.change_customer'):
         return redirect('circulation_newcustomer')
+    if request.user.has_perm ('circulation.add_customerid'):
+        return redirect('circulation_addcustomerid')
+    if request.user.has_perm('circulation.change_customerid'):
+        # TODO implement view for changing idstatus only
+        pass
     return redirect('circulation_newcustomer')
 
 
@@ -58,6 +64,28 @@ class CustomerCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView
     model = Customer
 
 
+@login_required
+@has_any_permission (('circulation.add_customerid', 'circulation.change_customerid',
+    'circulation.add_customer', 'circulation.change_customer'))
+def get_customer_by_IDlabel (request):
+    customers = Customer.objects.none()
+    custpk = None
+    if request.method == 'GET':
+        if request.GET.__contains__("filter"):
+            filter_criteria = request.GET.get("filter")
+            # self.request.session ['catalogue_filter'] = filter_criteria
+            # else:
+            #     filter_criteria = self.request.session.get ('catalogue_filter', None)
+            if filter_criteria != None:
+                # expected one and only one Customer matching the criteria
+                # TODO zrefaktoryzować, bo można jakoś inteligentniej poprzez get()
+                customers = Customer.objects.filter(CustomerIDs__IDlabel__iexact=filter_criteria)
+                if customers.count() == 1:
+                    custpk = customers[0].pk
+        if custpk == None:
+            return redirect('circulation_newcustomer')
+    return redirect('circulation_customeredit', pk = custpk)
+
 class CustomerUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     permission_required = 'circulation.change_customer'
     raise_exception = True
@@ -65,11 +93,30 @@ class CustomerUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView
     form_class = CustomerForm
     model = Customer
 
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(request.POST, instance = Customer.objects.get(pk=kwargs['pk']))
+        if form.is_valid():
+            try:
+                cust = form.save(commit=False)
+                newID = form.cleaned_data['newCustomerID']
+                if newID != "":
+                    # create activates ID
+                    custID = CustomerID.create (cust, newID)
+                    custID.save()
+                cust.save()
+            except ValidationError as exc:
+                form.add_error('newCustomerID', exc)
+                return render(request, 'circulation/customer_form.html', {'form': form, 'customer': self.get_object,})
+        else:
+            # dupa=form.errors
+            # dupa.blada
+            return render(request, 'circulation/customer_form.html', {'form': form, 'customer': self.get_object,})
+        return redirect(cust)
 
-# @login_required
-# @permission_required('warehouse', raise_exception=True)
-class CustomerAutocompleteViewByIDlabel(LoginRequiredMixin, PermissionRequiredMixin, autocomplete.Select2QuerySetView):
+
+class CustomerAutocompleteViewByActiveIDlabel(LoginRequiredMixin, PermissionRequiredMixin, autocomplete.Select2QuerySetView):
     permission_required = 'circulation.add_boardgamelending'
+    raise_exception = True
 
     def get_queryset(self):
         qs = Customer.objects.all().order_by('CustomerIDs__IDlabel')
@@ -78,12 +125,52 @@ class CustomerAutocompleteViewByIDlabel(LoginRequiredMixin, PermissionRequiredMi
         return qs
 
 
-class BoardGameUpdate2View(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
-    permission_required = 'circulation.change_Customer'
+
+class CustomerAutocompleteViewByIDlabel(LoginRequiredMixin, PermissionRequiredMixin, autocomplete.Select2QuerySetView):
+    permission_required = 'circulation.change_customer'
     raise_exception = True
 
-    form_class = CustomerForm
-    model = Customer
+    def get_queryset(self):
+        qs = Customer.objects.all().order_by('CustomerIDs__IDlabel')
+        if self.q:
+            qs = qs.filter(CustomerIDs__IDlabel__icontains=self.q)
+        return qs
+
+@login_required
+@permission_required ('circulation.change_customerid', raise_exception=True)
+def CustomerID_activate (request, IDpk):
+    try:
+        custID = CustomerID.objects.get(pk=IDpk)
+        custID.activate()
+        # if no ValidationError raised
+        custID.save()
+    except CustomerID.DoesNotExist as exc:
+        pass
+    except ValidationError as exc:
+        messages.info(request, 'Identyfikator nie może być aktywowany')
+    return redirect('circulation_customeredit', pk = custID.customer.pk)
+
+@login_required
+@permission_required ('circulation.change_customerid', raise_exception=True)
+def customerID_deactivate (request, IDpk):
+    try:
+        custID = CustomerID.objects.get(pk=IDpk)
+        custID.deactivate()
+        # if no ValidationError raised
+        custID.save()
+    except CustomerID.DoesNotExist as exc:
+        pass
+    except ValidationError as exc:
+        messages.info(request, 'Identyfikator nie może być zablokowany')
+    return redirect('circulation_customeredit', pk = custID.customer.pk)
+
+#
+# class BoardGameUpdate2View(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
+#     permission_required = 'circulation.change_customer'
+#     raise_exception = True
+#
+#     form_class = CustomerForm
+#     model = Customer
 
 #
 # @login_required
@@ -125,6 +212,7 @@ def repeat_add_customer(request):
         else:
             return render(request, 'circulation/customer_form.html', {'form': form})
     return redirect('circulation_newcustomer')
+
 #
 # @login_required
 # @permission_required('circulation.add_customer', raise_exception=True)

@@ -1,7 +1,8 @@
 from datetime import datetime
+from django.core.exceptions import ValidationError
 from django.conf import settings
 from django.db import models
-
+from django.urls import reverse
 from warehouse.models import BoardGameContainer
 
 
@@ -10,10 +11,13 @@ class Customer(models.Model):
     initials = models.CharField(max_length=10)
 
     def active_IDs_count (self):
-        return self.CustomerIDs.filter(status=CustomerID.AKTYWNY).count()
+        return self.CustomerIDs.filter(IDstatus=CustomerID.AKTYWNY).count()
 
     def __str__(self):
         return '{} {}'.format(self.initials, self.registrationNumber)
+
+    def get_absolute_url(self):
+        return reverse('circulation_customeredit', kwargs={'pk': self.pk})
 
 
 class CustomerID(models.Model):
@@ -37,17 +41,53 @@ class CustomerID(models.Model):
 
     IDstatus = models.IntegerField(default=AKTYWNY, verbose_name='Status identyfikatora')
 
-    def activate (self):
-        if self.customer.active_IDs_count < settings.CIRCULATION_MAX_ACTIVE_IDS:
-            self.IDstatus = CustomerID.AKTYWNY
-        else:
-            raise CustomerID.StatusError
+    @classmethod
+    def create(cls, cust, label):
+        customerID = cls(customer=cust, IDlabel=label)
+        customerID.activate()
+        return customerID
 
-    def aktywny (self):
-        return self.IDstatus == AKTYWNY
+    def activate (self):
+        # only allow to activate ID if customer is allowed to have additional active one otherwise raise a model ValidationError
+        other_active_IDs_count = self.customer.CustomerIDs.exclude(pk=self.pk).filter(IDstatus=CustomerID.AKTYWNY).count()
+        if other_active_IDs_count < settings.CIRCULATION_MAX_ACTIVE_IDS:
+            if self.IDstatus == CustomerID.AKTYWNY:
+                pass
+            elif self.IDstatus == CustomerID.ZABLOKOWANY:
+                self.IDstatus = CustomerID.AKTYWNY
+            else:
+                raise ValidationError ('Identyfikator nie może zostać aktywowany', code='CustomerID state machine violated')
+        else:
+            raise ValidationError ('Dla klienta nie może być aktywowany kolejny identyfikator', code='too many active CustomerIDs')
+
+    def deactivate (self):
+        # only allow active ID to be deactivated otherwise raise a model ValidationError
+        if self.IDstatus == CustomerID.AKTYWNY:
+            self.IDstatus = CustomerID.ZABLOKOWANY
+        elif self.IDstatus == CustomerID.ZABLOKOWANY:
+            pass
+        else:
+            raise ValidationError ('Identyfikator nie jest aktywny', code='CustomerID state machine violated')
+
+    def get_status_str (self):
+        status_desc = None
+        for status in CustomerID.CustomerID_STATUS:
+            if status [0] == self.IDstatus:
+                status_desc = status [1]
+                break
+        return status_desc
+
+    def active (self):
+        return self.IDstatus == CustomerID.AKTYWNY
+
+    # def save(self, *args, **kwargs):
+    #     do_something()
+    #     super().save(*args, **kwargs)  # Call the "real" save() method.
+    #     do_something_else()
+
 
     def __str__(self):
-        return '{}@{}'.format(self.IDlabel, self.customer)
+        return '{}@{}:{}'.format(self.IDlabel, self.customer, CustomerID.CustomerID_STATUS[self.IDstatus])
 
 
 class BoardGameLending(models.Model):

@@ -18,11 +18,11 @@
       {% if perms.circulation.add_boardgamelending %}
           <a class="navbar-nav techfont appmenu" href="{% url 'circulation_lend' %}">Wypożyczenie</a>
       {% endif %}
-      {% if perms.circulation.add_customer %}
-          <a class="navbar-nav techfont appmenu" href="{% url 'circulation_newcustomer' %}">Dodaj klienta</a>
+      {% if perms.circulation.add_customer or perms.circulation.change_customer %}
+          <a class="navbar-nav techfont appmenu" href="{% url 'circulation_newcustomer' %}">Klienci</a>
       {% endif %}
-      {% if perms.circulation.change_customer %}
-          <a class="navbar-nav techfont appmenu" href="{% url 'circulation_newcustomer' %}">Zmień dane klienta</a>
-      {% endif %}
+      <!-- {% if perms.circulation.add_customerid or perms.circulation.change_customerid %}
+          <a class="navbar-nav techfont appmenu" href="{% url 'circulation_customergetbyid' %}">Identyfikatory</a>
+      {% endif %} -->
     {% endif %}
 {% endblock %}

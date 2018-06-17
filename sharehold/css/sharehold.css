@@ -27,6 +27,17 @@ i {
   vertical-align: middle;
 }
 
+.message {
+
+}
+
+.messages .info {
+  background-color: var(--color2nd);
+  color: var(--color5th);
+  padding: 5px;
+  list-style: none;
+}
+
 .help-block {
   background-color: var(--color5th);
   color: var(--color4th);
@@ -160,8 +171,17 @@ i {
   margin: 3px;
 }
 
+.btn-danger {
+  /* background-color: var(--color4th);
+  border-color: var(--color4th);
+  color: white; */
+  margin: 3px;
+}
+
+
 .btn-default {
   color: var(--color2nd);
+  margin: 3px;
 }
 
 .btn:disabled  {

@@ -6,6 +6,13 @@
   {{ hidden }}
 {% endfor %}
 
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
 
 {% for field in form.visible_fields %}
   <div class="form-group">
@@ -17,3 +24,7 @@
     {% endfor %}
   </div>
 {% endfor %}
+
+<!-- {% for error in form.errors %}
+  <span class="help-block">{{ error }}</span>
+{% endfor %} -->
