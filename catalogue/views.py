@@ -8,7 +8,7 @@ from django.conf import settings
 from dal import autocomplete
 # for case insensitive qureyset ordering
 from django.db.models.functions import Lower
-from warehouse.models import BoardGameContainer
+from warehouse.models import BoardGameContainer, Warehouse
 
 # Create your views here.
 class CatalogueItemListView(ListView):
@@ -140,12 +140,14 @@ class BoardGameCommodityUpdateView(LoginRequiredMixin, PermissionRequiredMixin, 
 class BoardGameCommodityNotInWarehouseAutocompleteViewByCode(autocomplete.Select2QuerySetView):
     # these queryset data will be available through pulib url guard w/ permissions if necessary
     # here are none as boardgame cataloge is going to be available for publicity
-    warehouse = None
 
     def get_queryset(self):
+
+        warehouse = Warehouse.objects.get(pk=self.forwarded.get('warehouse', None))
+
         if self.q:
-            qs = BoardGameCommodity.objects.filter(codeValue__icontains=self.q).order_by('codeValue')
+            qs = BoardGameCommodity.objects.exclude(containers__warehouse=warehouse).filter(codeValue__icontains=self.q).order_by('codeValue')
         else:
-            qs = BoardGameCommodity.objects.all().order_by('codeValue')
+            qs = BoardGameCommodity.objects.exclude(containers__warehouse=warehouse).order_by('codeValue')
 
         return qs
