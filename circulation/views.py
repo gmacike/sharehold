@@ -79,7 +79,7 @@ def get_customer_by_IDlabel (request):
             if filter_criteria != None:
                 # expected one and only one Customer matching the criteria
                 # TODO zrefaktoryzować, bo można jakoś inteligentniej poprzez get()
-                customers = Customer.objects.filter(CustomerIDs__IDlabel__iexact=filter_criteria)
+                customers = Customer.objects.filter(customerIDs__IDlabel__iexact=filter_criteria)
                 if customers.count() == 1:
                     custpk = customers[0].pk
         if custpk == None:
@@ -120,7 +120,7 @@ class CustomerAutocompleteViewByActiveIDlabel(LoginRequiredMixin, PermissionRequ
 
     def get_queryset(self):
         if self.q:
-            qs = Customer.objects.filter(CustomerIDs__IDstatus=CustomerID.AKTYWNY, CustomerIDs__IDlabel__icontains=self.q).order_by('CustomerIDs__IDlabel')
+            qs = Customer.objects.filter(customerIDs__IDstatus=CustomerID.AKTYWNY, customerIDs__IDlabel__icontains=self.q).order_by('customerIDs__IDlabel')
         else:
             qs = Customer.objects.all().order_by('CustomerIDs__IDlabel')
         return qs
@@ -259,9 +259,9 @@ def repeat_add_customer(request):
 #             return render(request, 'circulation/customer_form.html', {'form': form, 'Customer': customer})
 #     return redirect('circulation_newcustomer')
 #
-
-class BoardGameLendingList(ListView):
-    model = BoardGameLending
+#
+# class BoardGameLendingList(ListView):
+#     model = BoardGameLending
 
 
 class BoardGameLendingCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
@@ -270,6 +270,21 @@ class BoardGameLendingCreateView(LoginRequiredMixin, PermissionRequiredMixin, Cr
     raise_exception=True
     form_class = BoardGameLendingForm
 
+
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(request.POST)
+        if form.is_valid():
+            try:
+                lending = form.save()
+            except ValidationError as exc:
+                dupa.blada
+                form.add_error('newLending', exc)
+                return render(request, 'circulation/boardgamelending_form.html', {'form': form,})
+        else:
+            # dupa = form.errors
+            # dupa.blada
+            return render(request, 'circulation/boardgamelending_form.html', {'form': form,})
+        return redirect('circulation_lend')
 
 class BoardGameLendingDetailView(DetailView):
     model = BoardGameLending
@@ -282,36 +297,3 @@ def register_return(request, pk):
         BoardGameLending.save()
 
     return redirect('BoardGameLending_detail', pk=pk)
-
-
-# TODO add PermissionRequiredMixin
-class BoardGameContainerInWarehouseAutocompleteViewByCommodity(autocomplete.Select2QuerySetView):
-    # these queryset data will be available through pulib url guard w/ permissions if necessary
-    # here are none as boardgame cataloge is going to be available for publicity
-
-    def get_queryset(self):
-        selected_warehouse = None
-        warehouse_pk = None
-
-        if self.request.method == 'GET':
-            if self.request.GET.__contains__("wrhpk"):
-                warehouse_pk = self.request.GET.get("wrhpk")
-            else:
-                warehouse_pk = self.request.session.get('warehouse_context_pk', None)
-
-        if warehouse_pk != None:
-            try:
-                selected_warehouse = Warehouse.objects.get (pk=warehouse_pk)
-            except Warehouse.DoesNotExist as exc:
-                messages.add_message(request, messages.ERROR, exc)
-                raise Http404
-
-            if self.q:
-                qs = BoardGameContainer.objects.filter(warehouse=selected_warehouse,
-                    commodity__codeValue__icontains=self.q).order_by('commodity__codeValue')
-            else:
-                qs = BoardGameContainer.objects.filter(warehouse=selected_warehouse).order_by('codeValue')
-        else:
-            qs = BoardGameContainer.objects.none()
-
-        return qs

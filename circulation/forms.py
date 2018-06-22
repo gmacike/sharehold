@@ -1,5 +1,6 @@
 from django import forms
 from django.core.exceptions import ValidationError
+from django.conf import settings
 from dal import autocomplete
 
 from circulation.models import Customer, CustomerID, BoardGameLending
@@ -76,14 +77,15 @@ class BoardGameLendingForm(forms.ModelForm):
         }
 
 
-    def clean(self):
-        cleaned = super().clean()
-        container = cleaned.get('container')
+    def clean_customer(self):
+        # cleaned = super(CustomerForm, self).clean()
+        cust = self.cleaned_data['customer']
+        if cust.get_unfinished_lendings_count() >= settings.CIRCULATION_MAX_LENDINGS_PER_CUSTOMER:
+            raise ValidationError ('Klient wyczerpał limit wypożyczeń')
+        return cust
+
+    def clean_container(self):
+        container = self.cleaned_data['container']
         if container.available <= 0:
-            raise ValidationError('brak dostępnych egzemplarzy w magazynie')
-
-        customer = cleaned.get('customer')
-        # if customer.BoardGameLending.objects.filter(returned=None).count() > 0:
-        #     raise ValidationError('użytkownik wypożyczył już grę')
-
-        return cleaned
+            raise ValidationError('Brak dostępnych egzemplarzy w magazynie')
+        return container

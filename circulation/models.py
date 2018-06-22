@@ -1,4 +1,4 @@
-from datetime import datetime
+from django.utils import timezone
 from django.core.exceptions import ValidationError
 from django.conf import settings
 from django.db import models
@@ -11,7 +11,7 @@ class Customer(models.Model):
     initials = models.CharField(max_length=10)
 
     def active_IDs_count (self):
-        return self.CustomerIDs.filter(IDstatus=CustomerID.AKTYWNY).count()
+        return self.customerIDs.filter(IDstatus=CustomerID.AKTYWNY).count()
 
     def __str__(self):
         return '{} {}'.format(self.initials, self.registrationNumber)
@@ -19,11 +19,13 @@ class Customer(models.Model):
     def get_absolute_url(self):
         return reverse('circulation_customeredit', kwargs={'pk': self.pk})
 
+    def get_unfinished_lendings_count(self):
+        return BoardGameLending.objects.filter(customer=self, returned=None).count()
 
 class CustomerID(models.Model):
     customer = models.ForeignKey('Customer',
                                      on_delete=models.CASCADE,
-                                     related_name='CustomerIDs',
+                                     related_name='customerIDs',
                                      null=False,
                                      blank=False)
     IDlabel = models.CharField(max_length=12, unique=True, null=False, blank=False, verbose_name='Identyfikator')
@@ -49,7 +51,7 @@ class CustomerID(models.Model):
 
     def activate (self):
         # only allow to activate ID if customer is allowed to have additional active one otherwise raise a model ValidationError
-        other_active_IDs_count = self.customer.CustomerIDs.exclude(pk=self.pk).filter(IDstatus=CustomerID.AKTYWNY).count()
+        other_active_IDs_count = self.customer.customerIDs.exclude(pk=self.pk).filter(IDstatus=CustomerID.AKTYWNY).count()
         if other_active_IDs_count < settings.CIRCULATION_MAX_ACTIVE_IDS:
             if self.IDstatus == CustomerID.AKTYWNY:
                 pass
@@ -58,7 +60,7 @@ class CustomerID(models.Model):
             else:
                 raise ValidationError ('Identyfikator nie może zostać aktywowany', code='CustomerID state machine violated')
         else:
-            raise ValidationError ('Dla klienta nie może być aktywowany kolejny identyfikator', code='too many active CustomerIDs')
+            raise ValidationError ('Dla klienta nie może być aktywowany kolejny identyfikator', code='too many active ')
 
     def deactivate (self):
         # only allow active ID to be deactivated otherwise raise a model ValidationError
@@ -91,11 +93,43 @@ class CustomerID(models.Model):
 
 
 class BoardGameLending(models.Model):
-    customer = models.ForeignKey(Customer)
-    container = models.ForeignKey(BoardGameContainer)
+    customer = models.ForeignKey(Customer,
+                                     on_delete=models.CASCADE,
+                                     related_name='lendings',
+                                     null=False,
+                                     blank=False)
+    # customerID = models.ForeignKey(CustomerID,
+    #                                  on_delete=models.CASCADE,
+    #                                  related_name='lendings',
+    #                                  null=False,
+    #                                  blank=False)
+    container = models.ForeignKey(BoardGameContainer,
+                                     on_delete=models.CASCADE,
+                                     related_name='lendings',
+                                     null=False,
+                                     blank=False)
 
-    issued = models.DateTimeField(default=datetime.now)
+
+    issued = models.DateTimeField(null=False, default=timezone.now)
     returned = models.DateTimeField(null=True)
+
+    def save(self, *args, **kwargs):
+        # count customer's lendings and check if limit will not be exceeded
+        qs = BoardGameLending.objects.filter(customer=self.customer)
+        unfinished_customer_lendings_cnt = qs.count()
+        if unfinished_customer_lendings_cnt >= settings.CIRCULATION_MAX_LENDINGS_PER_CUSTOMER:
+            raise ValidationError ('Klient wyczerpał limit {} wypożyczeń, ma ich: {}'.format(settings.CIRCULATION_MAX_LENDINGS_PER_CUSTOMER, self.customer.get_unfinished_lendings_count()), 'model constraint violation')
+
+        #check if limit per customerID won't be exceeded
+        # unfinished_customerID_lendings_cnt = qs.filter (customerID=self.customerID).count()
+        # if unfinished_customerID_lendings_cnt >= settings.CIRCULATION_MAX_LENDINGS_PER_CUSTOMERID:
+        #     raise ValidationError ('Dla identyfikatora wyczerpano limit wypożyczeń', 'model constraint violation')
+
+        #start lending from now on
+        self.issued = timezone.now()
+
+        # TODO: add following to MIDDLEWARE - https://docs.djangoproject.com/en/2.0/topics/i18n/timezones/
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return '{} <-> {} from {}, to'.format (self.customer, self.container, self.issued, self.returned)

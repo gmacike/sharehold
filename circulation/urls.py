@@ -17,7 +17,6 @@ urlpatterns = [
     # url(r'^Customer/(?P<pk>\d+)/edit/return_CustomerList', views.updateAndReturn_CustomerList, name='return_CustomerList'),
     url(r'^customerbyidlabel-autocomp/$',views.CustomerAutocompleteViewByIDlabel.as_view(),name='customerbyidlabel-autocomplete'),
     url(r'^customerbyactiveidlabel-autocomp/$',views.CustomerAutocompleteViewByActiveIDlabel.as_view(),name='customerbyactiveidlabel-autocomplete'),
-    url(r'^containerbycommodity-autocomp/$',views.BoardGameContainerInWarehouseAutocompleteViewByCommodity.as_view(),name='containerbycommodity-autocomplete'),
 
     url(r'^lending$', views.circulation_home, name='circulation_home'),
     url(r'^lending/new$', views.BoardGameLendingCreateView.as_view(success_url='/lending/new'),  name='circulation_lend'),

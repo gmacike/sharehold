@@ -35,4 +35,7 @@ urlpatterns = [
     url(r'warehouse/bgcnt/(?P<cntpk>\d+)/dec$',
         views.bgcontainer_dec,
         name='bgcontainer_dec'),
+
+    url(r'^containerbycommodity-autocomp/$',views.BoardGameContainerInWarehouseAutocompleteViewByCommodity.as_view(),name='containerbycommodity-autocomplete'),
+
 ]
