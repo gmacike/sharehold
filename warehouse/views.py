@@ -136,3 +136,36 @@ class BoardGameContainerCreateView(LoginRequiredMixin, PermissionRequiredMixin, 
     def get_success_url(self):
         pk = self.kwargs['pk']
         return reverse('warehouse_inventory', kwargs={'pk': pk})
+
+# TODO add PermissionRequiredMixin
+class BoardGameContainerInWarehouseAutocompleteViewByCommodity(LoginRequiredMixin, autocomplete.Select2QuerySetView):
+    raise_exception=True
+    # these queryset data will be available through pulib url guard w/ permissions if necessary
+    # here are none as boardgame cataloge is going to be available for publicity
+
+    def get_queryset(self):
+        selected_warehouse = None
+        warehouse_pk = None
+
+        if self.request.method == 'GET':
+            if self.request.GET.__contains__("wrhpk"):
+                warehouse_pk = self.request.GET.get("wrhpk")
+            else:
+                warehouse_pk = self.request.session.get('warehouse_context_pk', None)
+
+        if warehouse_pk != None:
+            try:
+                selected_warehouse = Warehouse.objects.get (pk=warehouse_pk)
+            except Warehouse.DoesNotExist as exc:
+                messages.add_message(request, messages.ERROR, exc)
+                raise Http404
+
+            if self.q:
+                qs = BoardGameContainer.objects.filter(warehouse=selected_warehouse,
+                    commodity__codeValue__icontains=self.q).order_by('commodity__codeValue')
+            else:
+                qs = BoardGameContainer.objects.filter(warehouse=selected_warehouse).order_by('codeValue')
+        else:
+            qs = BoardGameContainer.objects.none()
+
+        return qs

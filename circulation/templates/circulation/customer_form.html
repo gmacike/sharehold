@@ -48,7 +48,7 @@
     {% endif %}
 
     <div class="row no-gutters">
-      {% for customerid in customer.CustomerIDs.all|order_by:"IDstatus, IDlabel" %}
+      {% for customerid in customer.customerIDs.all|order_by:"IDstatus, IDlabel" %}
       <div class="d-flex flex-wrap col-lg-4 col-md-6 customerIDentry">
         <div class="row no-gutters w-100">
           <div class="col-8">

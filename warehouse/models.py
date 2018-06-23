@@ -54,7 +54,7 @@ class BoardGameContainer(models.Model):
 
     @property
     def available(self):
-        return self.total - self.boardgamelending_set.filter(returned=None).count()
+        return self.total - self.lendings.filter(returned=None).count()
 
     class Meta:
         unique_together = ('warehouse', 'commodity')

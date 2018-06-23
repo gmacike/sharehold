@@ -30,3 +30,28 @@
   flex-grow: 1;
   flex-shrink: 2;
 }
+
+.custlendinglist{
+  margin-left: 0px;
+  margin-right: 0px;
+  padding: 0px 0px;
+  background-color: white;
+}
+
+.lendingentry{
+  background-color: var(--color6th);
+  padding: 8px 4px;
+  margin-top: 8px;
+  margin-right: 16px;
+  margin-bottom: 8px;
+  flex-basis: 400px;
+  min-width: 350px;
+  max-width: 450px;
+  min-height: 150px;
+  flex-grow: 1;
+  flex-shrink: 2;
+}
+
+.lendingentry h4 {
+  min-height: 2.5em;
+}

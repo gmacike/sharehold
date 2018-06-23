@@ -13,12 +13,10 @@
     {% if request.session.warehouse_context_pk %}
       <button type="submit" class="btn btn-primary">Wypożycz</button>
     {% else %}
-      <button type="submit" class="btn btn-primary" disabled>Wypożycz</button>
-      <a href="{% url 'warehouse_index' %}" class="btn btn-warning">Wybierz magazyn do pracy</a>
+      <a href="{% url 'warehouse_index' %}" class="btn btn-danger">Wybierz magazyn do pracy</a>
     {% endif %}
-
-
   </form>
+
 </div>
 
 <script type="text/javascript" src="{% static 'admin/js/vendor/jquery/jquery.js' %}"></script>
