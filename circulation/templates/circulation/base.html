@@ -16,7 +16,10 @@
   <!-- Navbar -->
     {% if user.is_authenticated %}
       {% if perms.circulation.add_boardgamelending %}
-          <a class="navbar-nav techfont appmenu" href="{% url 'circulation_lend' %}">Wypożyczenie</a>
+          <a class="navbar-nav techfont appmenu" href="{% url 'circulation_lend' %}">Wypożyczenia</a>
+      {% endif %}
+      {% if perms.circulation.change_boardgamelending %}
+          <a class="navbar-nav techfont appmenu" href="{% url 'circulation_return' %}">Zwroty</a>
       {% endif %}
       {% if perms.circulation.add_customer or perms.circulation.change_customer %}
           <a class="navbar-nav techfont appmenu" href="{% url 'circulation_newcustomer' %}">Klienci</a>

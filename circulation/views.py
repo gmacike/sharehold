@@ -12,6 +12,7 @@ from circulation.models import (Customer, CustomerID, BoardGameLending)
 from warehouse.models import Warehouse, BoardGameContainer
 from circulation.forms import (CustomerForm, BoardGameLendingForm)
 from django.views.generic import (ListView, DetailView, CreateView, UpdateView)
+from django.views.generic.detail import SingleObjectMixin
 from django.conf import settings
 from sharehold.templatetags.anypermission import has_any_permission
 
@@ -35,29 +36,6 @@ def circulation_home(request):
 ############################################
 # customer Views
 ############################################
-# class CustomerListView(ListView):
-#     model = Customer
-#     paginate_by = settings.CLIENTS_PAGINATION
-#     paginate_orphans = settings.CLIENTS_PAGINATION_ORPHANS
-#
-#     def get_queryset(self):
-#         if self.request.method == 'GET':
-#             self.filter_criteria = self.request.GET.get("filter")
-#             if self.filter_criteria and len(self.filter_criteria) >= 2:
-#                 search_type = self.request.GET.get("search")
-#                 if search_type == "identificationCode":
-#                     return Customer.objects.filter(identificationCode__startswith=self.filter_criteria).order_by(
-#                         "identificationCode")
-#                 elif search_type == "initials":
-#                     return Customer.objects.filter(initials__icontains=self.filter_criteria).order_by("initials")
-#
-#         return Customer.objects.none()
-#
-#
-# class CustomerDetailsView(DetailView):
-#     model = Customer
-#
-#
 class CustomerCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     permission_required = 'circulation.add_customer'
     form_class = CustomerForm
@@ -66,8 +44,8 @@ class CustomerCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView
 
 @login_required
 @has_any_permission (('circulation.add_customerid', 'circulation.change_customerid',
-    'circulation.add_customer', 'circulation.change_customer'))
-def get_customer_by_IDlabel (request):
+    'circulation.add_customer', 'circulation.change_customer', 'circulation.change_boardgamelending',))
+def get_customers_by_IDlabel (request):
     customers = Customer.objects.none()
     custpk = None
     if request.method == 'GET':
@@ -165,39 +143,6 @@ def customerID_deactivate (request, IDpk):
         messages.info(request, 'Identyfikator nie może być zablokowany')
     return redirect('circulation_customeredit', pk = custID.customer.pk)
 
-#
-# class BoardGameUpdate2View(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
-#     permission_required = 'circulation.change_customer'
-#     raise_exception = True
-#
-#     form_class = CustomerForm
-#     model = Customer
-
-#
-# @login_required
-# @permission_required('circulation.change_customer', raise_exception=True)
-# def manage_Customer(request, pk):
-#     Customer = get_object_or_404(Customer, pk=pk)
-#     form = CustomerForm(instance=Customer)
-#     CustomerInlineFormSet = inlineformset_factory(Customer, CustomerID, fields=('ID', 'active'), extra=1, formset=RentalCustomerIDInlineFormSet, can_delete=False)
-#     if request.method == "POST":
-#         formset = CustomerInlineFormSet(request.POST, request.FILES, instance=Customer)
-#         if formset.is_valid():
-#             formset.save()
-#             return redirect_query('circulation_newcustomer',
-#                                   {'filter': Customer.identificationCode, 'search': 'identificationCode'})
-#     else:
-#         formset = CustomerInlineFormSet(instance=Customer)
-#     return render(request, 'circulation/circulation_customerdetails.html', {'form': form, 'formset': formset})
-#
-#
-# def redirect_query(url, params=None):
-#     response = redirect(url)
-#     if params:
-#         query_string = urlencode(params)
-#         response['Location'] += '?' + query_string
-#     return response
-
 @login_required
 @permission_required('circulation.add_customer', raise_exception=True)
 def repeat_add_customer(request):
@@ -214,55 +159,30 @@ def repeat_add_customer(request):
             return render(request, 'circulation/customer_form.html', {'form': form})
     return redirect('circulation_newcustomer')
 
-#
-# @login_required
-# @permission_required('circulation.add_customer', raise_exception=True)
-# def addAndReturn_CustomerList(request):
-#     if request.method == 'POST':
-#         form = CustomerForm(request.POST)
-#         if form.is_valid():
-#             Customer = form.save(commit=False)
-#             Customer.save()
-#             return redirect_query('circulation_newcustomer',
-#                                   {'filter': Customer.identificationCode, 'search': 'identificationCode'})
-#         else:
-#             return render(request, 'circulation/customer_form.html', {'form': form})
-#     return redirect('circulation_newcustomer')
-#
-#
-# @login_required
-# @permission_required('circulation.add_customer', raise_exception=True)
-# def addAndAddNew_CustomerList(request):
-#     if request.method == 'POST':
-#         form = CustomerForm(request.POST)
-#         if form.is_valid():
-#             Customer = form.save(commit=False)
-#             Customer.save()
-#             return redirect_query('circulation_newcustomer')
-#         else:
-#             return render(request, 'circulation/customer_form.html', {'form': form})
-#     return redirect('circulation_newcustomer')
-#
-#
-# @login_required
-# @permission_required('circulation.change_customer', raise_exception=True)
-# def updateAndReturn_CustomerList(request, pk):
-#     if request.method == 'POST':
-#         customer = get_object_or_404(Customer, pk=pk)
-#         form = CustomerForm(request.POST, instance=client)
-#         if form.is_valid():
-#             Customer = form.save(commit=False)
-#             Customer.save()
-#             return redirect_query('circulation_newcustomer',
-#                                   {'filter': Customer.identificationCode, 'search': 'identificationCode'})
-#         else:
-#             return render(request, 'circulation/customer_form.html', {'form': form, 'Customer': customer})
-#     return redirect('circulation_newcustomer')
-#
-#
-# class BoardGameLendingList(ListView):
-#     model = BoardGameLending
+class CustomerLendingListView(LoginRequiredMixin, PermissionRequiredMixin, SingleObjectMixin, ListView):
+    model = BoardGameLending
+    permission_required = 'circulation.add_boardgamelending'
+    raise_exception=True
+    template_name = 'circulation/customerlending_list.html'
+    paginate_by = settings.CIRCULATION_LENDING_PAGINATION
+    paginate_orphans = settings.CIRCULATION_LENDING_PAGINATION_ORPHANS
+    # ListView context object => list of warehouse containers
+    # context_object_name = 'customer_lending_list'
 
+    # def get(self, request, *args, **kwargs):
+    #     self.object = self.get_object(queryset=Customer.objects.all())
+    #     return super().get(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['customer'] = self.object
+        return context
+
+    def get_queryset(self):
+        # qs will contain only returned lendings
+        self.object = self.get_object(queryset=Customer.objects.all())
+        self.queryset = BoardGameLending.objects.filter(customer=self.object).exclude(returned=None).order_by('-issued')
+        return self.queryset
 
 class BoardGameLendingCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     model = BoardGameLending
@@ -275,7 +195,9 @@ class BoardGameLendingCreateView(LoginRequiredMixin, PermissionRequiredMixin, Cr
         form = self.form_class(request.POST)
         if form.is_valid():
             try:
-                lending = form.save()
+                lending = form.save(commit=False)
+                lending.start()
+                lending.save()
             except ValidationError as exc:
                 dupa.blada
                 form.add_error('newLending', exc)
@@ -286,14 +208,59 @@ class BoardGameLendingCreateView(LoginRequiredMixin, PermissionRequiredMixin, Cr
             return render(request, 'circulation/boardgamelending_form.html', {'form': form,})
         return redirect('circulation_lend')
 
-class BoardGameLendingDetailView(DetailView):
+class BoardGameLendingReturnView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     model = BoardGameLending
+    permission_required = 'circulation.change_boardgamelending'
+    raise_exception=True
+    template_name = 'circulation/boardgamelending_return.html'
+
+    customer = None
 
 
-def register_return(request, pk):
-    if request.method == 'POST':
-        BoardGameLending = get_object_or_404(BoardGameLending, pk=pk)
-        BoardGameLending.returned = datetime.now()
-        BoardGameLending.save()
 
-    return redirect('BoardGameLending_detail', pk=pk)
+    # def get(self, request, *args, **kwargs):
+        # self.object = self.get_object(queryset=Customer.objects.all())
+        # return super().get(request, *args, **kwargs)
+
+
+    def get_context_data(self, **kwargs):
+        if self.request.method == 'GET':
+            filter_criteria = self.request.GET.get("filter", None)
+        if filter_criteria == None:
+            self.customer = None
+        else:
+            try:
+                self.customer = Customer.get_by_IDlabel (filter_criteria)
+            except Customer.DoesNotExist as exc:
+                self.customer = None
+            except Customer.MultipleObjectsReturned as exc:
+                self.customer = None
+        context = super().get_context_data(**kwargs)
+        context['customer'] = self.customer
+        qs = self.get_queryset()
+        context['object_list'] = qs
+        context['boardgamelending_list'] = qs
+        return context
+
+    def get_queryset(self):
+        if self.request.method == 'GET':
+            if self.customer == None:
+                return BoardGameLending.objects.none()
+            else:
+                return self.customer.get_unfinished_lendings()
+        else:
+            return BoardGameLending.objects.none()
+
+@login_required
+@permission_required ('circulation.change_boardgamelending', raise_exception=True)
+def boardgamelending_finish (request, pk):
+    try:
+        lending = BoardGameLending.objects.get(pk=pk)
+        lending.finish()
+        # if no ValidationError raised
+        lending.save()
+    except BoardGameLending.DoesNotExist as exc:
+        messages.error(request, 'Błąd odczytu wypożyczenia')
+    except ValidationError as exc:
+        messages.info(request, exc.messages)
+    return redirect('circulation_return')

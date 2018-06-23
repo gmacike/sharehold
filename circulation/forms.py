@@ -11,11 +11,11 @@ class CustomerForm(forms.ModelForm):
 
     class Meta:
         model = Customer
-        fields = ('registrationNumber', 'initials')
+        fields = ('registrationNumber', 'nick')
 
         labels = {
             'registrationNumber': 'Zarejestrowany jako',
-            'initials': 'Inicjały',
+            'nick': 'Pseudonim',
         }
 
         widgets = {

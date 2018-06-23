@@ -8,16 +8,23 @@ from warehouse.models import BoardGameContainer
 
 class Customer(models.Model):
     registrationNumber = models.IntegerField(unique=True)
-    initials = models.CharField(max_length=10)
+    nick = models.CharField(max_length=10)
+
+    @classmethod
+    def get_by_IDlabel (cls, label):
+        return Customer.objects.get(customerIDs__IDlabel__iexact=label)
 
     def active_IDs_count (self):
         return self.customerIDs.filter(IDstatus=CustomerID.AKTYWNY).count()
 
     def __str__(self):
-        return '{} {}'.format(self.initials, self.registrationNumber)
+        return '{} {}'.format(self.nick, self.registrationNumber)
 
     def get_absolute_url(self):
         return reverse('circulation_customeredit', kwargs={'pk': self.pk})
+
+    def get_unfinished_lendings(self):
+        return BoardGameLending.objects.filter(customer=self, returned=None).order_by("-issued")
 
     def get_unfinished_lendings_count(self):
         return BoardGameLending.objects.filter(customer=self, returned=None).count()
@@ -110,12 +117,12 @@ class BoardGameLending(models.Model):
                                      blank=False)
 
 
-    issued = models.DateTimeField(null=False, default=timezone.now)
+    issued = models.DateTimeField(null=False)
     returned = models.DateTimeField(null=True)
 
-    def save(self, *args, **kwargs):
+    def start (self):
+        qs = self.customer.get_unfinished_lendings()
         # count customer's lendings and check if limit will not be exceeded
-        qs = BoardGameLending.objects.filter(customer=self.customer)
         unfinished_customer_lendings_cnt = qs.count()
         if unfinished_customer_lendings_cnt >= settings.CIRCULATION_MAX_LENDINGS_PER_CUSTOMER:
             raise ValidationError ('Klient wyczerpał limit {} wypożyczeń, ma ich: {}'.format(settings.CIRCULATION_MAX_LENDINGS_PER_CUSTOMER, self.customer.get_unfinished_lendings_count()), 'model constraint violation')
@@ -126,10 +133,15 @@ class BoardGameLending(models.Model):
         #     raise ValidationError ('Dla identyfikatora wyczerpano limit wypożyczeń', 'model constraint violation')
 
         #start lending from now on
+        # TODO: add following to MIDDLEWARE - https://docs.djangoproject.com/en/2.0/topics/i18n/timezones/
         self.issued = timezone.now()
 
+    def finish (self):
+        if self.returned != None:
+            raise ValidationError ('Zwrot wypożyczenia został już zarejestrowany', 'model constraint violation')
         # TODO: add following to MIDDLEWARE - https://docs.djangoproject.com/en/2.0/topics/i18n/timezones/
-        super().save(*args, **kwargs)
+        self.returned = timezone.now()
+
 
     def __str__(self):
-        return '{} <-> {} from {}, to'.format (self.customer, self.container, self.issued, self.returned)
+        return '{} <-> {} from {}, to {}'.format (self.customer, self.container, self.issued, self.returned)

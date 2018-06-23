@@ -1,0 +1,74 @@
+{% extends "circulation/base.html" %}
+{% load staticfiles %}
+{% load pagination %}
+
+{% block content %}
+
+<div class="jumbotron content pl-3">
+  <h1>Wypożyczenia klienta: {{customer.nick}}</h1>
+
+
+  <div class="container-fluid custlendinglist">
+    <div class="row no-gutters">
+      <h2 class="w-100">Wypożyczenia oczekujące na zwrot</h2>
+      {% for lending in customer.get_unfinished_lendings %}
+        <div class="d-flex flex-wrap col-md-4 col-sm-6 lendingentry p-2">
+          {% with commodity=lending.container.commodity %}
+            <div class="row no-gutters">
+              <h4 class="w-100">{{ commodity.catalogueEntry.itemLabel }}</h4>
+              <div class="col-4">
+                {% if commodity.getImage %}
+                <img class="img-responsive img-thumbnail" src="{{commodity.getImage.url}}">
+                {% else %}
+                <img class="img-responsive img-thumbnail" src="{% static 'noimage.png' %}">
+                {% endif %}
+              </div>
+              <div class="col-8 pl-1">
+                <p>Z magazynu: {{ lending.container.warehouse.name }}</p>
+                <p>Rozpoczęto: {{ lending.issued }}</p>
+              </div>
+            </div>
+          {% endwith %}
+        </div>
+      {% empty %}
+        <p>Brak wypożyczeń oczekujących na zwrot</p>
+      {% endfor %}
+    </div>
+
+    <div class="row no-gutters">
+      <h2 class="w-100">Wypożyczenia zakończone</h2>
+      {% for lending in object_list %}
+        <div class="d-flex flex-wrap col-md-4 col-sm-6 lendingentry p-2">
+          {% with commodity=lending.container.commodity %}
+            <div class="row no-gutters">
+              <h4 class="w-100">{{ commodity.catalogueEntry.itemLabel }}</h4>
+              <div class="col-4">
+                {% if commodity.getImage %}
+                <img class="img-responsive img-thumbnail" src="{{commodity.getImage.url}}">
+                {% else %}
+                <img class="img-responsive img-thumbnail" src="{% static 'noimage.png' %}">
+                {% endif %}
+              </div>
+              <div class="col-8 pl-1">
+                <p>Z magazynu: {{ lending.container.warehouse.name }}</p>
+                <p>Rozpoczęto: {{ lending.issued }}</p>
+                <p>Zakończono: {{ lending.returned }}</p>
+              </div>
+            </div>
+          {% endwith %}
+        </div>
+      {% empty %}
+        <p>Brak zakończonych wypożyczeń</p>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% if is_paginated %}
+  <div class="container">
+    {% paginator 5%}
+  </div>
+{% endif %}
+
+
+{% endblock %}
