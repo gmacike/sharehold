@@ -1,7 +1,8 @@
 {% extends 'base.html' %}
+{% load staticfiles %}
 
 {% block content %}
-  <div class="jumbotron content">
+  <div class="jumbotron content pl-3">
     <h2>Podaj swoje dane użytkownika systemu</h2>
 
     {% if form.errors %}
@@ -10,7 +11,7 @@
 
     <form  action="{% url 'login' %}" method="POST">
       {% csrf_token %}
-        {{ form.as_p }}
+        {% include "sharehold/formfieldsgenerator.html" %}
         <input type="submit" class="btn btn-primary" value="Potwierdź">
         <input type="hidden" name="next" value="{{next}}">
 
