@@ -14,6 +14,31 @@ class Customer(models.Model):
     def get_by_IDlabel (cls, label):
         return Customer.objects.get(customerIDs__IDlabel__iexact=label)
 
+    @classmethod
+    def get_matching_IDlabel (cls, label, active_only = False, order_by = None):
+        qs = None
+        if active_only:
+            matching_active_custID = CustomerID.objects.filter(IDlabel__icontains=label, IDstatus=CustomerID.AKTYWNY)
+            qs = Customer.objects.filter(customerIDs__in=matching_active_custID)
+        else:
+            qs = Customer.objects.filter(customerIDs__IDlabel__icontains=label)
+        if order_by != None:
+            qs = qs.order_by(order_by)
+        return qs
+
+    @classmethod
+    def get_matching_nick (cls, nick_part, active_only = False, order_by = None):
+        if active_only:
+            matching_customers = Customer.objects.filter(nick__icontains=nick_part)
+            matching_active_custID = CustomerID.objects.filter(IDstatus=CustomerID.AKTYWNY, customer__in=matching_customers)
+            qs =  matching_customers.filter(customerIDs__in=matching_active_custID)
+        else:
+            qs =  Customer.objects.filter(nick__icontains=nick_part)
+        if order_by != None:
+            qs = qs.order_by(order_by)
+        return qs
+
+
     def active_IDs_count (self):
         return self.customerIDs.filter(IDstatus=CustomerID.AKTYWNY).count()
 

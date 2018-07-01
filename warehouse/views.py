@@ -164,7 +164,7 @@ class BoardGameContainerInWarehouseAutocompleteViewByCommodity(LoginRequiredMixi
                 qs = BoardGameContainer.objects.filter(warehouse=selected_warehouse,
                     commodity__codeValue__icontains=self.q).order_by('commodity__codeValue')
             else:
-                qs = BoardGameContainer.objects.filter(warehouse=selected_warehouse).order_by('codeValue')
+                qs = BoardGameContainer.objects.filter(warehouse=selected_warehouse).order_by('commodity__codeValue')
         else:
             qs = BoardGameContainer.objects.none()
 

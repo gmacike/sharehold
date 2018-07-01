@@ -1,0 +1,74 @@
+{% extends "circulation/base.html" %}
+{% load static %}
+{% load widget_tweaks %}
+<!-- {% load pagination %} -->
+
+{% block content %}
+
+<div class="jumbotron content pl-3">
+  <h1>Przyjęcie zwrotu</h1>
+
+  <form class="lending-form" method="post">
+    {% include "sharehold/formfieldsgenerator.html" %}
+
+    {% if request.session.warehouse_context_pk %}
+      {% if perms.circulation.change_boardgamelending %}
+        {% if boardgamelending %}
+          {% if request.session.warehouse_context_pk == boardgamelending.container.warehouse.pk %}
+            <a class="btn btn-primary" href="{% url 'lending_finish' pk=boardgamelending.pk %}">Zatwierdź zwrot</a>
+            <a class="btn btn-secondary" href="{% url 'circulation_customerlendings' pk=boardgamelending.customer.pk %}">Wszystkie wypożyczenia klienta</a>
+          {% else %}
+            <p class="help-block">Zwrot możliwy tylko do magazynu: {{ boardgamelending.container.warehouse }}</p>
+          {% endif %}
+        {% else %}
+          <button type="submit" class="btn btn-primary">Przyjmij zwrot</button>
+        {% endif %}
+      {% endif %}
+    {% else %}
+      <a href="{% url 'warehouse_index' %}" class="btn btn-danger">Wybierz magazyn do pracy</a>
+    {% endif %}
+  </form>
+
+
+
+  <div class="container-fluid lending_list">
+
+    {% if boardgamelending %}
+      {% with customer=boardgamelending.customer %}
+        <h2 class="w-100">Klient: {{ customer.nick }}</h2>
+
+        <div class="row no-gutters">
+          <div class="d-flex flex-wrap col-md-4 col-sm-6 lendingentry p-2">
+            {% with commodity=boardgamelending.container.commodity %}
+              <div class="row no-gutters">
+                <h4 class="w-100">{{ commodity.catalogueEntry.itemLabel }}</h4>
+                <div class="col-4">
+                  {% if commodity.getImage %}
+                    <img class="img-responsive img-thumbnail" src="{{commodity.getImage.url}}">
+                  {% else %}
+                    <img class="img-responsive img-thumbnail" src="{% static 'noimage.png' %}">
+                  {% endif %}
+                </div>
+                <div class="col-8 pl-1">
+                  <p>Z magazynu: {{ boardgamelending.container.warehouse.name }}</p>
+                  <p>Rozpoczęto: {{ boardgamelending.issued }}</p>
+                </div>
+              </div>
+            {% endwith %}
+          </div>
+        </div>
+      {% endwith %}
+    {% endif %}
+  </div>
+</div>
+
+<!-- {% if is_paginated %}
+  <div class="container">
+    {% paginator 5%}
+  </div>
+{% endif %} -->
+
+<script type="text/javascript" src="{% static 'admin/js/vendor/jquery/jquery.js' %}"></script>
+{{ form.media }}
+
+{% endblock %}
