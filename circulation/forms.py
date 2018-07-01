@@ -39,18 +39,6 @@ class CustomerForm(forms.ModelForm):
             raise forms.ValidationError ('Podany identyfikator został już zarejestrowany', code='duplicated unique data')
         return newID
 
-# class RentalCustomerIDInlineFormSet(forms.BaseInlineFormSet):
-#     def clean(self):
-#         cleaned = super(RentalCustomerIDInlineFormSet, self).clean()
-#         numOfActiveIDs = 0;
-#         for form in self.forms:
-#             if form.cleaned_data.get('active'):
-#                 numOfActiveIDs+=1;
-#         if numOfActiveIDs > 1:
-#             raise forms.ValidationError('Tylko jeden identyfikator może być aktywny')
-#
-#         return cleaned
-
 class BoardGameLendingForm(forms.ModelForm):
     class Meta:
         model = BoardGameLending
@@ -89,3 +77,28 @@ class BoardGameLendingForm(forms.ModelForm):
         if container.available <= 0:
             raise ValidationError('Brak dostępnych egzemplarzy w magazynie')
         return container
+
+class BoardGameReturnForm(forms.ModelForm):
+    class Meta:
+        model = BoardGameLending
+
+        fields = ('customer', 'container')
+
+        labels = {'customer': 'Klient',
+                  'container': 'Wypożyczony przedmiot',
+        }
+
+        widgets = {
+            'customer': autocomplete.ModelSelect2(
+                url='activecustomerbynickorcustid-autocomplete',
+                attrs={'data-placeholder': 'Podaj aktywny identyfikator klienta...',
+                    'data-minimum-input-length': 1,}
+                ),
+
+            'container': autocomplete.ModelSelect2(
+                url='containerbyunfinishedlendings-autocomplete',
+                attrs={'data-placeholder': 'Wpisz kod przedmiotu...',
+                    'data-minimum-input-length': 1,}
+                ),
+
+        }

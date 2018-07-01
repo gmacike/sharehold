@@ -8,12 +8,13 @@ from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMix
 from django.contrib.auth.decorators import login_required, permission_required
 from dal import autocomplete
 from django.forms import inlineformset_factory
-from circulation.models import (Customer, CustomerID, BoardGameLending)
-from warehouse.models import Warehouse, BoardGameContainer
-from circulation.forms import (CustomerForm, BoardGameLendingForm)
 from django.views.generic import (ListView, DetailView, CreateView, UpdateView)
 from django.views.generic.detail import SingleObjectMixin
+from django.views.generic.edit import FormMixin
 from django.conf import settings
+from circulation.models import (Customer, CustomerID, BoardGameLending)
+from warehouse.models import Warehouse, BoardGameContainer
+from circulation.forms import (CustomerForm, BoardGameLendingForm, BoardGameReturnForm)
 from sharehold.templatetags.anypermission import has_any_permission
 
 
@@ -208,48 +209,82 @@ class BoardGameLendingCreateView(LoginRequiredMixin, PermissionRequiredMixin, Cr
             return render(request, 'circulation/boardgamelending_form.html', {'form': form,})
         return redirect('circulation_lend')
 
-class BoardGameLendingReturnView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
+
+class BoardGameLendingReturnView(LoginRequiredMixin, PermissionRequiredMixin, FormMixin, ListView):
     model = BoardGameLending
     permission_required = 'circulation.change_boardgamelending'
     raise_exception=True
-    template_name = 'circulation/boardgamelending_return.html'
+    form_class = BoardGameReturnForm
+    template_name = 'circulation/boardgamereturn_form.html'
 
     customer = None
 
-
-
-    # def get(self, request, *args, **kwargs):
-        # self.object = self.get_object(queryset=Customer.objects.all())
-        # return super().get(request, *args, **kwargs)
-
-
-    def get_context_data(self, **kwargs):
-        if self.request.method == 'GET':
-            filter_criteria = self.request.GET.get("filter", None)
-        if filter_criteria == None:
-            self.customer = None
-        else:
-            try:
-                self.customer = Customer.get_by_IDlabel (filter_criteria)
-            except Customer.DoesNotExist as exc:
-                self.customer = None
-            except Customer.MultipleObjectsReturned as exc:
-                self.customer = None
-        context = super().get_context_data(**kwargs)
-        context['customer'] = self.customer
-        qs = self.get_queryset()
-        context['object_list'] = qs
-        context['boardgamelending_list'] = qs
-        return context
-
+    # def get_context_data(self, **kwargs):
+    #     if self.request.method == 'GET':
+    #         filter_criteria = self.request.GET.get("filter", None)
+    #     if filter_criteria == None:
+    #         self.customer = None
+    #     else:
+    #         try:
+    #             self.customer = Customer.get_by_IDlabel (filter_criteria)
+    #         except Customer.DoesNotExist as exc:
+    #             self.customer = None
+    #         except Customer.MultipleObjectsReturned as exc:
+    #             self.customer = None
+        # context = super().get_context_data(**kwargs)
+    #     context['customer'] = self.customer
+        # qs = self.get_queryset()
+        # context['object_list'] = qs
+    #     context['boardgamelending_list'] = qs
+        # return context
+    #
     def get_queryset(self):
-        if self.request.method == 'GET':
-            if self.customer == None:
-                return BoardGameLending.objects.none()
-            else:
-                return self.customer.get_unfinished_lendings()
-        else:
-            return BoardGameLending.objects.none()
+        return BoardGameLending.objects.filter(returned=None)
+        # if self.request.method == 'GET':
+        #     if self.customer == None:
+        #         return BoardGameLending.objects.none()
+        #     else:
+        #         return self.customer.get_unfinished_lendings()
+        # else:
+        #     return BoardGameLending.objects.none()
+
+
+# Old view based with form starting from customer ID
+# class BoardGameLendingReturnByCustomerIDView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
+#     model = BoardGameLending
+#     permission_required = 'circulation.change_boardgamelending'
+#     raise_exception=True
+#     template_name = 'circulation/boardgamelending_return.html'
+#
+#     customer = None
+#
+#     def get_context_data(self, **kwargs):
+#         if self.request.method == 'GET':
+#             filter_criteria = self.request.GET.get("filter", None)
+#         if filter_criteria == None:
+#             self.customer = None
+#         else:
+#             try:
+#                 self.customer = Customer.get_by_IDlabel (filter_criteria)
+#             except Customer.DoesNotExist as exc:
+#                 self.customer = None
+#             except Customer.MultipleObjectsReturned as exc:
+#                 self.customer = None
+#         context = super().get_context_data(**kwargs)
+#         context['customer'] = self.customer
+#         qs = self.get_queryset()
+#         context['object_list'] = qs
+#         context['boardgamelending_list'] = qs
+#         return context
+#
+#     def get_queryset(self):
+#         if self.request.method == 'GET':
+#             if self.customer == None:
+#                 return BoardGameLending.objects.none()
+#             else:
+#                 return self.customer.get_unfinished_lendings()
+#         else:
+#             return BoardGameLending.objects.none()
 
 @login_required
 @permission_required ('circulation.change_boardgamelending', raise_exception=True)
@@ -264,3 +299,58 @@ def boardgamelending_finish (request, pk):
     except ValidationError as exc:
         messages.info(request, exc.messages)
     return redirect('circulation_return')
+
+class BoardGameContainerInWarehouseAutocompleteViewByNotReturnedLending(LoginRequiredMixin, PermissionRequiredMixin, autocomplete.Select2QuerySetView):
+    permission_required = 'circulation.change_boardgamelending'
+    raise_exception=True
+    # these queryset data will be available through pulib url guard w/ permissions if necessary
+    # here are none as boardgame cataloge is going to be available for publicity
+
+    def get_queryset(self):
+        selected_warehouse = None
+        warehouse_pk = None
+
+        if self.request.method == 'GET':
+            if self.request.GET.__contains__("wrhpk"):
+                warehouse_pk = self.request.GET.get("wrhpk")
+            else:
+                warehouse_pk = self.request.session.get('warehouse_context_pk', None)
+
+        if warehouse_pk != None:
+            try:
+                selected_warehouse = Warehouse.objects.get (pk=warehouse_pk)
+            except Warehouse.DoesNotExist as exc:
+                messages.add_message(request, messages.ERROR, exc)
+                raise Http404
+
+            unfinished_lendings = BoardGameLending.objects.filter(returned=None, container__warehouse=selected_warehouse)
+            if self.q:
+                containers_by_codeValue = BoardGameContainer.objects.filter(warehouse=selected_warehouse, lendings__in=unfinished_lendings,
+                    commodity__codeValue__icontains=self.q).order_by('commodity__codeValue')
+                containers_by_catalogueEntry_label = BoardGameContainer.objects.filter(warehouse=selected_warehouse, lendings__in=unfinished_lendings,
+                    commodity__catalogueEntry__itemLabel__icontains=self.q).order_by('commodity__codeValue')
+
+                qs = containers_by_codeValue | containers_by_catalogueEntry_label
+                qs = qs.filter(warehouse=selected_warehouse).order_by('commodity__codeValue')
+            else:
+                qs = BoardGameContainer.objects.filter(warehouse=selected_warehouse, lendings__in=unfinished_lendings).order_by('commodity__codeValue')
+
+        else:
+            qs = BoardGameContainer.objects.none()
+
+        return qs
+
+class AvcitveCustomerAutocompleteViewByPseudo_ActiveID(LoginRequiredMixin, PermissionRequiredMixin, autocomplete.Select2QuerySetView):
+    permission_required = 'circulation.change_boardgamelending'
+    raise_exception=True
+    # these queryset data will be available through pulib url guard w/ permissions if necessary
+    # here are none as boardgame cataloge is going to be available for publicity
+
+    def get_queryset(self):
+        qs = BoardGameContainer.objects.none()
+        if self.q:
+            customers_by_active_custID = Customer.get_matching_IDlabel(self.q, True)
+            customers_by_nick = Customer.get_matching_nick(self.q, True)
+
+            qs = customers_by_active_custID | customers_by_nick
+        return qs
