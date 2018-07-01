@@ -59,7 +59,7 @@ class BoardGameLendingForm(forms.ModelForm):
             'container': autocomplete.ModelSelect2(
                 url='containerbycommodity-autocomplete',
                 attrs={'data-placeholder': 'Wpisz kod przedmiotu...',
-                    'data-minimum-input-length': 1,}
+                    'data-minimum-input-length': 3,}
                 ),
 
         }
@@ -92,14 +92,14 @@ class BoardGameReturnForm(forms.ModelForm):
             'customer': autocomplete.ModelSelect2(
                 url='returncustomerbynickorcustid-autocomplete',
                 attrs={'data-placeholder': 'Podaj pseudonim albo identyfikator klienta...',
-                    'data-minimum-input-length': 1,},
+                    'data-minimum-input-length': 3,},
                 forward=('container',)
                 ),
 
             'container': autocomplete.ModelSelect2(
                 url='containerbyunfinishedlendings-autocomplete',
                 attrs={'data-placeholder': 'Wpisz kod lub tytuł katalogowy przedmiotu...',
-                    'data-minimum-input-length': 1,},
+                    'data-minimum-input-length': 3,},
                 forward=('customer',)
                 ),
 
