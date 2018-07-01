@@ -6,6 +6,12 @@
 {% block content %}
 
 <div class="jumbotron content pl-3">
+  {% if customer != null %}
+    <h1>Aktualizacja danych klienta</h1>
+  {% else %}
+    <h1>Rejestracja klienta</h1>
+  {% endif %}
+
   <form class="customer_search_form" action="{% url 'circulation_customergetbyid' %}" method="GET">
     <label for="filter_criteria">Identyfikator klienta</label>
     <div class="input-group">
@@ -13,15 +19,9 @@
         <button type="submit" class="save btn btn-primary btn-lg mt-0 mb-0">Identyfikuj</button>
       </div>
       <input type="text" class="form-control" id="filter_customerID" name="filter"
-      placeholder="Podaj pełny identyfikator klienta">
+      placeholder="Wskaż {% if customer != null %}innego {% endif %}klienta do edycji...">
     </div>
   </form>
-
-  {% if customer != null %}
-    <h1>Aktualizacja danych klienta</h1>
-  {% else %}
-    <h1>Rejestracja klienta</h1>
-  {% endif %}
 
 
   <form class="customer-form" method="post">
@@ -54,7 +54,7 @@
           <div class="col-8">
             <p class="barcodetextfont text-center">{{customerid.IDlabel}}</p>
             {% if debug %}
-            <p>debug info: {{customerid.get_status_str }}</p>
+              <p>debug info: {{customerid.get_status_str }}</p>
             {% endif %}
           </div>
           <div class="col-4 align-items-end">
