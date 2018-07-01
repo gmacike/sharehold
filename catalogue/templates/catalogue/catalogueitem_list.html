@@ -29,7 +29,7 @@
             <a class="w-50" href="{% url 'boardgame_detail' pk=item.pk %}"><img class="img-responsive img-thumbnail" src="{% static 'noimage.png' %}"></a>
           {% endif %}
           <div class="d-flex flex-column w-50 justify-content-start align-items-end">
-            <a href="{% url 'circulation_lend' %}" class="btn btn-block btn-primary">Wypożycz</a>
+            <!-- <a href="{% url 'circulation_lend' %}" class="btn btn-block btn-primary">Wypożycz</a> -->
             {% if perms.catalogue.change_boardgameitem %}
               <a href="{% url 'boardgame_edit' pk=item.pk %}" class="btn btn-block btn-warning">Edytuj grę</a>
             {% endif %}
