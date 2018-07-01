@@ -90,15 +90,17 @@ class BoardGameReturnForm(forms.ModelForm):
 
         widgets = {
             'customer': autocomplete.ModelSelect2(
-                url='activecustomerbynickorcustid-autocomplete',
-                attrs={'data-placeholder': 'Podaj aktywny identyfikator klienta...',
-                    'data-minimum-input-length': 1,}
+                url='returncustomerbynickorcustid-autocomplete',
+                attrs={'data-placeholder': 'Podaj pseudonim albo identyfikator klienta...',
+                    'data-minimum-input-length': 1,},
+                forward=('container',)
                 ),
 
             'container': autocomplete.ModelSelect2(
                 url='containerbyunfinishedlendings-autocomplete',
-                attrs={'data-placeholder': 'Wpisz kod przedmiotu...',
-                    'data-minimum-input-length': 1,}
+                attrs={'data-placeholder': 'Wpisz kod lub tytuł katalogowy przedmiotu...',
+                    'data-minimum-input-length': 1,},
+                forward=('customer',)
                 ),
 
         }

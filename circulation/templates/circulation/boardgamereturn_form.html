@@ -12,25 +12,34 @@
     {% include "sharehold/formfieldsgenerator.html" %}
 
     {% if request.session.warehouse_context_pk %}
-      <button type="submit" class="btn btn-primary">Przyjmij zwrot</button>
+      {% if perms.circulation.change_boardgamelending %}
+        {% if boardgamelending %}
+          {% if request.session.warehouse_context_pk == boardgamelending.container.warehouse.pk %}
+            <a class="btn btn-primary" href="{% url 'lending_finish' pk=boardgamelending.pk %}">Zatwierdź zwrot</a>
+            <a class="btn btn-secondary" href="{% url 'circulation_customerlendings' pk=boardgamelending.customer.pk %}">Wszystkie wypożyczenia klienta</a>
+          {% else %}
+            <p class="help-block">Zwrot możliwy tylko do magazynu: {{ boardgamelending.container.warehouse }}</p>
+          {% endif %}
+        {% else %}
+          <button type="submit" class="btn btn-primary">Przyjmij zwrot</button>
+        {% endif %}
+      {% endif %}
     {% else %}
       <a href="{% url 'warehouse_index' %}" class="btn btn-danger">Wybierz magazyn do pracy</a>
     {% endif %}
   </form>
 
 
-<!--
+
   <div class="container-fluid lending_list">
 
-    {% if customer %}
-      <h2 class="w-100">Klient: {{ customer.nick }}</h2>
+    {% if boardgamelending %}
+      {% with customer=boardgamelending.customer %}
+        <h2 class="w-100">Klient: {{ customer.nick }}</h2>
 
-      <a class="btn btn-secondary" href="{% url 'circulation_customerlendings' pk=customer.pk %}">Wszystkie wypożyczenia klienta</a>
-
-      <div class="row no-gutters">
-        {% for lending in boardgamelending_list.all %}
+        <div class="row no-gutters">
           <div class="d-flex flex-wrap col-md-4 col-sm-6 lendingentry p-2">
-            {% with commodity=lending.container.commodity %}
+            {% with commodity=boardgamelending.container.commodity %}
               <div class="row no-gutters">
                 <h4 class="w-100">{{ commodity.catalogueEntry.itemLabel }}</h4>
                 <div class="col-4">
@@ -41,31 +50,16 @@
                   {% endif %}
                 </div>
                 <div class="col-8 pl-1">
-                  <p>Z magazynu: {{ lending.container.warehouse.name }}</p>
-                  <p>Rozpoczęto: {{ lending.issued }}</p>
-                </div>
-                <div class="col-12 d-flex justify-content-end">
-                  {% if perms.circulation.change_boardgamelending %}
-                    {% if request.session.warehouse_context_pk %}
-                      {% if request.session.warehouse_context_pk == lending.container.warehouse.pk %}
-                        <a class="btn btn-primary" href="{% url 'lending_finish' pk=lending.pk %}">Przyjmij zwrot</a>
-                      {% else %}
-                        <p class="help-block">Zwrot możliwy tylko do magazynu: {{ lending.container.warehouse }}</p>
-                      {% endif %}
-                    {% else %}
-                      <a href="{% url 'warehouse_index' %}" class="btn btn-danger">Wybierz magazyn do pracy</a>
-                    {% endif %}
-                  {% endif %}
+                  <p>Z magazynu: {{ boardgamelending.container.warehouse.name }}</p>
+                  <p>Rozpoczęto: {{ boardgamelending.issued }}</p>
                 </div>
               </div>
             {% endwith %}
           </div>
-        {% empty %}
-          <p>Brak informacji o niezakończonych wypożyczeniach Klienta.</p>
-        {% endfor %}
-      </div>
+        </div>
+      {% endwith %}
     {% endif %}
-  </div> -->
+  </div>
 </div>
 
 <!-- {% if is_paginated %}
